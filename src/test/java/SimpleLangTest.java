@@ -34,7 +34,7 @@ public class SimpleLangTest {
         parser = new SimpleLangParser(tokens);
         ClazzVisitor classVisitor = new ClazzVisitor();
         Clazz traverseResult = classVisitor.visit(parser.classDeclaration());
-        assertThat(traverseResult.getMethods().size(),equalTo(3));
+        assertThat(traverseResult.getMethods().size(),equalTo(2));
     }
 
     @Test
