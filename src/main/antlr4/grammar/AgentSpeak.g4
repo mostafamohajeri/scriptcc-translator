@@ -56,8 +56,8 @@ plan :
     ANNOTATION*
     plantrigger
     literal
-    plandefinition+
-    ( DOT | SEMICOLON )
+    plandefinition
+    DOT
     ;
 
 
@@ -65,8 +65,9 @@ plan :
  * plan trigger
  */
 plantrigger :
-    ARITHMETICOPERATOR3 STRONGNEGATION?  EXCLAMATIONMARK?
+    ARITHMETICOPERATOR3 (EXCLAMATIONMARK | QUESTIONMARK )? STRONGNEGATION?
     ;
+
 
 
 /**
@@ -80,27 +81,33 @@ plandefinition :
  * rules are similar to plans
  * but without context and trigger event
  */
-logicrule :
-    literal
-    ( RULEOPERATOR body )+
-    ( DOT | SEMICOLON )
-    ;
+//logicrule :
+//    literal
+//    ( RULEOPERATOR body )+
+//    ( DOT | SEMICOLON )
+//    ;
 
 /**
  * block body
  */
 body :
-    repairformula
-    ( SEMICOLON repairformula )*
+    bodyformula
+    ( SEMICOLON bodyformula )*
     ;
+//    body :
+//        repairformula
+//        ( SEMICOLON repairformula )*
+//        ;
+
 
 /**
  * block-formula of subsection
  */
-blockformula :
-    repairformula
-    | ( LEFTCURVEDBRACKET body RIGHTCURVEDBRACKET )
-    ;
+
+//blockformula :
+//    repairformula
+//    | ( LEFTCURVEDBRACKET body RIGHTCURVEDBRACKET )
+//    ;
 
 // ---------------------------------------------------------------------------------------
 
@@ -111,34 +118,41 @@ blockformula :
 /**
  * repairable formula
  */
-repairformula :
-    bodyformula
-    ( LEFTSHIFT bodyformula )*
-    ;
+//repairformula :
+//    bodyformula
+//    ( LEFTSHIFT bodyformula )*
+//    ;
 
 /**
  * basic executable formula
  */
 bodyformula :
-    ternaryoperation
-    | beliefaction
-
-    | expression
-    | deconstructexpression
-    | assignmentexpression
-    | unaryexpression
-    | testaction
+    beliefaction
+    | testgoal
     | achievementgoal
-
-    | unification
-    | lambda
+    | maintenancegoal
+    | primitiveaction
+//    | lambda
     ;
+
+//    bodyformula :
+//        ternaryoperation
+//        | beliefaction
+//        | expression
+//        | deconstructexpression
+//        | assignmentexpression
+//        | unaryexpression
+//        | testaction
+//        | achievementgoal
+//        | unification
+//        | lambda
+//        ;
 
 /**
  * expression rule
  */
 expression :
-    STRONGNEGATION single=expression
+    DEFAULTNEGATION single=expression
     | LEFTROUNDBRACKET single=expression RIGHTROUNDBRACKET
     | lhs=expression binaryoperator=ARITHMETICOPERATOR1 rhs=expression
     | lhs=expression binaryoperator=ARITHMETICOPERATOR2 rhs=expression
@@ -147,7 +161,6 @@ expression :
     | lhs=expression binaryoperator=LOGICALOPERATOR1 rhs=expression
     | lhs=expression binaryoperator=LOGICALOPERATOR2 rhs=expression
     | lhs=expression binaryoperator=LOGICALOPERATOR3 rhs=expression
-    | unification
     | term
     ;
 
@@ -155,128 +168,145 @@ expression :
  * belief-action operator
  */
 beliefaction :
-    ARITHMETICOPERATOR3 literal
+    ARITHMETICOPERATOR3 STRONGNEGATION? literal
     ;
 
-/**
- * test-goal / -rule action
- */
-testaction :
-    QUESTIONMARK DOLLAR? ATOM
+
+maintenancegoal :
+    ARITHMETICOPERATOR3 DOUBLEEXCLAMATIONMARK STRONGNEGATION? literal
+    ;
+
+///**
+// * test-goal / -rule action
+// */
+//testaction :
+//    QUESTIONMARK DOLLAR? ATOM
+//    ;
+
+testgoal :
+    QUESTIONMARK
+    ( literal )
     ;
 
 /**
  * achivement-goal action
  */
 achievementgoal :
-    ( EXCLAMATIONMARK | DOUBLEEXCLAMATIONMARK )
-    ( literal | ( variable termlist? ) )
+    ( EXCLAMATIONMARK )
+    ( literal )
+    ;
+
+
+
+primitiveaction :
+    ( HASH )
+    ( literal )
     ;
 
 // ---------------------------------------------------------------------------------------
 
 
 
-// --- assignment structures -------------------------------------------------------------
+//// --- assignment structures -------------------------------------------------------------
+//
+///**
+// * deconstruct expression (splitting clauses)
+// */
+//deconstructexpression :
+//    variablelist
+//    DECONSTRUCT
+//    ( literal | variable )
+//    ;
+//
+///**
+// * assignment expression (for assignin a variable)
+// */
+//assignmentexpression :
+//    assignmentexpressionsinglevariable
+//    | assignmentexpressionmultivariable
+//    ;
+//
+///**
+// * assignment of a single variable
+// */
+//assignmentexpressionsinglevariable :
+//    variable
+//    ASSIGNOPERATOR
+//    ( ternaryoperation | expression )
+//    ;
+//
+///**
+// * assignment of a variable list
+// */
+//assignmentexpressionmultivariable :
+//    variablelist
+//    ASSIGNOPERATOR
+//    ( ternaryoperation | expression )
+//    ;
+//
+///**
+// * unary expression
+// */
+//unaryexpression :
+//    variable
+//    UNARYOPERATOR
+//    ;
+//
+//// ---------------------------------------------------------------------------------------
+//
 
-/**
- * deconstruct expression (splitting clauses)
- */
-deconstructexpression :
-    variablelist
-    DECONSTRUCT
-    ( literal | variable )
-    ;
 
-/**
- * assignment expression (for assignin a variable)
- */
-assignmentexpression :
-    assignmentexpressionsinglevariable
-    | assignmentexpressionmultivariable
-    ;
-
-/**
- * assignment of a single variable
- */
-assignmentexpressionsinglevariable :
-    variable
-    ASSIGNOPERATOR
-    ( ternaryoperation | expression )
-    ;
-
-/**
- * assignment of a variable list
- */
-assignmentexpressionmultivariable :
-    variablelist
-    ASSIGNOPERATOR
-    ( ternaryoperation | expression )
-    ;
-
-/**
- * unary expression
- */
-unaryexpression :
-    variable
-    UNARYOPERATOR
-    ;
-
-// ---------------------------------------------------------------------------------------
-
-
-
-// --- ternary operator -------------------------------------------------------------------
-
-/**
- * ternary operation
- */
-ternaryoperation :
-    expression
-    ternaryoperationtrue
-    ternaryoperationfalse
-    ;
-
-/**
- * ternary operation true-rule
- */
-ternaryoperationtrue :
-    QUESTIONMARK
-    expression
-    ;
-
-/**
- * ternary operation false-rule
- */
-ternaryoperationfalse :
-    COLON
-    expression
-    ;
-
-// ---------------------------------------------------------------------------------------
+//// --- ternary operator -------------------------------------------------------------------
+//
+///**
+// * ternary operation
+// */
+//ternaryoperation :
+//    expression
+//    ternaryoperationtrue
+//    ternaryoperationfalse
+//    ;
+//
+///**
+// * ternary operation true-rule
+// */
+//ternaryoperationtrue :
+//    QUESTIONMARK
+//    expression
+//    ;
+//
+///**
+// * ternary operation false-rule
+// */
+//ternaryoperationfalse :
+//    COLON
+//    expression
+//    ;
+//
+//// ---------------------------------------------------------------------------------------
 
 
 // --- unification -----------------------------------------------------------------------
 
-/**
- * unification expression
- */
-unification :
-    AT? RIGHTSHIFT
-    (
-        literal
-        | LEFTROUNDBRACKET literal COMMA unificationconstraint RIGHTROUNDBRACKET
-    )
-    ;
+///**
+// * unification expression
+// */
+//unification :
+//    AT? RIGHTSHIFT
+//    (
+//        literal
+//        | LEFTROUNDBRACKET literal COMMA unificationconstraint RIGHTROUNDBRACKET
+//    )
+//    ;
 
-/**
- * unification constraint
- */
-unificationconstraint :
-    variable
-    | literal
-    | expression
-    ;
+///**
+// * unification constraint
+// */
+//unificationconstraint :
+//    variable
+//    | literal
+//    | expression
+//    ;
 
 // ---------------------------------------------------------------------------------------
 
@@ -287,38 +317,38 @@ unificationconstraint :
 /**
  * lambda expression
  */
-lambda :
-    AT? lambdastream
-    RIGHTARROW variable
-    lambdareturn?
-    COLON blockformula
-    ;
+//lambda :
+//    AT? lambdastream
+//    RIGHTARROW variable
+//    lambdareturn?
+//    COLON blockformula
+//    ;
 
 /**
  * lambda stream operator
  */
-lambdastream :
-    LEFTROUNDBRACKET
-    HASH?
-    ( variable | NUMBER )
-    lambdaelement*
-    RIGHTROUNDBRACKET
-    ;
+//lambdastream :
+//    LEFTROUNDBRACKET
+//    HASH?
+//    ( variable | NUMBER )
+//    lambdaelement*
+//    RIGHTROUNDBRACKET
+//    ;
 
 /**
  * lambda elements
  */
-lambdaelement :
-    COMMA
-    ( variable | NUMBER )
-    ;
+//lambdaelement :
+//    COMMA
+//    ( variable | NUMBER )
+//    ;
 
 /**
  * return argument lambda expression
  */
-lambdareturn :
-    VLINE variable
-    ;
+//lambdareturn :
+//    VLINE variable
+//    ;
 
 // ---------------------------------------------------------------------------------------
 
@@ -331,13 +361,8 @@ lambdareturn :
  */
 term :
     termvalue
-    | termvaluelist
     | variable
     | literal
-
-    | executeaction
-    | executerule
-    | executevariable
     ;
 
 /**
@@ -349,45 +374,45 @@ termvalue :
     | STRING
     ;
 
-/**
- * value list
- */
-termvaluelist :
-    LEFTANGULARBRACKET
-    termvalue ( COMMA termvalue )*
-    RIGHTANGULARBRACKET
-    ;
+///**
+// * value list
+// */
+//termvaluelist :
+//    LEFTANGULARBRACKET
+//    termvalue ( COMMA termvalue )*
+//    RIGHTANGULARBRACKET
+//    ;
 
-/**
- * rule for an action
- */
-executeaction :
-    DOT
-    literal;
+///**
+// * rule for an action
+// */
+//executeaction :
+//    DOT
+//    literal;
 
-/**
- * rule for execute a logical-rule
- */
-executerule :
-    DOLLAR ( literal | executevariable )
-    ;
+///**
+// * rule for execute a logical-rule
+// */
+//executerule :
+//    DOLLAR ( literal | executevariable )
+//    ;
 
 /**
  * variable-evaluation will be used for an executable call
  * like X(1,2,Y), it is possible for passing variables and parameters
  */
-executevariable :
-    DOT
-    variable
-    termlist
-    ;
+//executevariable :
+//    DOT
+//    variable
+//    termlist
+//    ;
 
 /**
  * clause represent a literal structure existing
  * atom, optional argument
  */
 literal :
-    ( AT | STRONGNEGATION )?
+    STRONGNEGATION?
     ATOM
     termlist?
     ;
@@ -399,21 +424,20 @@ termlist :
     LEFTROUNDBRACKET term ( COMMA term )* RIGHTROUNDBRACKET
     ;
 
-/**
- * list with head-tail-notation definition
- */
-variablelist :
-    LEFTANGULARBRACKET
-    variable ( VLINE variable )*
-    RIGHTANGULARBRACKET
-    ;
+///**
+// * list with head-tail-notation definition
+// */
+//variablelist :
+//    LEFTANGULARBRACKET
+//    variable ( VLINE variable )*
+//    RIGHTANGULARBRACKET
+//    ;
 
 /**
  * variables are defined like Prolog variables,
  * @-prefix creates a thread-safe variable
  */
 variable :
-    AT?
     VARIABLEATOM
     ;
 

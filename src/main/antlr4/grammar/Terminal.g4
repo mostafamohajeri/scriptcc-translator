@@ -352,7 +352,7 @@ WHITESPACE                 : (' ' | '\n' | '\t' | '\r')+ -> skip;
 /**
  * add for line-comment also
  */
-LINECOMMENT                : ('//' | '#') .*? '\r'? '\n' -> skip;
+LINECOMMENT                : '//' .*? '\r'? '\n' -> skip;
 /**
  * block comment allowed within the grammar
  * default behaviour does not allow block comments
