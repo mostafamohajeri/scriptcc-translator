@@ -100,7 +100,7 @@ transition : memory_control | intent_control | memory_query | LPAR transition_fo
 
 memory_control : ( PLUS | MINUS ) belief ;
 intent_control : ( PLUS | MINUS )? pos_intent ;
-memory_query : QUESTION_MARK belief ; % or test_goals
+memory_query : QUESTION_MARK belief ; // or test_goals
 
 //////////////////////////////////////
 // lists
