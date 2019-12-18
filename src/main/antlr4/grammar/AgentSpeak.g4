@@ -38,20 +38,7 @@ belief :
     literal DOT
     ;
 
-/**
- * plan modified against the original Jason grammar,
- * so a context is optional (on default true) and the
- * plan body is also optional. The definition is
- * trigger name [ plancontent ]* .
- */
-/*plan :
-    ANNOTATION*
-    plantrigger
-    literal
-    plandefinition+
-    ( DOT | SEMICOLON )
-    ;
-*/
+
 plan :
     ANNOTATION*
     plantrigger
@@ -65,8 +52,9 @@ plan :
  * plan trigger
  */
 plantrigger :
-    ARITHMETICOPERATOR3 (EXCLAMATIONMARK | QUESTIONMARK )? STRONGNEGATION?
+    ARITHMETICOPERATOR3 ( EXCLAMATIONMARK | QUESTIONMARK )? STRONGNEGATION?
     ;
+
 
 
 
@@ -132,7 +120,6 @@ bodyformula :
     | achievementgoal
     | maintenancegoal
     | primitiveaction
-//    | lambda
     ;
 
 //    bodyformula :
@@ -442,3 +429,12 @@ variable :
     ;
 
 // ---------------------------------------------------------------------------------------
+// Preferences
+// ---------------------------------------------------------------------------------------
+
+//preference :
+//    proceduralpreference
+//    | declarativepreference
+//    ;
+//
+//proceduralpreference :
