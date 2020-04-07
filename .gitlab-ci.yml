@@ -1,4 +1,4 @@
-git image: maven:latest
+image: maven:latest
 
 cache:
   paths:
