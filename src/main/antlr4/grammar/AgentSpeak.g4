@@ -38,31 +38,41 @@ belief :
     literal DOT
     ;
 
+initialgoal :
+    (achievementgoal | maintenancegoal) DOT
+    ;
+
+initialachievegoal :
+    (EXCLAMATIONMARK)  literal DOT
+    ;
+
+initialmaintenancegoal :
+    (DOUBLEEXCLAMATIONMARK)  literal DOT
+    ;
 
 plan :
     ANNOTATION*
     plantrigger
     literal
+    ( COLON condition = expression )?
     plandefinition
     DOT
     ;
-
 
 /**
  * plan trigger
  */
 plantrigger :
-    ARITHMETICOPERATOR3 ( EXCLAMATIONMARK | QUESTIONMARK )? STRONGNEGATION?
+    ( ARITHMETICOPERATOR3 )
+    ( QUESTIONMARK | EXCLAMATIONMARK | DOUBLEEXCLAMATIONMARK )?
     ;
-
-
 
 
 /**
  * plan definition
  */
 plandefinition :
-    ( COLON expression )? RIGHTARROWDOUBLE body
+     RIGHTARROWDOUBLE body
     ;
 
 /**
@@ -114,11 +124,10 @@ body :
 /**
  * basic executable formula
  */
-bodyformula :
+    bodyformula :
     beliefaction
     | testgoal
     | achievementgoal
-    | maintenancegoal
     | primitiveaction
     ;
 
@@ -155,13 +164,13 @@ expression :
  * belief-action operator
  */
 beliefaction :
-    ARITHMETICOPERATOR3 STRONGNEGATION? literal
+    ARITHMETICOPERATOR3 literal
     ;
 
 
-maintenancegoal :
-    ARITHMETICOPERATOR3 DOUBLEEXCLAMATIONMARK STRONGNEGATION? literal
-    ;
+//maintenancegoal :
+//    ARITHMETICOPERATOR3 DOUBLEEXCLAMATIONMARK STRONGNEGATION? literal
+//    ;
 
 ///**
 // * test-goal / -rule action
@@ -171,7 +180,7 @@ maintenancegoal :
 //    ;
 
 testgoal :
-    QUESTIONMARK
+    ( QUESTIONMARK )
     ( literal )
     ;
 
@@ -183,11 +192,16 @@ achievementgoal :
     ( literal )
     ;
 
+maintenancegoal :
+    ( DOUBLEEXCLAMATIONMARK )
+    ( literal )
+    ;
 
 
 primitiveaction :
     ( HASH )
-    ( literal )
+    ( ATOM )
+    (termlist)*
     ;
 
 // ---------------------------------------------------------------------------------------

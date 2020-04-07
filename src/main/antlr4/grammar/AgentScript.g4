@@ -53,7 +53,7 @@ backward_mechanism : transition ( COLON list_ext_states ) ? LE list_transitions 
 //////////////////////////////////////
 
 operator : outcome_operator | action_operator ;
-outcome_operator : primitive_intent ( COLON list_ext_states ) ? EVENTUALLY_PRODUCES list_beliefs DOT ;
+outcome_operator : primitive_intent ( COLON  ) ? EVENTUALLY_PRODUCES list_beliefs DOT ;
 action_operator : primitive_intent ( COLON list_ext_states ) ? PRODUCES transition_formula DOT ;
 
 //////////////////////////////////////

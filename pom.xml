@@ -65,15 +65,13 @@
                 <artifactId>antlr4-maven-plugin</artifactId>
                 <version>4.7.2</version>
                 <configuration>
-                    <libDirectory>${basedir}/src/main/antlr4/grammar</libDirectory>
+                    <libDirectory>${basedir}/src/main/antlr4/grammar/</libDirectory>
                 </configuration>
                 <executions>
                     <execution>
                         <configuration>
                             <arguments>
                                 <argument>-visitor</argument>
-                                <argument>-package</argument>
-                                <argument>grammar</argument>
                             </arguments>
                         </configuration>
                         <id>antlr</id>

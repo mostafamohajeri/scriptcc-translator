@@ -231,11 +231,11 @@ ATOM :
 /**
  * rule to represent the initial goal
  */
-INITIALGOAL :
-    EXCLAMATIONMARK
-    ATOM
-    DOT
-    ;
+//INITIALGOAL :
+//    EXCLAMATIONMARK
+//    ATOM
+//    DOT
+//    ;
 
 
 // --- character structures ------------------------------------------------------------------------------------------------------------------------------------
@@ -287,9 +287,9 @@ fragment MAXIMUMVALUE      : 'maximumvalue';
 fragment MINIMUMVALUE      : 'minimumvalue';
 fragment NAN               : 'notanumber';
 
-fragment AND               : '&&' | 'and';
-fragment OR                : '||' | 'or';
-fragment XOR               : '^' | 'xor';
+fragment AND               : '&&' ;
+fragment OR                : '||' ;
+fragment XOR               : '^' ;
 
 fragment TRUE              : 'true' | 'success';
 fragment FALSE             : 'false' | 'fail';
@@ -320,7 +320,7 @@ fragment LESSEQUAL         : '<=';
 fragment GREATER           : '>';
 fragment GREATEREQUAL      : '>=';
 fragment EQUAL             : '==';
-fragment NOTEQUAL          : '\\==' | '!=';
+fragment NOTEQUAL          : '!=';
 
 
 fragment POW               : '**';

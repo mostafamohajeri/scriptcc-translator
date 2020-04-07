@@ -34,7 +34,20 @@ import AgentSpeak;
  * initial grammar rule
  **/
 agent :
-    belief*
-    INITIALGOAL*
-    plan*
+    initialbeliefs?
+    initialgoals?
+    plans?
+    ;
+
+
+initialbeliefs:
+    belief+
+    ;
+
+initialgoals:
+    initialgoal+
+    ;
+
+plans:
+    plan+
     ;
