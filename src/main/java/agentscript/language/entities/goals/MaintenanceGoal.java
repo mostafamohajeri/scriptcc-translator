@@ -1,5 +1,7 @@
-package agentscript.language.entities;
+package agentscript.language.entities.goals;
 
+import agentscript.language.entities.Atom;
+import agentscript.language.entities.Literal;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -10,7 +12,7 @@ import lombok.NoArgsConstructor;
 public class MaintenanceGoal extends Goal{
     Literal literal;
 
-    public static Goal empty() {
-        return MaintenanceGoal.from(Literal.builder().atom(Atom.from("null")).build());
+    public static MaintenanceGoal empty() {
+        return new MaintenanceGoal();
     }
 }

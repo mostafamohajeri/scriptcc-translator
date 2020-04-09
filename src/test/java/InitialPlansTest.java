@@ -1,5 +1,4 @@
-import agentscript.language.entities.AchievementGoal;
-import agentscript.language.entities.MaintenanceGoal;
+
 import agentscript.language.visitor.CAgentVisitor;
 import grammar.AgentLexer;
 import grammar.AgentParser;
@@ -9,13 +8,32 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.hamcrest.Matchers.equalTo;
 import static org.junit.Assert.assertThat;
 
 public class InitialPlansTest {
 
-    private String code = "a(2). b(m). !!~a(10). !!m(10). !c(d(s),m('aaa')). +!m : x(X) && (x(D) || m(1))mv => !m(1).";
+    private String code =
+                    " belief(2)." +
+                    " proposition_1." +
+                    " !!~m_goal_1(10)." +
+                    " !!m_goal_2(10)." +
+                    " !goal( d(s) ,m('aaa') )." +
+                    " +!~m :" +
+                        " x(X) && (x(D) || m(1)) && X==D => " +
+                            " !goal(1);" +
+                            " !goal(m);" +
+                            " #action(X,1);" +
+                            " ?test_goal(M);" +
+                            " +belief(b,M)" +
+                        "." +
+                    " +!m => " +
+                            " !goal(1);" +
+                            " !goal(m);" +
+                            " #action(X,1);" +
+                            " ?test_goal(M);" +
+                            " +belief(b,M)" +
+                        ".";
 
     private AgentParser parser;
 
@@ -41,8 +59,9 @@ public class InitialPlansTest {
     public void testCountGoals() {
         CAgentVisitor agentVisitor = new CAgentVisitor();
         agentVisitor.visit(parser.agent());
-        assertThat(agentVisitor.getFactory().getM_plans().size(),equalTo(1));
-
+        assertThat(agentVisitor.getFactory().getM_plans().size(),equalTo(2));
+        assertThat(agentVisitor.getFactory().getM_plans().get(0).getPlanDefinition().getSteps().size(),equalTo(5));
+        assertThat(agentVisitor.getFactory().getM_plans().get(1).getPlanDefinition().getSteps().size(),equalTo(5));
     }
 
 

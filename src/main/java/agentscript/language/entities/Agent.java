@@ -1,5 +1,6 @@
 package agentscript.language.entities;
 
+import agentscript.language.entities.goals.InitialGoal;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Singular;

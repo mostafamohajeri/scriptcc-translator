@@ -5,6 +5,10 @@ import agentscript.language.entities.expression.BinaryExpression;
 import agentscript.language.entities.expression.Expression;
 import agentscript.language.entities.expression.NegationExpression;
 import agentscript.language.entities.expression.TermExpression;
+import agentscript.language.entities.goals.AchievementGoal;
+import agentscript.language.entities.goals.Goal;
+import agentscript.language.entities.goals.MaintenanceGoal;
+import agentscript.language.entities.goals.TestGoal;
 import grammar.AgentBaseVisitor;
 import grammar.AgentParser;
 import lombok.Getter;
@@ -27,6 +31,7 @@ public class CAgentVisitor extends AgentBaseVisitor<Optional<Object>> {
         ctx.belief().stream().map(this::visitBelief).map(i -> (Literal) i.orElse(Literal.empty())).forEach(factory::addInitialBelief);
 
         return Optional.empty();
+
     }
 
     @Override
@@ -46,6 +51,7 @@ public class CAgentVisitor extends AgentBaseVisitor<Optional<Object>> {
         ).map(i -> (Goal) i.orElse(Goal.empty())).forEach(factory::addInitialGoal);
 
         return Optional.empty();
+
     }
 
     @Override
@@ -56,25 +62,78 @@ public class CAgentVisitor extends AgentBaseVisitor<Optional<Object>> {
 
     @Override
     public Optional<Object> visitPlan(AgentParser.PlanContext ctx) {
-        Plan.PlanBuilder planBuilder = Plan.builder()
-                .trigger(
-                        (PlanTrigger) visitPlantrigger(ctx.plantrigger()).orElse(PlanTrigger.from(ActionOperator.NONE, PlanOperator.NONE))
-                )
-                .literal(
-                        (Literal) visitLiteral(ctx.literal()).orElse(Literal.empty())
-                );
+        Plan.PlanBuilder planBuilder = Plan.builder();
 
-        if (Objects.nonNull(ctx.condition)) {
+        if (Objects.nonNull(ctx.plantrigger()))
+            planBuilder
+                    .trigger(
+                            (PlanTrigger) visitPlantrigger(ctx.plantrigger()).orElse(PlanTrigger.from(ActionOperator.NONE, PlanOperator.NONE))
+                    );
+
+        if (Objects.nonNull(ctx.literal()))
+            planBuilder
+                    .literal(
+                            (Literal) visitLiteral(ctx.literal()).orElse(Literal.empty())
+                    );
+
+        if (Objects.nonNull(ctx.condition))
             planBuilder.expression((Expression) visitExpression(ctx.condition).orElse(Expression.empty()));
-        }
+
+
+        if (Objects.nonNull(ctx.plandefinition()))
+            planBuilder.planDefinition((PlanDefinition) visitPlandefinition(ctx.plandefinition()).orElse(PlanDefinition.empty()));
+
 
         return Optional.of(planBuilder.build());
     }
 
     @Override
+    public Optional<Object> visitPlandefinition(AgentParser.PlandefinitionContext ctx) {
+
+        if (Objects.nonNull(ctx.body()))
+            return visitBody(ctx.body());
+
+        return Optional.empty();
+
+    }
+
+    @Override
+    public Optional<Object> visitBody(AgentParser.BodyContext ctx) {
+        PlanDefinition.PlanDefinitionBuilder builder = PlanDefinition.builder();
+
+        ctx.bodyformula().forEach(formula -> {
+
+                    if (Objects.nonNull(formula.beliefaction())) {
+
+                        builder.step((BeliefAction) visitBeliefaction(formula.beliefaction()).orElse(BeliefAction.empty()));
+
+                    } else if (Objects.nonNull(formula.achievementgoal())) {
+
+                        builder.step((AchievementGoal) visitAchievementgoal(formula.achievementgoal()).orElse(AchievementGoal.empty()));
+
+                    } else if (Objects.nonNull(formula.primitiveaction())) {
+
+                        builder.step((PrimitiveAction) visitPrimitiveaction(formula.primitiveaction()).orElse(PrimitiveAction.empty()));
+
+                    } else if (Objects.nonNull(formula.testgoal())) {
+
+                        builder.step((TestGoal) visitTestgoal(formula.testgoal()).orElse(TestGoal.empty()));
+
+                    } else {
+
+                    }
+
+                }
+        );
+
+        return Optional.of(builder.build());
+    }
+
+    @Override
     public Optional<Object> visitExpression(AgentParser.ExpressionContext ctx) {
+
         if (Objects.nonNull(ctx.term()))
-            return Optional.of(TermExpression.from( (Term) visitTerm(ctx.term()).orElse(Term.empty())));
+            return Optional.of(TermExpression.from((Term) visitTerm(ctx.term()).orElse(Term.empty())));
 
         else if (Objects.nonNull(ctx.DEFAULTNEGATION()))
             return Optional.of(NegationExpression.from((Expression) visitExpression(ctx.single).orElse(Expression.empty())));
@@ -82,28 +141,46 @@ public class CAgentVisitor extends AgentBaseVisitor<Optional<Object>> {
         else if (Objects.nonNull(ctx.LEFTROUNDBRACKET()) && Objects.nonNull(ctx.RIGHTROUNDBRACKET()))
             return visitExpression(ctx.single);
 
-        else if (Objects.nonNull(ctx.rhs) && Objects.nonNull(ctx.lhs)) {
+        else if (Objects.nonNull(ctx.rhs) && Objects.nonNull(ctx.lhs))
             return Optional.of(BinaryExpression.from(
                     (Expression) visitExpression(ctx.lhs).orElse(Expression.empty()),
                     ctx.binaryoperator.getText(),
                     (Expression) visitExpression(ctx.rhs).orElse(Expression.empty())
             ));
-        }
+
 
         return Optional.empty();
+
     }
+
 
     @Override
     public Optional<Object> visitPlantrigger(AgentParser.PlantriggerContext ctx) {
+
         ActionOperator actionOperator = ActionOperator.NONE;
         PlanOperator planOperator = PlanOperator.NONE;
-        if (Objects.nonNull(ctx.ARITHMETICOPERATOR3()) && ctx.ARITHMETICOPERATOR3().getText().equals(ActionOperator.PLUS.getValue())) actionOperator = ActionOperator.PLUS;
-        else if (Objects.nonNull(ctx.ARITHMETICOPERATOR3()) && ctx.ARITHMETICOPERATOR3().getText().equals(ActionOperator.MINUS.getValue())) actionOperator = ActionOperator.MINUS;
-        if (Objects.nonNull(ctx.EXCLAMATIONMARK())) planOperator = PlanOperator.EXCLAMATION;
-        else if (Objects.nonNull(ctx.DOUBLEEXCLAMATIONMARK())) planOperator = PlanOperator.DOUBLEEXCLAMATION;
-        else if (Objects.nonNull(ctx.QUESTIONMARK())) planOperator = PlanOperator.QUESTION;
+
+        if (Objects.nonNull(ctx.ARITHMETICOPERATOR3())
+                && ctx.ARITHMETICOPERATOR3().getText().equals(ActionOperator.PLUS.getValue()))
+            actionOperator = ActionOperator.PLUS;
+        else if (Objects.nonNull(ctx.ARITHMETICOPERATOR3())
+                && ctx.ARITHMETICOPERATOR3().getText().equals(ActionOperator.MINUS.getValue()))
+            actionOperator = ActionOperator.MINUS;
+
+        if (Objects.nonNull(ctx.EXCLAMATIONMARK()))
+            planOperator = PlanOperator.EXCLAMATION;
+        else if (Objects.nonNull(ctx.DOUBLEEXCLAMATIONMARK()))
+            planOperator = PlanOperator.DOUBLEEXCLAMATION;
+        else if (Objects.nonNull(ctx.QUESTIONMARK()))
+            planOperator = PlanOperator.QUESTION;
 
         return Optional.of(PlanTrigger.from(actionOperator, planOperator));
+
+    }
+
+    @Override
+    public Optional<Object> visitTestgoal(AgentParser.TestgoalContext ctx) {
+        return Optional.of(TestGoal.from((Literal) visitLiteral(ctx.literal()).orElse(Literal.empty())));
     }
 
     @Override
@@ -114,6 +191,32 @@ public class CAgentVisitor extends AgentBaseVisitor<Optional<Object>> {
     @Override
     public Optional<Object> visitMaintenancegoal(AgentParser.MaintenancegoalContext ctx) {
         return Optional.of(MaintenanceGoal.from((Literal) visitLiteral(ctx.literal()).orElse(Literal.empty())));
+    }
+
+    @Override
+    public Optional<Object> visitBeliefaction(AgentParser.BeliefactionContext ctx) {
+
+        ActionOperator actionOperator = ActionOperator.NONE;
+
+        if (Objects.nonNull(ctx.ARITHMETICOPERATOR3())
+                && ctx.ARITHMETICOPERATOR3().getText().equals(ActionOperator.PLUS.getValue()))
+            actionOperator = ActionOperator.PLUS;
+        else if (Objects.nonNull(ctx.ARITHMETICOPERATOR3())
+                && ctx.ARITHMETICOPERATOR3().getText().equals(ActionOperator.MINUS.getValue()))
+            actionOperator = ActionOperator.MINUS;
+
+        return Optional.of(BeliefAction.from(actionOperator,
+                (Literal) visitLiteral(ctx.literal()).orElse(Literal.empty())));
+
+    }
+
+    @Override
+    public Optional<Object> visitPrimitiveaction(AgentParser.PrimitiveactionContext ctx) {
+        return Optional.of(
+                PrimitiveAction.from(
+                        Atom.from(ctx.ATOM().getText()),
+                        Objects.nonNull(ctx.termlist()) ? (List) this.visitTermlist(ctx.termlist()).orElse(Collections.EMPTY_LIST) : Collections.EMPTY_LIST
+                ));
     }
 
     @Override

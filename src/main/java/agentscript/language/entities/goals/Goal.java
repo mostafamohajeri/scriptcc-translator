@@ -1,7 +1,5 @@
-package agentscript.language.entities;
+package agentscript.language.entities.goals;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 

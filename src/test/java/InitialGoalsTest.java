@@ -1,5 +1,6 @@
-import agentscript.language.entities.AchievementGoal;
-import agentscript.language.entities.MaintenanceGoal;
+
+import agentscript.language.entities.goals.AchievementGoal;
+import agentscript.language.entities.goals.MaintenanceGoal;
 import agentscript.language.visitor.CAgentVisitor;
 import grammar.AgentLexer;
 import grammar.AgentParser;
@@ -8,8 +9,6 @@ import org.antlr.v4.runtime.CommonTokenStream;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-
-import java.util.Optional;
 
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.CoreMatchers.instanceOf;

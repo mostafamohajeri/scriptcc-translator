@@ -20,6 +20,6 @@ public class Literal extends Term {
     List<Term> terms;
 
     public static Literal empty() {
-        return Literal.builder().atom(Atom.from("null")).build();
+        return Literal.builder().build();
     }
 }

@@ -1,12 +1,10 @@
 package agentscript.language.visitor;
 
 import agentscript.language.entities.*;
-import grammar.AgentParser;
+import agentscript.language.entities.goals.Goal;
 import lombok.Getter;
 
-import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.Set;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 public class AgentFactory {

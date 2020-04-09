@@ -201,7 +201,7 @@ maintenancegoal :
 primitiveaction :
     ( HASH )
     ( ATOM )
-    (termlist)*
+    (termlist)
     ;
 
 // ---------------------------------------------------------------------------------------
