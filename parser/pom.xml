@@ -2,16 +2,14 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>antlr4grammars</artifactId>
+        <groupId>nl.uva.sne.cci</groupId>
+        <version>1.0-SNAPSHOT</version>
+    </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>nl.uva.sne.cci</groupId>
-    <artifactId>antlr4grammars</artifactId>
-    <packaging>pom</packaging>
-    <version>1.0-SNAPSHOT</version>
-    <modules>
-        <module>java-generator</module>
-        <module>parser</module>
-    </modules>
+    <artifactId>parser</artifactId>
 
     <properties>
         <maven.compiler.target>11</maven.compiler.target>
@@ -70,7 +68,7 @@
                 <artifactId>antlr4-maven-plugin</artifactId>
                 <version>4.7.2</version>
                 <configuration>
-                    <libDirectory>parser/src/main/antlr4/grammar/</libDirectory>
+                    <libDirectory>src/main/antlr4/grammar/</libDirectory>
                 </configuration>
                 <executions>
                     <execution>
@@ -107,5 +105,6 @@
             </plugin>
         </plugins>
     </build>
+
 
 </project>

@@ -1,5 +1,7 @@
-package agentscript.language.entities;
+package agentscript.language.entities.agent;
 
+import agentscript.language.entities.InitialBelief;
+import agentscript.language.entities.Plan;
 import agentscript.language.entities.goals.InitialGoal;
 import lombok.Builder;
 import lombok.Getter;
@@ -10,7 +12,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 @Builder
 @Getter
-public class Agent {
+public class Agent implements IAgent {
     @Singular
     List<InitialBelief> initialBeliefs = new CopyOnWriteArrayList<>();
     @Singular

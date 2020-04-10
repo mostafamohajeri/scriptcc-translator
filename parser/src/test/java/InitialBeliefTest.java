@@ -1,4 +1,3 @@
-import agentscript.language.entities.Agent;
 import agentscript.language.visitor.CAgentVisitor;
 import grammar.*;
 import org.antlr.v4.runtime.ANTLRInputStream;
@@ -6,8 +5,6 @@ import org.antlr.v4.runtime.CommonTokenStream;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import simplelang.ob.Clazz;
-import simplelang.visitors.ClazzVisitor;
 
 import java.util.Optional;
 

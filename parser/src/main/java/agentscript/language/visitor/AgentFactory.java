@@ -1,6 +1,6 @@
 package agentscript.language.visitor;
 
-import agentscript.language.entities.Agent;
+import agentscript.language.entities.agent.Agent;
 import agentscript.language.entities.InitialBelief;
 import agentscript.language.entities.Plan;
 import agentscript.language.entities.goals.InitialGoal;
