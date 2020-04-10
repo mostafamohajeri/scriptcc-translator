@@ -7,6 +7,6 @@ import lombok.NoArgsConstructor;
 @Getter
 @AllArgsConstructor(staticName = "from")
 @NoArgsConstructor
-public class TermValue<T> extends Term{
+public class TermValue<T> extends Term {
     T data;
 }

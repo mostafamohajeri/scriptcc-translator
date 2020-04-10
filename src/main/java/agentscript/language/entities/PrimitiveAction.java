@@ -1,7 +1,9 @@
 package agentscript.language.entities;
 
 import agentscript.language.entities.goals.IPlanStep;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.util.List;
 

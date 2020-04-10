@@ -14,5 +14,7 @@ public class PlanDefinition {
     @Singular
     private List<IPlanStep> steps;
 
-    public static PlanDefinition empty() {return  PlanDefinition.builder().build();}
+    public static PlanDefinition empty() {
+        return PlanDefinition.builder().build();
+    }
 }

@@ -42,7 +42,7 @@ public class InitialBeliefTest {
     public void testCountBeliefs() {
         CAgentVisitor agentVisitor = new CAgentVisitor();
         Optional<Object> traverseResult = agentVisitor.visit(parser.agent());
-        assertThat(agentVisitor.getFactory().getM_initialbeliefs().size(),equalTo(4));
+        assertThat(agentVisitor.getFactory().getAgent().getInitialBeliefs().size(),equalTo(4));
     }
 
 

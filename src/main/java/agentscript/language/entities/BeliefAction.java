@@ -2,7 +2,6 @@ package agentscript.language.entities;
 
 import agentscript.language.entities.goals.IPlanStep;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 

@@ -1,10 +1,10 @@
 package agentscript.language.entities;
 
-import lombok.Builder;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 @Getter
-@Builder
+@AllArgsConstructor(staticName = "from")
 public class InitialBelief {
     Literal literal;
 }

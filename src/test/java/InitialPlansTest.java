@@ -18,7 +18,7 @@ public class InitialPlansTest {
                     " proposition_1." +
                     " !!~m_goal_1(10)." +
                     " !!m_goal_2(10)." +
-                    " !goal( d(s) ,m('aaa') )." +
+                    " !goal( d(s), m('aaa') )." +
                     " +!~m :" +
                         " x(X) && (x(D) || m(1)) && X==D => " +
                             " !goal(1);" +
@@ -59,9 +59,9 @@ public class InitialPlansTest {
     public void testCountGoals() {
         CAgentVisitor agentVisitor = new CAgentVisitor();
         agentVisitor.visit(parser.agent());
-        assertThat(agentVisitor.getFactory().getM_plans().size(),equalTo(2));
-        assertThat(agentVisitor.getFactory().getM_plans().get(0).getPlanDefinition().getSteps().size(),equalTo(5));
-        assertThat(agentVisitor.getFactory().getM_plans().get(1).getPlanDefinition().getSteps().size(),equalTo(5));
+        assertThat(agentVisitor.getFactory().getAgent().getPlans().size(),equalTo(2));
+        assertThat(agentVisitor.getFactory().getAgent().getPlans().get(0).getPlanDefinition().getSteps().size(),equalTo(5));
+        assertThat(agentVisitor.getFactory().getAgent().getPlans().get(1).getPlanDefinition().getSteps().size(),equalTo(5));
     }
 
 

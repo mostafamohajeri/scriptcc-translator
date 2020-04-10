@@ -6,11 +6,15 @@ import lombok.Getter;
 import lombok.Singular;
 
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 @Builder
 @Getter
 public class Agent {
-    @Singular List<InitialBelief> initialBeliefs;
-    @Singular List<InitialGoal> initialGoals;
-    @Singular List<Plan> plans;
+    @Singular
+    List<InitialBelief> initialBeliefs = new CopyOnWriteArrayList<>();
+    @Singular
+    List<InitialGoal> initialGoals = new CopyOnWriteArrayList<>();
+    @Singular
+    List<Plan> plans = new CopyOnWriteArrayList<>();
 }

@@ -42,7 +42,7 @@ public class InitialGoalsTest {
     public void testCountGoals() {
         CAgentVisitor agentVisitor = new CAgentVisitor();
         agentVisitor.visit(parser.agent());
-        assertThat(agentVisitor.getFactory().getM_initialGoals().size(),equalTo(3));
+        assertThat(agentVisitor.getFactory().getAgent().getInitialGoals().size(),equalTo(3));
 
     }
 
@@ -50,9 +50,9 @@ public class InitialGoalsTest {
     public void testTypeOfGoals() {
         CAgentVisitor agentVisitor = new CAgentVisitor();
         agentVisitor.visit(parser.agent());
-        assertThat(agentVisitor.getFactory().getM_initialGoals().size(),equalTo(3));
-        assertThat(agentVisitor.getFactory().getM_initialGoals().get(0), instanceOf(MaintenanceGoal.class));
-        assertThat(agentVisitor.getFactory().getM_initialGoals().get(2), instanceOf(AchievementGoal.class));
+        assertThat(agentVisitor.getFactory().getAgent().getInitialGoals().size(),equalTo(3));
+        assertThat(agentVisitor.getFactory().getAgent().getInitialGoals().get(0).getGoal(), instanceOf(MaintenanceGoal.class));
+        assertThat(agentVisitor.getFactory().getAgent().getInitialGoals().get(2).getGoal(), instanceOf(AchievementGoal.class));
     }
 
 

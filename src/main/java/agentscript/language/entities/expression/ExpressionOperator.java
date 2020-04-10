@@ -21,5 +21,6 @@ public enum ExpressionOperator {
     AND("&&"),
     OR("||");
 
-    @Getter  private String value;
+    @Getter
+    private String value;
 }

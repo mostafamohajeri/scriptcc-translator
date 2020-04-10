@@ -1,14 +1,8 @@
 package agentscript.language.visitor;
 
 import agentscript.language.entities.*;
-import agentscript.language.entities.expression.BinaryExpression;
-import agentscript.language.entities.expression.Expression;
-import agentscript.language.entities.expression.NegationExpression;
-import agentscript.language.entities.expression.TermExpression;
-import agentscript.language.entities.goals.AchievementGoal;
-import agentscript.language.entities.goals.Goal;
-import agentscript.language.entities.goals.MaintenanceGoal;
-import agentscript.language.entities.goals.TestGoal;
+import agentscript.language.entities.expression.*;
+import agentscript.language.entities.goals.*;
 import grammar.AgentBaseVisitor;
 import grammar.AgentParser;
 import lombok.Getter;
@@ -24,11 +18,22 @@ public class CAgentVisitor extends AgentBaseVisitor<Optional<Object>> {
     @Getter
     private AgentFactory factory = new AgentFactory();
 
+    @Override
+    public Optional<Object> visitAgent(AgentParser.AgentContext ctx) {
+
+        factory.startAgent();
+
+        super.visitAgent(ctx);
+
+        factory.endAgent();
+
+        return Optional.empty();
+    }
 
     @Override
     public Optional<Object> visitInitialbeliefs(AgentParser.InitialbeliefsContext ctx) {
 
-        ctx.belief().stream().map(this::visitBelief).map(i -> (Literal) i.orElse(Literal.empty())).forEach(factory::addInitialBelief);
+        ctx.belief().stream().map(this::visitBelief).map(i -> (InitialBelief) i.orElse(Literal.empty())).forEach(factory::addInitialBelief);
 
         return Optional.empty();
 
@@ -36,7 +41,7 @@ public class CAgentVisitor extends AgentBaseVisitor<Optional<Object>> {
 
     @Override
     public Optional<Object> visitBelief(AgentParser.BeliefContext ctx) {
-        return visitLiteral(ctx.literal());
+        return Optional.of(InitialBelief.from((Literal) visitLiteral(ctx.literal()).orElse(Literal.empty())));
     }
 
     @Override
@@ -48,7 +53,7 @@ public class CAgentVisitor extends AgentBaseVisitor<Optional<Object>> {
                     else if (Objects.nonNull(g.maintenancegoal())) return visitMaintenancegoal(g.maintenancegoal());
                     else return Optional.empty();
                 }
-        ).map(i -> (Goal) i.orElse(Goal.empty())).forEach(factory::addInitialGoal);
+        ).map(i -> InitialGoal.from((Goal) i.orElse(Goal.empty()))).forEach(factory::addInitialGoal);
 
         return Optional.empty();
 

@@ -1,24 +1,16 @@
 package agentscript.language.visitor;
 
-import agentscript.language.entities.*;
-import agentscript.language.entities.goals.Goal;
+import agentscript.language.entities.Agent;
+import agentscript.language.entities.InitialBelief;
+import agentscript.language.entities.Plan;
+import agentscript.language.entities.goals.InitialGoal;
 import lombok.Getter;
-
-import java.util.List;
-import java.util.concurrent.CopyOnWriteArrayList;
 
 public class AgentFactory {
 
     Agent.AgentBuilder agentBuilder;
+    @Getter
     Agent agent;
-    @Getter
-    private final List<Literal> m_initialbeliefs = new CopyOnWriteArrayList<>();
-
-    @Getter
-    private final List<Goal> m_initialGoals = new CopyOnWriteArrayList<>();
-
-    @Getter
-    private final List<Plan> m_plans = new CopyOnWriteArrayList<>();
 
     public void startAgent() {
         agentBuilder = Agent.builder();
@@ -28,16 +20,16 @@ public class AgentFactory {
         agent = agentBuilder.build();
     }
 
-    public void addInitialBelief(Literal l) {
-        m_initialbeliefs.add(l);
+    public void addInitialBelief(InitialBelief l) {
+        agentBuilder.initialBelief(l);
     }
 
-    public void addInitialGoal(Goal g) {
-        m_initialGoals.add(g);
+    public void addInitialGoal(InitialGoal g) {
+        agentBuilder.initialGoal(g);
     }
 
     public void addPlan(Plan p) {
-        m_plans.add(p);
+        agentBuilder.plan(p);
     }
 
 }

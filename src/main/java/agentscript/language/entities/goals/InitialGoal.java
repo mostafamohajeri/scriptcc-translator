@@ -1,10 +1,10 @@
 package agentscript.language.entities.goals;
 
-import lombok.Builder;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 @Getter
-@Builder
-public class InitialGoal extends Goal{
+@AllArgsConstructor(staticName = "from")
+public class InitialGoal {
     Goal goal;
 }
