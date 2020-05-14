@@ -1,9 +1,12 @@
-import java.security.PublicKey;
+import java.io.File;
 
 public class Main {
 
-public static void main(String[] args) {
-    Translator t = new Translator();
-    t.translate("In.asl","Test3.scala.stg","GeneratedAgent1");
-}
+    public static void main(String[] args) {
+        Translator t = new Translator();
+        t.translate(new File(t.getClass().getClassLoader().getResource("In.asl").getFile()).getAbsolutePath(),
+                new File(t.getClass().getClassLoader().getResource("Test3.scala.stg").getFile()).getAbsolutePath(),
+                "GeneratedAgent1");
+    }
+
 }

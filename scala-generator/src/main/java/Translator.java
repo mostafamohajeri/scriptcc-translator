@@ -25,8 +25,8 @@ public class Translator {
         return parser;
     }
 
-    private void createParser(String fileName) {
-        parser = Translator.parse(readResourceLineByLine(fileName));
+    private void createParser(String file) {
+        parser = Translator.parse(readLineByLine(file));
     }
     private void deleteParser() {
         parser = null;
@@ -34,33 +34,28 @@ public class Translator {
 
 
 
-    public  void translate(String inputName, String templateName,String generatedAgentName) {
-        createParser(inputName);
+    public  void translate(String input, String  template,String generatedName) {
+        createParser(input);
 
         CAgentVisitor agentVisitor = new CAgentVisitor();
         agentVisitor.visit(parser.agent());
 
-        ST st = new ST(readResourceLineByLine(templateName));
+        ST st = new ST(readLineByLine(template));
         st.add("initialGoals", agentVisitor.getFactory().getAgent().getInitialGoals());
         st.add("goalPlans", agentVisitor.getFactory().getAgent().getGoalPlans());
-        st.add("class_name", generatedAgentName);
+        st.add("class_name", generatedName);
         String output = st.render();
-        writeFile(String.format("scala-playground/src/main/scala/example/%s.scala",generatedAgentName),output);
+        writeFile(String.format("scala-playground/src/main/scala/example/%s.scala",generatedName),output);
         System.out.println(output);
         deleteParser();
     }
 
 
-    private  String readResourceLineByLine(String fileName)
+    private  String readLineByLine(String file)
     {
-
-
-        ClassLoader classLoader = getClass().getClassLoader();
-        File file = new File(classLoader.getResource(fileName).getFile());
-
         StringBuilder contentBuilder = new StringBuilder();
 
-        try (Stream<String> stream = Files.lines( Paths.get(file.getAbsolutePath()), StandardCharsets.UTF_8))
+        try (Stream<String> stream = Files.lines( Paths.get(file), StandardCharsets.UTF_8))
         {
             stream.forEach(s -> contentBuilder.append(s).append("\n"));
         }
