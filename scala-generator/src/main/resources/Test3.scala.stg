@@ -1,142 +1,83 @@
-package test
+package example
 
-import akka.actor.typed.{ActorRef, ActorSystem, Behavior, Props}
+import akka.actor.typed.{Behavior}
 import akka.actor.typed.scaladsl.{ActorContext, Behaviors}
 
+
 import scala.util.Random
-import scala.collection.mutable
-
-trait IMessage {
-}
-
-trait IGoalMessage {
-  def goal() : IGoal
-  def params(): IParams
-}
-
-trait IGoal {
-
-}
-
-trait IParams {
-
-}
+object <class_name> {
 
 
-trait IPlan {
+    object Intention {
 
-}
+      def apply(): Behavior[IGoalMessage] = Behaviors.receive {
+        (context, message) => message.goal() match {
 
-class CPlan[G,P](goal: G, params: P) extends IPlan
+        < goalPlans :  { goalPlan |
+      case <class_name>.<goalPlan.goal.atom.name> =>
+           <class_name>.<goalPlan.goal.atom.name>.execute(context,message.params().asInstanceOf[<class_name>.<goalPlan.goal.atom.name>.Parameters])
 
+         } >
+          case _ =>
+            context.log.error("This actor can not handle goal of type {}", message.goal())
+        }
+          Behaviors.same
+      }
 
-case class GoalMessage(p_goal: IGoal,p_params: IParams) extends IGoalMessage {
-  override def goal(): IGoal = p_goal
-  override def params(): IParams = p_params
+    }
 
-}
+    object Agent extends IAgent {
 
-object MAS {
+      def initGoals() = List[IGoalMessage](
+        < initialGoals : { initialGoal |
+        GoalMessage(<initialGoal.goal.literal.atom.name>,<initialGoal.goal.literal.atom.name>.Parameters(<initialGoal.goal.literal.terms : { term | List( <term.value> }; separator=", ">)))}; separator=",\n ">
+      )
 
-  def apply(): Behavior[Int] = Behaviors.receive {
-    (context, message) =>
-    {
-      for (a \<- 1 to message) {
-        val name = "Agent_" + Random.nextInt(Int.MaxValue)
-        val ref = context.spawn(Agent(name), "Agent_" + Random.nextInt(Int.MaxValue))
-        Agent.initGoals().foreach(ref.tell)
+      def apply(name: String): Behavior[IGoalMessage] = Behaviors.receive {
+        (context, message) =>
+        {
+          context.spawn(Intention(), "GOAL_" + Random.nextInt(Int.MaxValue)) ! GoalMessage(message.goal(),message.params())
+        }
+          Behaviors.same
       }
     }
-      Behaviors.same
-  }
-}
 
-object Intention {
+    <goalPlans : { goalPlan |
 
-  def apply(): Behavior[IGoalMessage] = Behaviors.receive {
-    (context, message) => message.goal() match {
+     object <goalPlan.goal.atom.name> extends IGoal {
+        case class Parameters(l_params: List[AnyVal]) extends IParams {\}
 
-    < goalPlans :  { goalPlan |
-  case test.<goalPlan.goal.atom.name> =>
-       test.<goalPlan.goal.atom.name>.execute(context,message.params().asInstanceOf[test.<goalPlan.goal.atom.name>.Parameters])
+       def execute(actorContext: ActorContext[IGoalMessage], params: Parameters): Unit = {
+        <goalPlan.goal.terms : { term | var <term.name> = params.l_params(<i0>)  }; separator=", ">
+        <goalPlan.plans : { plan |
+            if (<plan.expression.st4>)
 
-     } >
-      case _ =>
-        context.log.error("This actor can not handle goal of type {}", message.goal())
+                plan<i0>(actorContext,params)
+       \}
+       } >
+
+        < goalPlan.plans : { plan |
+             def plan<i0>(actorContext: ActorContext[IGoalMessage], params: Parameters): Unit = {
+
+                <plan.literal.terms : { term | var <term.name> = params.l_params(<i0>)  }; separator=", ">
+
+                <plan.planDefinition.steps : { step |
+                <if(step.achieve)>
+                    <step.writableName>.execute(actorContext,<step.writableName>.Parameters(List( <step.writableTerms : { term | <term.value> } > )))
+                <elseif(step.primitive)>
+                    PrimitiveAction.execute(actorContext,PrimitiveAction.Parameters(() => <step.writableName>( <step.writableTerms : { term | <term.value> } > )))
+                <endif>
+                } >
+            \}
+        } >
+
+     \}
+
+     }>
+
+
+    object Comparer {
+        def compare(lhs: AnyVal,rhs: AnyVal, operator: String) : Boolean = true
     }
-      Behaviors.same
-  }
 
 }
-
-object Agent {
-
-  def initGoals() = List[IGoalMessage](
-    < initialGoals : { initialGoal |
-    GoalMessage(<initialGoal.goal.literal.atom.name>,<initialGoal.goal.literal.atom.name>.Parameters(<initialGoal.goal.literal.terms : { term | List( <term.value> }; separator=", ">)))}; separator=",\n ">
-  )
-
-  def apply(name: String): Behavior[IGoalMessage] = Behaviors.receive {
-    (context, message) =>
-    {
-      context.spawn(Intention(), "GOAL_" + Random.nextInt(Int.MaxValue)) ! GoalMessage(message.goal(),message.params())
-    }
-      Behaviors.same
-  }
-}
-
-<goalPlans : { goalPlan |
-
- object <goalPlan.goal.atom.name> extends IGoal {
-    case class Parameters(l_params: List[AnyVal]) extends IParams {\}
-
-   def execute(actorContext: ActorContext[IGoalMessage], params: Parameters): Unit = {
-    <goalPlan.goal.terms : { term | var <term.name> = params.l_params(<i0>)  }; separator=", ">
-    <goalPlan.plans : { plan |
-        if (<plan.expression.st4>)
-
-            plan<i0>(actorContext,params)
-   \}
-   } >
-
-    < goalPlan.plans : { plan |
-         def plan<i0>(actorContext: ActorContext[IGoalMessage], params: Parameters): Unit = {
-
-            <plan.literal.terms : { term | var <term.name> = params.l_params(<i0>)  }; separator=", ">
-
-            <plan.planDefinition.steps : { step |
-            <if(step.achieve)>
-                <step.writableName>.execute(actorContext,<step.writableName>.Parameters(List( <step.writableTerms : { term | <term.value> } > )))
-            <elseif(step.primitive)>
-                PrimitiveAction.execute(actorContext,PrimitiveAction.Parameters(() => <step.writableName>( <step.writableTerms : { term | <term.value> } > )))
-            <endif>
-            } >
-        \}
-    } >
-
- \}
-
- }>
-
-
-object Comparer {
-    def compare(lhs: AnyVal,rhs: AnyVal, operator: String) : Boolean = true
-}
-
-
-object PrimitiveAction extends IGoal {
-
-  case class Parameters(v1: () => Unit) extends IParams
-
-  def execute(actorContext: ActorContext[IGoalMessage], params: Parameters): Unit = {
-    params.v1()
-  }
-}
-
-object Ring extends App {
-  val system: ActorSystem[Int] =
-    ActorSystem(MAS(), "MAS")
-  system ! 1
-}
-
-

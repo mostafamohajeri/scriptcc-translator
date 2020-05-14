@@ -34,7 +34,7 @@ public class Translator {
 
 
 
-    public  void translate(String inputName, String templateName) {
+    public  void translate(String inputName, String templateName,String generatedAgentName) {
         createParser(inputName);
 
         CAgentVisitor agentVisitor = new CAgentVisitor();
@@ -43,8 +43,9 @@ public class Translator {
         ST st = new ST(readResourceLineByLine(templateName));
         st.add("initialGoals", agentVisitor.getFactory().getAgent().getInitialGoals());
         st.add("goalPlans", agentVisitor.getFactory().getAgent().getGoalPlans());
+        st.add("class_name", generatedAgentName);
         String output = st.render();
-        writeFile("out/test.scala",output);
+        writeFile(String.format("scala-playground/src/main/scala/example/%s.scala",generatedAgentName),output);
         System.out.println(output);
         deleteParser();
     }
