@@ -9,4 +9,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class TermValue<T> extends Term {
     T data;
+
+    public String getValue() { return data.toString(); }
 }

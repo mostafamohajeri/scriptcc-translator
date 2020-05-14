@@ -7,4 +7,7 @@ public class Expression {
     public static Expression empty() {
         return new Expression();
     }
+    public String getSt4() {
+        return "EXPRESSION";
+    }
 }

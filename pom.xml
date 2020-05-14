@@ -11,6 +11,7 @@
     <modules>
         <module>java-generator</module>
         <module>parser</module>
+        <module>scala-generator</module>
     </modules>
 
     <properties>

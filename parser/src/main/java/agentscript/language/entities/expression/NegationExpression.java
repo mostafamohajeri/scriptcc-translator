@@ -7,4 +7,8 @@ import lombok.Getter;
 @Getter
 public class NegationExpression extends Expression {
     Expression expression;
+
+    public String getSt4() {
+        return String.format("!(%s)",expression.getSt4());
+    }
 }

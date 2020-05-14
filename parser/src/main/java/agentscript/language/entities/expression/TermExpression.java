@@ -8,4 +8,9 @@ import lombok.Getter;
 @AllArgsConstructor(staticName = "from")
 public class TermExpression extends Expression {
     Term term;
+
+    public String getSt4() {
+        return term.getValue();
+    }
+
 }

@@ -1,19 +1,32 @@
 package agentscript.language.entities.goals;
 
 import agentscript.language.entities.Literal;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import agentscript.language.entities.Term;
+import agentscript.language.entities.agent.Agent;
+import lombok.*;
+import org.stringtemplate.v4.ST;
+
+import java.util.List;
 
 
-@AllArgsConstructor(staticName = "from")
+@RequiredArgsConstructor(staticName = "from")
 @NoArgsConstructor
 @Getter
 public class AchievementGoal extends Goal implements IPlanStep {
-    Literal literal;
+    @NonNull Literal literal;
+
+    public String getWritableName () {return literal.getAtom().getName();}
+    public List<Term>  getWritableTerms() {return literal.getTerms();}
+    public final boolean achieve = true;
 
     public static AchievementGoal empty() {
         return new AchievementGoal();
     }
+
+//    public void setGoalPlan(Agent context) {
+//        goalPlan = context.getGoalPlans().stream().filter(
+//                goalPlan -> this.literal.getAtom().equals(goalPlan.getGoal().getAtom()) && this.literal.getTerms().size() == goalPlan.getGoal().getTerms().size()
+//        ).findFirst().get();
+//    }
 
 }
