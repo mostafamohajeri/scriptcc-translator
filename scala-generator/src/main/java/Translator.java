@@ -46,7 +46,7 @@ public class Translator {
         st.add("goalPlans", agentVisitor.getFactory().getAgent().getGoalPlans());
         st.add("class_name", generatedName);
         String output = st.render();
-        writeFile(String.format("scala-playground/src/main/scala/example/%s.scala",generatedName),output);
+        writeFile(String.format("out/%s.scala",generatedName),output);
         System.out.println(output);
         deleteParser();
     }
