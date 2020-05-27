@@ -149,7 +149,7 @@ body :
  */
 expression :
     DEFAULTNEGATION single=expression
-    | LEFTROUNDBRACKET single=expression RIGHTROUNDBRACKET
+
     | lhs=expression binaryoperator=ARITHMETICOPERATOR1 rhs=expression
     | lhs=expression binaryoperator=ARITHMETICOPERATOR2 rhs=expression
     | lhs=expression binaryoperator=ARITHMETICOPERATOR3 rhs=expression
@@ -157,6 +157,7 @@ expression :
     | lhs=expression binaryoperator=LOGICALOPERATOR1 rhs=expression
     | lhs=expression binaryoperator=LOGICALOPERATOR2 rhs=expression
     | lhs=expression binaryoperator=LOGICALOPERATOR3 rhs=expression
+    | LEFTROUNDBRACKET single=expression RIGHTROUNDBRACKET
     | term
     ;
 

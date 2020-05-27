@@ -10,7 +10,7 @@ public class TermExpression extends Expression {
     Term term;
 
     public String getSt4() {
-        return term.getValue();
+        return term.getRefName();
     }
 
 }

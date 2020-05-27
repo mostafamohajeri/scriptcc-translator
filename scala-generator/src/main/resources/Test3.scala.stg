@@ -1,8 +1,9 @@
-package example
 
-import akka.actor.typed.{Behavior}
+import scala.collection.mutable
+import akka.actor.typed.{ActorRef, Behavior}
+import akka.actor.typed.receptionist.{Receptionist, ServiceKey}
 import akka.actor.typed.scaladsl.{ActorContext, Behaviors}
-
+import alice.tuprolog.{Term,Struct,Number}
 
 import scala.util.Random
 object <class_name> {
@@ -10,12 +11,15 @@ object <class_name> {
 
     object Intention {
 
-      def apply(): Behavior[IGoalMessage] = Behaviors.receive {
+      def apply(executionContext: ExecutionContext): Behavior[IGoalMessage] = Behaviors.setup { context =>
+
+        val l_executionContext = executionContext.copy(intention = context)
+        Behaviors.receive {
         (context, message) => message.goal() match {
 
         < goalPlans :  { goalPlan |
       case <class_name>.<goalPlan.goal.atom.name> =>
-           <class_name>.<goalPlan.goal.atom.name>.execute(context,message.params().asInstanceOf[<class_name>.<goalPlan.goal.atom.name>.Parameters])
+           <class_name>.<goalPlan.goal.atom.name>.execute(l_executionContext,message.params().asInstanceOf[<class_name>.<goalPlan.goal.atom.name>.Parameters])
 
          } >
           case _ =>
@@ -23,49 +27,72 @@ object <class_name> {
         }
           Behaviors.same
       }
-
+     }
     }
 
-    object Agent extends IAgent {
+     object Agent extends IAgent {
 
-      def initGoals() = List[IGoalMessage](
-        < initialGoals : { initialGoal |
-        GoalMessage(<initialGoal.goal.literal.atom.name>,<initialGoal.goal.literal.atom.name>.Parameters(<initialGoal.goal.literal.terms : { term | List( <term.value> }; separator=", ">)))}; separator=",\n ">
-      )
+        def initGoals() = List[IGoalMessage](
+          < initialGoals : { initialGoal |
+          GoalMessage(<initialGoal.goal.literal.atom.name>,<initialGoal.goal.literal.atom.name>.Parameters(List( <initialGoal.goal.literal.terms : { term | <term.refName> }; separator=", ">)),null)}; separator=",\n ">
+        )
 
-      def apply(name: String): Behavior[IGoalMessage] = Behaviors.receive {
-        (context, message) =>
-        {
-          context.spawn(Intention(), "GOAL_" + Random.nextInt(Int.MaxValue)) ! GoalMessage(message.goal(),message.params())
+        def initBeliefs() = List[Term](
+          < initialBeliefs : { ib |
+          <ib.literal.refName>
+          }; separator=",\n " >
+        )
+
+        def apply(name: String,yellowPages: ActorRef[IMessage]): Behavior[IMessage] = {
+                    Behaviors.setup { context =>
+                      val yp : ActorRef[IMessage] = yellowPages
+                      val bb : BeliefBase = BeliefBaseFactory()
+                      bb.assert(initBeliefs())
+                Behaviors.receive {
+          (context, message) => message match {
+
+          case GoalMessage(_, _, _) =>
+            context.spawn(Intention(ExecutionContext(context,null,yp,bb)), "GOAL_" + Random.nextInt(Int.MaxValue)) ! message.asInstanceOf[GoalMessage]
+          case StartMessage() =>
+            initGoals().foreach(context.self.tell)
+              }
+              Behaviors.same
+          }
         }
-          Behaviors.same
       }
     }
 
     <goalPlans : { goalPlan |
 
      object <goalPlan.goal.atom.name> extends IGoal {
-        case class Parameters(l_params: List[AnyVal]) extends IParams {\}
+        case class Parameters(l_params: List[Term]) extends IParams {\}
 
-       def execute(actorContext: ActorContext[IGoalMessage], params: Parameters): Unit = {
-        <goalPlan.goal.terms : { term | var <term.name> = params.l_params(<i0>)  }; separator=", ">
+       def execute(executionContext: ExecutionContext, params: Parameters): Unit = {
+        <goalPlan.goal.terms : { term | var <term.name> = params.l_params(<i0>)  }; separator="\n">
+        var vars = new mutable.HashMap[String,Term]
         <goalPlan.plans : { plan |
-            if (<plan.expression.st4>)
+        //plan <i0>
+                vars.clear()
+                vars +=( <plan.literal.terms : { term | "<term.name>" -> params.l_params(<i0>)}; separator=", "> )
+                val r<i0> = executionContext.beliefBase.query(<plan.expression.st4>)
 
-                plan<i0>(actorContext,params)
+                if (r<i0>.result) {
+                    r<i0>.bindings foreach { case (k, v) => vars += (k -> v) \}
+                    plan<i0>(executionContext,vars)
+                    return
+                \}
+                } >
        \}
-       } >
+
 
         < goalPlan.plans : { plan |
-             def plan<i0>(actorContext: ActorContext[IGoalMessage], params: Parameters): Unit = {
-
-                <plan.literal.terms : { term | var <term.name> = params.l_params(<i0>)  }; separator=", ">
+             def plan<i0>(executionContext: ExecutionContext, vars: mutable.HashMap[String,Term]): Unit = {
 
                 <plan.planDefinition.steps : { step |
                 <if(step.achieve)>
-                    <step.writableName>.execute(actorContext,<step.writableName>.Parameters(List( <step.writableTerms : { term | <term.value> } > )))
+                    <step.writableName>.execute(executionContext,<step.writableName>.Parameters(List( <step.writableTerms : { term | <term.refName> } ; separator=", "> )))
                 <elseif(step.primitive)>
-                    PrimitiveAction.execute(actorContext,PrimitiveAction.Parameters(() => <step.writableName>( <step.writableTerms : { term | <term.value> } > )))
+                    PrimitiveAction.execute(executionContext,PrimitiveAction.Parameters(() => <step.writableName>( <step.writableTerms : { term | <term.refName> } ; separator=", "> )))
                 <endif>
                 } >
             \}
@@ -79,5 +106,10 @@ object <class_name> {
     object Comparer {
         def compare(lhs: AnyVal,rhs: AnyVal, operator: String) : Boolean = true
     }
+
+       def add_and_print(num1 : Any,num2:Any): Unit = {
+          println(" sum of " + num1.asInstanceOf[Double] + " and " + num2.asInstanceOf[Double] + " = " )
+          println(num1.asInstanceOf[Double] + num2.asInstanceOf[Double])
+        }
 
 }

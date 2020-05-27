@@ -1,0 +1,29 @@
+   object Agent extends IAgent {
+
+      def initGoals() = List[IGoalMessage](
+        < initialGoals : { initialGoal |
+        GoalMessage(<initialGoal.goal.literal.atom.name>,<initialGoal.goal.literal.atom.name>.Parameters(List( <initialGoal.goal.literal.terms : { term | Term.createTerm(<term.value>) }; separator=", ">)),null)}; separator=",\n ">
+      )
+
+      def initBeliefs() = List[Term](
+        < initialBeliefs : { ib |
+        Term.createTerm("<ib>")
+        }; separator=",\n " >
+      )
+
+      def apply(name: String,yellowPages: ActorRef[IMessage]): Behavior[IMessage] = {
+                  Behaviors.setup { context =>
+                    val yp : ActorRef[IMessage] = yellowPages
+              Behaviors.receive {
+        (context, message) => message match {
+
+        case GoalMessage(_, _, _) =>
+          context.spawn(Intention(), "GOAL_" + Random.nextInt(Int.MaxValue)) ! message.asInstanceOf[GoalMessage]
+        case StartMessage() =>
+          initGoals().foreach(context.self.tell)
+            }
+            Behaviors.same
+        }
+      }
+    }
+  }

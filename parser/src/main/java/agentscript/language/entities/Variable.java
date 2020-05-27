@@ -7,5 +7,8 @@ import lombok.Getter;
 @AllArgsConstructor(staticName = "from")
 public class Variable extends Term {
     String name;
+    @Override
     public String getValue() { return this.name; }
+    @Override
+    public String getRefName() { return "VarManager.bindVar(\"" + this.name + "\", vars)"; }
 }

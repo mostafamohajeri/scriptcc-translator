@@ -5,9 +5,9 @@ import lombok.Getter;
 
 @AllArgsConstructor(staticName = "from")
 @Getter
-public class NegationExpression extends Expression {
+public class NestedExpression extends Expression {
     Expression expression;
     public String getSt4() {
-        return String.format("Struct.of(\"not\",%s)",expression.getSt4());
+        return String.format("Struct.of(%s)",expression.getSt4());
     }
 }

@@ -81,6 +81,22 @@ STRING :
  */
 STRONGNEGATION : '~';
 DEFAULTNEGATION : 'not';
+
+
+/**
+ * relational operator
+ */
+RELATIONALOPERATOR :
+    ASSIGN // as unifiable
+    | EQUAL
+    | NOTEQUAL
+    | NOTUNIFIABLE
+    | LESS
+    | LESSEQUAL
+    | GREATER
+    | GREATEREQUAL
+    ;
+
 /**
  * assign operator
  */
@@ -92,18 +108,6 @@ ASSIGNOPERATOR :
     | ASSIGNDIVIDE
     | ASSIGNMODULO
     | ASSIGNPOW
-    ;
-
-/**
- * relational operator
- */
-RELATIONALOPERATOR :
-    EQUAL
-    | NOTEQUAL
-    | LESS
-    | LESSEQUAL
-    | GREATER
-    | GREATEREQUAL
     ;
 
 /**
@@ -316,11 +320,12 @@ fragment DECREMENT         : '--';
 
 
 fragment LESS              : '<';
-fragment LESSEQUAL         : '<=';
+fragment LESSEQUAL         : '=<';
 fragment GREATER           : '>';
 fragment GREATEREQUAL      : '>=';
 fragment EQUAL             : '==';
-fragment NOTEQUAL          : '!=';
+fragment NOTEQUAL          : '!==';
+fragment NOTUNIFIABLE      : '!=';
 
 
 fragment POW               : '**';

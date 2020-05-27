@@ -7,5 +7,5 @@ public class Term {
         return new Term();
     }
     public String getValue() {return "TERM";}
-
+    public String getRefName() {return "TERM";}
 }

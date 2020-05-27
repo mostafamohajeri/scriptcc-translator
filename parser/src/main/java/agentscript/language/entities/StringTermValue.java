@@ -1,5 +1,5 @@
 package agentscript.language.entities;
 
-public class StringTermValue extends TermValue<String> {
 
+public class StringTermValue extends TermValue<String> {
 }

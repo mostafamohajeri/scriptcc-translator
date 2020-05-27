@@ -42,6 +42,7 @@ public class Translator {
 
         ST st = new ST(readLineByLine(template));
         st.add("initialGoals", agentVisitor.getFactory().getAgent().getInitialGoals());
+        st.add("initialBeliefs", agentVisitor.getFactory().getAgent().getInitialBeliefs());
         st.add("goalPlans", agentVisitor.getFactory().getAgent().getGoalPlans());
         st.add("class_name", generatedName);
         String output = st.render();
