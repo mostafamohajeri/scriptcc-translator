@@ -1,4 +1,4 @@
-# The `scriptcc` AgentScript cross-compiler Framework
+# `scriptcc`: the AgentScript cross-compiler Framework
 
 ## Modules
 
