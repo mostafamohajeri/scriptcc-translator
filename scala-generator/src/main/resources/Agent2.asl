@@ -20,6 +20,7 @@ distance("charlie",8).
 
 +!hi(Y) : greet(Z,X) && Z != "friendly" && not friend(Y) && distance(Y,D) =>
     !say_distance(Y,D);
+    #inform("agent2","hello");
     #println(X, Y).
 
 +!say_distance(Y,D) : D == 10  =>

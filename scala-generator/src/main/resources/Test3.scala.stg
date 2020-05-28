@@ -13,13 +13,13 @@ object <class_name> {
 
       def apply(executionContext: ExecutionContext): Behavior[IGoalMessage] = Behaviors.setup { context =>
 
-        val l_executionContext = executionContext.copy(intention = context)
+        implicit val l_executionContext = executionContext.copy(intention = context)
         Behaviors.receive {
         (context, message) => message.goal() match {
 
         < goalPlans :  { goalPlan |
       case <class_name>.<goalPlan.goal.atom.name> =>
-           <class_name>.<goalPlan.goal.atom.name>.execute(l_executionContext,message.params().asInstanceOf[<class_name>.<goalPlan.goal.atom.name>.Parameters])
+           <class_name>.<goalPlan.goal.atom.name>.execute(message.params().asInstanceOf[<class_name>.<goalPlan.goal.atom.name>.Parameters])
 
          } >
           case _ =>
@@ -43,11 +43,12 @@ object <class_name> {
           }; separator=",\n " >
         )
 
-        def apply(name: String,yellowPages: ActorRef[IMessage]): Behavior[IMessage] = {
+        def apply(name: String,yellowPages: ActorRef[IMessage],MAS: ActorRef[IMessage]): Behavior[IMessage] = {
                     Behaviors.setup { context =>
                       val yp : ActorRef[IMessage] = yellowPages
                       val bb : BeliefBase = BeliefBaseFactory()
                       bb.assert(initBeliefs())
+                      MAS ! ReadyMessage(context.self)
                 Behaviors.receive {
           (context, message) => message match {
 
@@ -67,7 +68,7 @@ object <class_name> {
      object <goalPlan.goal.atom.name> extends IGoal {
         case class Parameters(l_params: List[Term]) extends IParams {\}
 
-       def execute(executionContext: ExecutionContext, params: Parameters): Unit = {
+       def execute(params: Parameters) (implicit executionContext: ExecutionContext) : Unit = {
         <goalPlan.goal.terms : { term | var <term.name> = params.l_params(<i0>)  }; separator="\n">
         var vars = new mutable.HashMap[String,Term]
         <goalPlan.plans : { plan |
@@ -78,7 +79,7 @@ object <class_name> {
 
                 if (r<i0>.result) {
                     r<i0>.bindings foreach { case (k, v) => vars += (k -> v) \}
-                    plan<i0>(executionContext,vars)
+                    plan<i0>(vars)
                     return
                 \}
                 } >
@@ -86,13 +87,13 @@ object <class_name> {
 
 
         < goalPlan.plans : { plan |
-             def plan<i0>(executionContext: ExecutionContext, vars: mutable.HashMap[String,Term]): Unit = {
+             def plan<i0>(vars: mutable.HashMap[String,Term])(implicit executionContext: ExecutionContext): Unit = {
 
                 <plan.planDefinition.steps : { step |
                 <if(step.achieve)>
-                    <step.writableName>.execute(executionContext,<step.writableName>.Parameters(List( <step.writableTerms : { term | <term.refName> } ; separator=", "> )))
+                    <step.writableName>.execute(<step.writableName>.Parameters(List( <step.writableTerms : { term | <term.refName> } ; separator=", "> )))
                 <elseif(step.primitive)>
-                    PrimitiveAction.execute(executionContext,PrimitiveAction.Parameters(() => <step.writableName>( <step.writableTerms : { term | <term.refName> } ; separator=", "> )))
+                    PrimitiveAction.execute(PrimitiveAction.Parameters(() => <step.writableName>( <step.writableTerms : { term | <term.refName> } ; separator=", "> )))
                 <endif>
                 } >
             \}
@@ -102,6 +103,14 @@ object <class_name> {
 
      }>
 
+
+    def inform( dest: Term,  message:Term) (implicit executionContext: ExecutionContext): Unit = {
+        executionContext.yellowPages ! ActorMessage(
+          dest.toString.replace("'",""),
+          new BeliefMessage(message,executionContext.agent.self),
+          executionContext.agent.self
+        )
+    }
 
     object Comparer {
         def compare(lhs: AnyVal,rhs: AnyVal, operator: String) : Boolean = true

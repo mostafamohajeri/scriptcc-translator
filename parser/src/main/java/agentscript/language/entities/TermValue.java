@@ -20,7 +20,7 @@ public class TermValue<T> extends Term {
 
         if (data instanceof String) {
             String s = (String) data;
-            return "Term.createTerm(\"'" + s.substring(1, s.length()-1) + "'\")";
+            return "Term.createTerm(\"'" + s + "'\")";
         }
         else if (data instanceof Number)
             return "Number.of(" + data.toString() + ")";
