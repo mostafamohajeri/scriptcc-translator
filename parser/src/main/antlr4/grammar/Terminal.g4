@@ -27,6 +27,7 @@ lexer grammar Terminal;
 
 // --- keyword rules must be first rules -----------------------------------------------------------------------------------------------------------------------
 
+FOR                        : 'for';
 
 /**
  * boolean values
@@ -345,6 +346,8 @@ fragment LOWERCASELETTER   : [a-z];
 fragment UPPERCASELETTER   : [A-Z];
 fragment DIGIT             : [0-9];
 fragment DIGITSEQUENCE     : DIGIT+ ('.' DIGIT+)?;
+
+
 
 
 

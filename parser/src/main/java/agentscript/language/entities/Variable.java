@@ -8,7 +8,7 @@ import lombok.Getter;
 public class Variable extends Term {
     String name;
     @Override
-    public String getValue() { return this.name; }
+    public String getValue() {  return "vars(\"" + this.name + "\")";  }
     @Override
     public String getRefName() { return "VarManager.bindVar(\"" + this.name + "\", vars)"; }
 }

@@ -1,4 +1,5 @@
 
+
 import scala.collection.mutable
 import akka.actor.typed.{ActorRef, Behavior}
 import akka.actor.typed.receptionist.{Receptionist, ServiceKey}
@@ -15,15 +16,14 @@ object <class_name> {
 
         implicit val l_executionContext = executionContext.copy(intention = context)
         Behaviors.receive {
-        (context, message) => message.goal() match {
+        (context, message) => message.goal match {
 
         < goalPlans :  { goalPlan |
       case <class_name>.<goalPlan.goal.atom.name> =>
-           <class_name>.<goalPlan.goal.atom.name>.execute(message.params().asInstanceOf[<class_name>.<goalPlan.goal.atom.name>.Parameters])
+           <class_name>.<goalPlan.goal.atom.name>.execute(message.params.asInstanceOf[<class_name>.<goalPlan.goal.atom.name>.Parameters])
 
          } >
-          case _ =>
-            context.log.error("This actor can not handle goal of type {}", message.goal())
+          context.log.error("This actor can not handle goal of type {}", message.goal)
         }
           Behaviors.same
       }
@@ -32,35 +32,36 @@ object <class_name> {
 
      object Agent extends IAgent {
 
-        def initGoals() = List[IGoalMessage](
+        override def agentName(): String = "<class_name>"
+
+        def initGoals = List[(IGoal,IParams)](
           < initialGoals : { initialGoal |
-          GoalMessage(<initialGoal.goal.literal.atom.name>,<initialGoal.goal.literal.atom.name>.Parameters(List( <initialGoal.goal.literal.terms : { term | <term.refName> }; separator=", ">)),null)}; separator=",\n ">
+          (<initialGoal.goal.literal.atom.name>,<initialGoal.goal.literal.atom.name>.Parameters(List( <initialGoal.goal.literal.terms : { term | <term.refName> }; separator=", ">)))}; separator=",\n ">
         )
 
-        def initBeliefs() = List[Term](
+        def initBeliefs = List[Term](
           < initialBeliefs : { ib |
           <ib.literal.refName>
           }; separator=",\n " >
         )
 
         def apply(name: String,yellowPages: ActorRef[IMessage],MAS: ActorRef[IMessage]): Behavior[IMessage] = {
-                    Behaviors.setup { context =>
-                      val yp : ActorRef[IMessage] = yellowPages
-                      val bb : BeliefBase = BeliefBaseFactory()
-                      bb.assert(initBeliefs())
-                      MAS ! ReadyMessage(context.self)
+              Behaviors.setup { context =>
+                val yp : ActorRef[IMessage] = yellowPages
+                val bb : BeliefBase = BeliefBaseFactory()
+                bb.assert(initBeliefs)
+                MAS ! ReadyMessage(context.self)
                 Behaviors.receive {
-          (context, message) => message match {
-
-          case GoalMessage(_, _, _) =>
-            context.spawn(Intention(ExecutionContext(context,null,yp,bb)), "GOAL_" + Random.nextInt(Int.MaxValue)) ! message.asInstanceOf[GoalMessage]
-          case StartMessage() =>
-            initGoals().foreach(context.self.tell)
+                  (context, message) => message match {
+                    case GoalMessage(_, _, _,_) =>
+                      context.spawn(Intention(ExecutionContext(context,null,yp,bb,name)), "GOAL_" + Random.nextInt(Int.MaxValue)) ! message.asInstanceOf[GoalMessage]
+                    case StartMessage() =>
+                      initGoals.foreach( tuple => context.self.tell(GoalMessage(context.self,name,tuple._1,tuple._2)))
+                  }
+                    Behaviors.same
+                }
               }
-              Behaviors.same
-          }
-        }
-      }
+            }
     }
 
     <goalPlans : { goalPlan |
@@ -93,7 +94,7 @@ object <class_name> {
                 <if(step.achieve)>
                     <step.writableName>.execute(<step.writableName>.Parameters(List( <step.writableTerms : { term | <term.refName> } ; separator=", "> )))
                 <elseif(step.primitive)>
-                    PrimitiveAction.execute(PrimitiveAction.Parameters(() => <step.writableName>( <step.writableTerms : { term | <term.refName> } ; separator=", "> )))
+                    PrimitiveAction.execute(PrimitiveAction.Parameters(() => <step.writableName>( <step.writableTerms : { term | <term.value> } ; separator=", "> )))
                 <endif>
                 } >
             \}
@@ -104,13 +105,13 @@ object <class_name> {
      }>
 
 
-    def inform( dest: Term,  message:Term) (implicit executionContext: ExecutionContext): Unit = {
-        executionContext.yellowPages ! ActorMessage(
-          dest.toString.replace("'",""),
-          new BeliefMessage(message,executionContext.agent.self),
-          executionContext.agent.self
-        )
-    }
+  def inform( dest: String,  message:Term) (implicit executionContext: ExecutionContext): Unit = {
+    executionContext.yellowPages ! ActorMessage(
+      dest.toString.replace("'",""),
+      new BeliefMessage(message,executionContext.agent.self,executionContext.name),
+      executionContext.agent.self
+    )
+  }
 
     object Comparer {
         def compare(lhs: AnyVal,rhs: AnyVal, operator: String) : Boolean = true

@@ -1,7 +1,10 @@
 package agentscript.language.visitor;
 
 import agentscript.language.entities.*;
-import agentscript.language.entities.expression.*;
+import agentscript.language.entities.expression.BinaryExpression;
+import agentscript.language.entities.expression.Expression;
+import agentscript.language.entities.expression.NegationExpression;
+import agentscript.language.entities.expression.TermExpression;
 import agentscript.language.entities.goals.*;
 import grammar.AgentBaseVisitor;
 import grammar.AgentParser;
@@ -124,6 +127,10 @@ public class CAgentVisitor extends AgentBaseVisitor<Optional<Object>> {
 
                         builder.step((TestGoal) visitTestgoal(formula.testgoal()).orElse(TestGoal.empty()));
 
+                    } else if (Objects.nonNull(formula.for_loop())) {
+
+                        builder.step((ForLoop) visitFor_loop(formula.for_loop()).orElse(ForLoop.empty()));
+
                     } else {
 
                     }
@@ -181,6 +188,30 @@ public class CAgentVisitor extends AgentBaseVisitor<Optional<Object>> {
 
         return Optional.of(PlanTrigger.from(actionOperator, planOperator));
 
+    }
+
+    @Override
+    public Optional<Object> visitFor_loop(AgentParser.For_loopContext ctx) {
+        ForLoop.ForLoopBuilder builder = ForLoop.builder();
+
+        builder.expression((Expression) visitExpression(ctx.expression()).orElse(Expression.empty()));
+
+        ctx.bodyformula().forEach(formula -> {
+                    if (Objects.nonNull(formula.beliefaction())) {
+                        builder.step((BeliefAction) visitBeliefaction(formula.beliefaction()).orElse(BeliefAction.empty()));
+                    } else if (Objects.nonNull(formula.achievementgoal())) {
+                        builder.step((AchievementGoal) visitAchievementgoal(formula.achievementgoal()).orElse(AchievementGoal.empty()));
+                    } else if (Objects.nonNull(formula.primitiveaction())) {
+                        builder.step((PrimitiveAction) visitPrimitiveaction(formula.primitiveaction()).orElse(PrimitiveAction.empty()));
+                    } else if (Objects.nonNull(formula.testgoal())) {
+                        builder.step((TestGoal) visitTestgoal(formula.testgoal()).orElse(TestGoal.empty()));
+                    } else if (Objects.nonNull(formula.for_loop())) {
+                        builder.step((ForLoop) visitFor_loop(formula.for_loop()).orElse(ForLoop.empty()));
+                    } else {
+                    }
+                }
+        );
+        return Optional.of(builder.build());
     }
 
     @Override

@@ -12,7 +12,3 @@
 
 +!sum(A,B) : true =>
     #add_and_print(B,A).
-
-
-
-a(B) > ~a(B) : C.

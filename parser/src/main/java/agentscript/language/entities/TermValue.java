@@ -12,14 +12,14 @@ public class TermValue<T> extends Term {
 
     public String getValue() {
         if (data instanceof String)
-            return ((String) data).replace("\"","\\\"");
+            return ((String) data);
         else return data.toString();
     }
 
     public String getRefName() {
 
         if (data instanceof String) {
-            String s = (String) data;
+            String s = ((String) data).replace("\"","").replace("\'","");
             return "Term.createTerm(\"'" + s + "'\")";
         }
         else if (data instanceof Number)

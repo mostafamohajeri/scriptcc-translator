@@ -89,10 +89,12 @@ plandefinition :
  * block body
  */
 body :
+    (  bodyformula SEMICOLON )*
     bodyformula
-    ( SEMICOLON bodyformula )*
     ;
-//    body :
+
+
+
 //        repairformula
 //        ( SEMICOLON repairformula )*
 //        ;
@@ -124,11 +126,15 @@ body :
 /**
  * basic executable formula
  */
-    bodyformula :
-    beliefaction
+
+
+bodyformula :
+    for_loop
+    | beliefaction
     | testgoal
     | achievementgoal
     | primitiveaction
+
     ;
 
 //    bodyformula :
@@ -149,7 +155,6 @@ body :
  */
 expression :
     DEFAULTNEGATION single=expression
-
     | lhs=expression binaryoperator=ARITHMETICOPERATOR1 rhs=expression
     | lhs=expression binaryoperator=ARITHMETICOPERATOR2 rhs=expression
     | lhs=expression binaryoperator=ARITHMETICOPERATOR3 rhs=expression
@@ -446,6 +451,14 @@ variable :
 // ---------------------------------------------------------------------------------------
 // Preferences
 // ---------------------------------------------------------------------------------------
+
+
+for_loop :
+    FOR LEFTROUNDBRACKET expression RIGHTROUNDBRACKET
+        LEFTCURVEDBRACKET
+        (bodyformula SEMICOLON)*
+        RIGHTCURVEDBRACKET;
+
 
 //preference :
 //    proceduralpreference
