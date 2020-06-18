@@ -23,10 +23,5 @@ public class AchievementGoal extends Goal implements IPlanStep {
         return new AchievementGoal();
     }
 
-//    public void setGoalPlan(Agent context) {
-//        goalPlan = context.getGoalPlans().stream().filter(
-//                goalPlan -> this.literal.getAtom().equals(goalPlan.getGoal().getAtom()) && this.literal.getTerms().size() == goalPlan.getGoal().getTerms().size()
-//        ).findFirst().get();
-//    }
 
 }

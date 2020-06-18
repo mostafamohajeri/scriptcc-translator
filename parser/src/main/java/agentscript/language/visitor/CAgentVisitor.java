@@ -194,6 +194,7 @@ public class CAgentVisitor extends AgentBaseVisitor<Optional<Object>> {
     public Optional<Object> visitFor_loop(AgentParser.For_loopContext ctx) {
         ForLoop.ForLoopBuilder builder = ForLoop.builder();
 
+        builder.variable((Variable) visitVariable(ctx.variable()).orElse(Variable.empty()));
         builder.expression((Expression) visitExpression(ctx.expression()).orElse(Expression.empty()));
 
         ctx.bodyformula().forEach(formula -> {
@@ -232,14 +233,7 @@ public class CAgentVisitor extends AgentBaseVisitor<Optional<Object>> {
     @Override
     public Optional<Object> visitBeliefaction(AgentParser.BeliefactionContext ctx) {
 
-        ActionOperator actionOperator = ActionOperator.NONE;
-
-        if (Objects.nonNull(ctx.ARITHMETICOPERATOR3())
-                && ctx.ARITHMETICOPERATOR3().getText().equals(ActionOperator.PLUS.getValue()))
-            actionOperator = ActionOperator.PLUS;
-        else if (Objects.nonNull(ctx.ARITHMETICOPERATOR3())
-                && ctx.ARITHMETICOPERATOR3().getText().equals(ActionOperator.MINUS.getValue()))
-            actionOperator = ActionOperator.MINUS;
+        ActionOperator actionOperator = (ActionOperator) (visitBeliefactiontrigger(ctx.beliefactiontrigger()).orElse(ActionOperator.NONE));
 
         return Optional.of(BeliefAction.from(actionOperator,
                 (Literal) visitLiteral(ctx.literal()).orElse(Literal.empty())));
@@ -247,10 +241,27 @@ public class CAgentVisitor extends AgentBaseVisitor<Optional<Object>> {
     }
 
     @Override
+    public Optional<Object> visitBeliefactiontrigger(AgentParser.BeliefactiontriggerContext ctx) {
+
+            if(ctx.first.getText().equals(ActionOperator.PLUS.getValue()))
+                return Optional.of(ActionOperator.PLUS);
+            else if(ctx.first.getText().equals(ActionOperator.MINUS.getValue()))
+            {
+                if(Objects.nonNull(ctx.second) && ctx.second.getText().equals(ActionOperator.PLUS.getValue()))
+                    return Optional.of(ActionOperator.MINUSPLUS);
+                else if (Objects.isNull(ctx.second))
+                    return Optional.of(ActionOperator.MINUS);
+            }
+
+            return Optional.empty();
+
+    }
+
+    @Override
     public Optional<Object> visitPrimitiveaction(AgentParser.PrimitiveactionContext ctx) {
         return Optional.of(
                 PrimitiveAction.from(
-                        Atom.from(ctx.ATOM().getText()),
+                        Atom.from(ctx.REFERENCEATOM().getText().replace("#","")),
                         Objects.nonNull(ctx.termlist()) ? (List) this.visitTermlist(ctx.termlist()).orElse(Collections.EMPTY_LIST) : Collections.EMPTY_LIST
                 ));
     }
@@ -278,7 +289,8 @@ public class CAgentVisitor extends AgentBaseVisitor<Optional<Object>> {
             return this.visitVariable(ctx.variable());
         else if (Objects.nonNull(ctx.termvalue()))
             return this.visitTermvalue(ctx.termvalue());
-
+        else if (Objects.nonNull(ctx.primitiveaction()))
+            return this.visitPrimitiveaction(ctx.primitiveaction());
         return Optional.empty();
     }
 
@@ -300,9 +312,12 @@ public class CAgentVisitor extends AgentBaseVisitor<Optional<Object>> {
         else if (Objects.nonNull(ctx.STRING()))
             return Optional.of(StringTermValue.from(ctx.STRING().getText()));
 
-        else if (Objects.nonNull(ctx.NUMBER()))
+        else if (Objects.nonNull(ctx.NUMBER())) {
+            try{
+                return Optional.of(NumericTermValue.from(Long.valueOf(ctx.NUMBER().getText())));
+            } catch (Exception e) {}
             return Optional.of(NumericTermValue.from(Double.valueOf(ctx.NUMBER().getText())));
-
+        }
         return Optional.empty();
     }
 }

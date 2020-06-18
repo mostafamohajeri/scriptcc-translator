@@ -67,7 +67,9 @@ plantrigger :
     ( QUESTIONMARK | EXCLAMATIONMARK | DOUBLEEXCLAMATIONMARK )?
     ;
 
-
+beliefactiontrigger :
+    first=ARITHMETICOPERATOR3 (second=ARITHMETICOPERATOR3)?
+    ;
 /**
  * plan definition
  */
@@ -154,11 +156,11 @@ bodyformula :
  * expression rule
  */
 expression :
-    DEFAULTNEGATION single=expression
-    | lhs=expression binaryoperator=ARITHMETICOPERATOR1 rhs=expression
+    lhs=expression binaryoperator=ARITHMETICOPERATOR1 rhs=expression
     | lhs=expression binaryoperator=ARITHMETICOPERATOR2 rhs=expression
     | lhs=expression binaryoperator=ARITHMETICOPERATOR3 rhs=expression
     | lhs=expression binaryoperator=RELATIONALOPERATOR rhs=expression
+    | DEFAULTNEGATION single=expression
     | lhs=expression binaryoperator=LOGICALOPERATOR1 rhs=expression
     | lhs=expression binaryoperator=LOGICALOPERATOR2 rhs=expression
     | lhs=expression binaryoperator=LOGICALOPERATOR3 rhs=expression
@@ -166,11 +168,14 @@ expression :
     | term
     ;
 
+
+
+
 /**
  * belief-action operator
  */
 beliefaction :
-    ARITHMETICOPERATOR3 literal
+    beliefactiontrigger  literal
     ;
 
 
@@ -184,6 +189,12 @@ beliefaction :
 //testaction :
 //    QUESTIONMARK DOLLAR? ATOM
 //    ;
+
+for_loop :
+    FOR LEFTROUNDBRACKET variable IN expression RIGHTROUNDBRACKET
+        LEFTCURVEDBRACKET
+        (bodyformula SEMICOLON)*
+        RIGHTCURVEDBRACKET;
 
 testgoal :
     ( QUESTIONMARK )
@@ -205,8 +216,7 @@ maintenancegoal :
 
 
 primitiveaction :
-    ( HASH )
-    ( ATOM )
+    ( REFERENCEATOM )
     (termlist)
     ;
 
@@ -367,7 +377,8 @@ primitiveaction :
  * terms are non-predictable structures
  */
 term :
-    termvalue
+    primitiveaction
+    | termvalue
     | variable
     | literal
     ;
@@ -453,11 +464,6 @@ variable :
 // ---------------------------------------------------------------------------------------
 
 
-for_loop :
-    FOR LEFTROUNDBRACKET expression RIGHTROUNDBRACKET
-        LEFTCURVEDBRACKET
-        (bodyformula SEMICOLON)*
-        RIGHTCURVEDBRACKET;
 
 
 //preference :

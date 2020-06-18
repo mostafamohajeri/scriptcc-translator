@@ -28,6 +28,7 @@ lexer grammar Terminal;
 // --- keyword rules must be first rules -----------------------------------------------------------------------------------------------------------------------
 
 FOR                        : 'for';
+IN                         : 'in';
 
 /**
  * boolean values
@@ -96,20 +97,22 @@ RELATIONALOPERATOR :
     | LESSEQUAL
     | GREATER
     | GREATEREQUAL
+    | IS
     ;
+
 
 /**
  * assign operator
  */
-ASSIGNOPERATOR :
-    ASSIGN
-    | ASSIGNINCREMENT
-    | ASSIGNDECREMENT
-    | ASSIGNMULTIPLY
-    | ASSIGNDIVIDE
-    | ASSIGNMODULO
-    | ASSIGNPOW
-    ;
+//ASSIGNOPERATOR :
+//    ASSIGN
+//    | ASSIGNINCREMENT
+//    | ASSIGNDECREMENT
+//    | ASSIGNMULTIPLY
+//    | ASSIGNDIVIDE
+//    | ASSIGNMODULO
+//    | ASSIGNPOW
+//    ;
 
 /**
  * logical operator with precendece 1
@@ -156,6 +159,8 @@ ARITHMETICOPERATOR3 :
     PLUS
     | MINUS
     ;
+
+
 
 /**
  * unary operator
@@ -228,10 +233,17 @@ VARIABLEATOM :
 /**
  * atoms are defined like Prolog atoms
  */
+
 ATOM :
     LOWERCASELETTER
     ( LOWERCASELETTER | UPPERCASELETTER | DIGIT | SLASH | MINUS | UNDERSCORE )*
     ;
+
+REFERENCEATOM :
+     HASH ATOM
+     ( DOT ATOM )*
+     ;
+
 
 /**
  * rule to represent the initial goal
@@ -333,6 +345,7 @@ fragment POW               : '**';
 fragment MULTIPLY          : '*';
 fragment MODULO            : '%' | 'mod';
 
+fragment IS          : 'is';
 /**
  * string can be definied in single- and double-quotes
  */

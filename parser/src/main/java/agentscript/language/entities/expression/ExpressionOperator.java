@@ -19,7 +19,9 @@ public enum ExpressionOperator {
     GREATEREQUAL(">="),
     XOR("^"),
     AND("&&"),
-    OR("||");
+    OR("||"),
+    ASSIGN("="),
+    IS("is");
 
     @Getter
     private String value;

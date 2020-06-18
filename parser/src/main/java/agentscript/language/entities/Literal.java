@@ -23,6 +23,7 @@ public class Literal extends Term {
         return Literal.builder().build();
     }
 
+
     @Override
     public String getValue() {
         StringBuilder builder = new StringBuilder();

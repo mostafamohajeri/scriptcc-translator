@@ -10,6 +10,8 @@
         <module name="scalagenerator" />
         <module name="javagenerator" />
         <module name="parser" />
+        <module name="scala-generator" />
+        <module name="java-generator" />
       </profile>
     </annotationProcessing>
   </component>

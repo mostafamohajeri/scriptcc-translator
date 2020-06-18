@@ -17,8 +17,7 @@ public class BinaryExpression extends Expression {
     Expression rhs;
 
     public String getSt4() {
-
-
+        String out = String.format("Struct.of(\"%s\",%s,%s)",TUPOperator(operator), lhs.getSt4(),rhs.getSt4());
         return String.format("Struct.of(\"%s\",%s,%s)",TUPOperator(operator), lhs.getSt4(),rhs.getSt4());
     }
 
@@ -32,10 +31,16 @@ public class BinaryExpression extends Expression {
             case ">": return ">";
             case ">=": return ">=";
             case "=<": return "=<";
+            case "is": return "is";
             case "!==": return "\\\\==";
             case "!=": return "\\\\=";
+            case "+": return "+";
+            case "-": return "-";
+            case "*": return "*";
+            case "/": return "/";
+            case "**": return "**";
         }
-        throw new RuntimeException(String.format("Not a known operator: %s", ASOperator));
+        return "UNIDENTIFIED_OPERATOR_" + ASOperator;
     }
 
 }

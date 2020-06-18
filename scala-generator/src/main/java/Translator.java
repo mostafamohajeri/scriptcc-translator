@@ -4,6 +4,9 @@ import grammar.AgentParser;
 import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.stringtemplate.v4.ST;
+import org.stringtemplate.v4.STGroup;
+import org.stringtemplate.v4.STGroupFile;
+import org.stringtemplate.v4.STGroupString;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -40,7 +43,9 @@ public class Translator {
         CAgentVisitor agentVisitor = new CAgentVisitor();
         agentVisitor.visit(parser.agent());
 
-        ST st = new ST(readLineByLine(template));
+        STGroupString stGroupString = new STGroupString(readLineByLine(template));
+        ST st = stGroupString.getInstanceOf("agentdef");
+//        ST st = new ST(readLineByLine(template));
         st.add("initialGoals", agentVisitor.getFactory().getAgent().getInitialGoals());
         st.add("initialBeliefs", agentVisitor.getFactory().getAgent().getInitialBeliefs());
         st.add("goalPlans", agentVisitor.getFactory().getAgent().getGoalPlans());

@@ -8,6 +8,7 @@ import lombok.Getter;
 public enum ActionOperator {
     PLUS("+"),
     MINUS("-"),
+    MINUSPLUS("-+"),
     NONE("");
 
 

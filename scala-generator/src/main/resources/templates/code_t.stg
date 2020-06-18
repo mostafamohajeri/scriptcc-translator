@@ -1,5 +1,6 @@
+group code;
 
-
+header() ::= <<
 import scala.collection.mutable
 import alice.tuprolog.presentation.TermUtils
 import akka.actor.typed.{ActorRef, Behavior}
@@ -8,10 +9,11 @@ import akka.actor.typed.scaladsl.{ActorContext, Behaviors}
 import alice.tuprolog.{Term,Struct,Number}
 
 import scala.util.Random
-object <class_name> {
+>>
 
+intention(goalPlans,class_name) ::= <<
 
-    object Intention {
+object Intention {
 
       def apply(executionContext: ExecutionContext): Behavior[IGoalMessage] = Behaviors.setup { context =>
 
@@ -32,7 +34,11 @@ object <class_name> {
      }
     }
 
-     object Agent extends IAgent {
+>>
+
+
+agent(class_name,initialGoals,initialBeliefs,goalPlans) ::= <<
+object Agent extends IAgent {
 
         override def agent_type: String = "<class_name>"
 
@@ -65,9 +71,11 @@ object <class_name> {
               }
             }
     }
+>>
 
-    <goalPlans : { goalPlan |
+goal_plans(class_name,goalPlans) ::= <<
 
+<goalPlans : { goalPlan |
      object <goalPlan.goal.atom.name> extends IGoal {
         case class Parameters(l_params: List[Term]) extends IParams {\}
 
@@ -77,7 +85,9 @@ object <class_name> {
         <goalPlan.plans : { plan |
         //plan <i0>
                 vars.clear()
+                <if(plan.literal.terms)>
                 vars +=( <plan.literal.terms : { term | "<term.name>" -> params.l_params(<i0>)}; separator=", "> )
+                <endif>
                 val r<i0> = executionContext.beliefBase.query(<plan.expression.st4>)
 
                 if (r<i0>.result) {
@@ -92,22 +102,35 @@ object <class_name> {
         < goalPlan.plans : { plan |
              def plan<i0>(vars: mutable.HashMap[String,Term])(implicit executionContext: ExecutionContext): Unit = {
 
-                <plan.planDefinition.steps : { step |
-                <if(step.achieve)>
-                    <step.writableName>.execute(<step.writableName>.Parameters(List( <step.writableTerms : { term | <term.refName> } ; separator=", "> )))
-                <elseif(step.primitive)>
-                    PrimitiveAction.execute(PrimitiveAction.Parameters(() => <step.call>))
-                <elseif(step.belief_action)>
-                     BeliefUpdateAction.execute(BeliefUpdateAction.Parameters(<step.operator>, <step.literal.refName>))
-                <endif>
-                } >
+             <code_block(plan.planDefinition.steps)>
+
             \}
         } >
 
      \}
 
      }>
+>>
 
+
+code_block(steps) ::= <<
+<steps : { step |
+                <if(step.achieve)>
+                    <step.writableName>.execute(<step.writableName>.Parameters(List( <step.writableTerms : { term | <term.refName> } ; separator=", "> )))
+                <elseif(step.primitive)>
+                    PrimitiveAction.execute(PrimitiveAction.Parameters(() => <step.call>))
+                <elseif(step.for_loop)>
+                    val ex_<step.iterationVarName> = executionContext.beliefBase.query( <step.query> )
+                    if (ex_<step.iterationVarName>.result) {
+
+                    \}
+                <elseif(step.belief_action)>
+                     BeliefUpdateAction.execute(BeliefUpdateAction.Parameters(<step.operator>, <step.literal.refName>))
+                <endif>
+                } >
+>>
+
+footer() ::= <<
 
   def inform( dest: String,  message:Term) (implicit executionContext: ExecutionContext): Unit = {
     executionContext.yellowPages ! ActorMessage(
@@ -127,4 +150,13 @@ object <class_name> {
           println(num1.asInstanceOf[Double] + num2.asInstanceOf[Double])
         }
 
-}
+>>
+
+agentdef(class_name,initialGoals,initialBeliefs,goalPlans) ::= <<
+ <header()>
+ object <class_name> {
+ <intention(goalPlans,class_name)>
+ <agent(class_name,initialGoals,initialBeliefs,goalPlans)>
+ <goal_plans(class_name,goalPlans)>
+ }
+>>

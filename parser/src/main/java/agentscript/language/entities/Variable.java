@@ -10,5 +10,5 @@ public class Variable extends Term {
     @Override
     public String getValue() {  return "vars(\"" + this.name + "\")";  }
     @Override
-    public String getRefName() { return "VarManager.bindVar(\"" + this.name + "\", vars)"; }
+    public String getRefName() { return "TermUtilWrapper.dynamicObjectToTerm(VarManager.bindVarNative(\"" + this.name + "\", vars))"; }
 }
