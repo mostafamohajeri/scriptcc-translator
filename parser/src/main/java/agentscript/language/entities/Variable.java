@@ -6,9 +6,22 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor(staticName = "from")
 public class Variable extends Term {
+
+    public final boolean is_var = true;
     String name;
+
+    public String getScalaCode() {
+        return "vars(\"" + this.name + "\")";
+    }
+
     @Override
     public String getValue() {  return "vars(\"" + this.name + "\")";  }
     @Override
-    public String getRefName() { return "TermUtilWrapper.dynamicObjectToTerm(VarManager.bindVarNative(\"" + this.name + "\", vars))"; }
+    public String getRefName(boolean isRoot) { return
+//           "toTerm(" +
+            "VarManager.bindVar(\"" + this.name + "\", vars)" +
+                    "";
+//                    ")";
+    }
+
 }

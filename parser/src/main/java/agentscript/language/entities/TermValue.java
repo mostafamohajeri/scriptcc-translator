@@ -12,21 +12,26 @@ public class TermValue<T> extends Term {
 
     public String getValue() {
         if (data instanceof String)
-            return ((String) data).replace("\"","").replace("'","");
+            return "\""+((String) data).replace("\"","").replace("'","") + "\"";
         else return data.toString();
 
     }
 
-    public String getRefName() {
+    public String getScalaCode() {
+        return this.getValue();
+    }
+
+    @Override
+    public String getRefName(boolean isRoot) {
         if (data instanceof String) {
             String s = ((String) data).replace("\"","").replace("'","");
-            return "Term.createTerm(\"'" + s + "'\")";
+            return "Atom.of(\"" + s + "\")";
         }
         else if (data instanceof Number)
-            return "Number.of(" + data.toString() + ")";
+            return "Numeric.of(" + data.toString() + ")";
 
         else if (data instanceof Boolean)
-            return "Struct.truth("+((Boolean) data ? "true":"false" )+ ")";
+            return "Truth.of("+((Boolean) data ? "true":"false" )+ ")";
 
         else throw new RuntimeException("Type " + data.getClass() + " not implemented");
     }

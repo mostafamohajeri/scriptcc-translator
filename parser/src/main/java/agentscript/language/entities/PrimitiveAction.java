@@ -1,11 +1,13 @@
 package agentscript.language.entities;
 
+import agentscript.language.entities.expression.Expression;
 import agentscript.language.entities.goals.IPlanStep;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Getter
@@ -13,34 +15,56 @@ import java.util.stream.Collectors;
 @NoArgsConstructor
 public class PrimitiveAction extends Term implements IPlanStep {
     Atom atom;
-    List<Term> terms;
+    //    List<Term> terms;
+    List<Expression> expressions;
 
-    public String getWritableName () {return atom.getName(); }
-    public List<Term>  getWritableTerms() {return terms; }
+    List<PrimitiveAction> follows;
+
+    public String getWritableName() {
+        return atom.getName();
+    }
+
+    public List<Expression> getWritableTerms() {
+        return expressions;
+    }
+
     public final boolean primitive = true;
 
     @Override
     public String getValue() {
-        String s = getWritableName() +
-                "(" +
-                getWritableTerms().stream().map(Term::getValue).collect(Collectors.joining(",")) +
-                ")";
-        return s;
+        return getCall();
+    }
+
+    public String getScalaCode() {
+        return this.getCall();
     }
 
     public String getCall() {
         String s =
-                getWritableName() +
-                "(" +
-                getWritableTerms().stream().map(t-> t.getValue() ).collect(Collectors.joining(",")) +
-                ")";
+                getWritableName();
+        if (Objects.nonNull(getWritableTerms())) {
+            s += "(";
+            if (getWritableTerms().size() > 0) {
+
+                s+=getWritableTerms().stream().map(Expression::getNative).collect(Collectors.joining(","));
+
+            }
+            s+= ")";
+        }
+
+        if(follows.size() > 0) {
+            s+="."+follows.stream().map(PrimitiveAction::getCall).collect(Collectors.joining("."));
+        }
+
         return s;
     }
 
-    public String getRefName() {
-        String s = "TermUtilWrapper.dynamicObjectToTerm("  +
-                getCall() +
-                ")";
+    @Override
+    public String getRefName(boolean isRoot) {
+        String s = //"toTerm("  +
+                getCall(); //+
+//                        "";
+        //")";
         return s;
     }
 

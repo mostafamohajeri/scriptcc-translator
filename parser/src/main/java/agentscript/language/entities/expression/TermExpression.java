@@ -7,13 +7,28 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor(staticName = "from")
-public class TermExpression extends Expression {
+public class TermExpression extends Expression implements IExpression{
     Term term;
 
+    @Override
     public String getSt4() {
         if(term instanceof PrimitiveAction)
-            return term.getRefName();
-        return term.getRefName();
+            return term.getRefName(true);
+        return term.getRefName(true);
+    }
+
+    @Override
+    public String getNative() {
+        if(term instanceof PrimitiveAction)
+            return ((PrimitiveAction) term).getCall();
+        return term.getValue();
+    }
+
+    @Override
+    public String getScala() {
+        if(term instanceof PrimitiveAction)
+            return ((PrimitiveAction) term).getCall();
+        return term.getValue();
     }
 
 }

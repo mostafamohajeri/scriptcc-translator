@@ -28,6 +28,9 @@ lexer grammar Terminal;
 // --- keyword rules must be first rules -----------------------------------------------------------------------------------------------------------------------
 
 FOR                        : 'for';
+IF                        : 'if';
+ELIF                        : 'elif';
+ELSE                        : 'else';
 IN                         : 'in';
 
 /**
@@ -84,13 +87,18 @@ STRING :
 STRONGNEGATION : '~';
 DEFAULTNEGATION : 'not';
 
+RETURNS    : 'returns';
+OBJECT_REF : '<-';
+AS : 'as';
 
 /**
  * relational operator
  */
+
+
+
 RELATIONALOPERATOR :
-    ASSIGN // as unifiable
-    | EQUAL
+    EQUAL
     | NOTEQUAL
     | NOTUNIFIABLE
     | LESS
@@ -100,6 +108,9 @@ RELATIONALOPERATOR :
     | IS
     ;
 
+ASSIGNOPERATOR :
+    ASSIGN
+    ;
 
 /**
  * assign operator
@@ -225,6 +236,10 @@ ANNOTATION_CONSTANT :
 /**
  * name structure of a variable
  */
+
+
+
+
 VARIABLEATOM :
     ( UPPERCASELETTER | UNDERSCORE )
     ( LOWERCASELETTER | UPPERCASELETTER | DIGIT | SLASH )*
@@ -234,15 +249,23 @@ VARIABLEATOM :
  * atoms are defined like Prolog atoms
  */
 
+FUNC_NAME :
+      DOT (LOWERCASELETTER | UPPERCASELETTER)
+      ( LOWERCASELETTER | UPPERCASELETTER | DIGIT | UNDERSCORE )*
+       ;
+
+
 ATOM :
     LOWERCASELETTER
     ( LOWERCASELETTER | UPPERCASELETTER | DIGIT | SLASH | MINUS | UNDERSCORE )*
     ;
 
-REFERENCEATOM :
-     HASH ATOM
-     ( DOT ATOM )*
+
+
+OBJECT_ATOM :
+     HASH (ATOM | VARIABLEATOM)
      ;
+
 
 
 /**
@@ -253,6 +276,7 @@ REFERENCEATOM :
 //    ATOM
 //    DOT
 //    ;
+
 
 
 // --- character structures ------------------------------------------------------------------------------------------------------------------------------------

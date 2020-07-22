@@ -3,9 +3,11 @@ group code;
 header() ::= <<
 import scala.collection.mutable
 
-import akka.actor.typed.{ActorRef, Behavior, SupervisorStrategy}
-import akka.actor.typed.scaladsl.{ActorContext, Behaviors, Routers}
-import it.unibo.tuprolog.core.{Atom, Numeric, Struct, Term, Truth}
+import alice.tuprolog.presentation.TermUtils
+import akka.actor.typed.{ActorRef, Behavior}
+import akka.actor.typed.receptionist.{Receptionist, ServiceKey}
+import akka.actor.typed.scaladsl.{ActorContext, Behaviors}
+import it.unibo.tuprolog.core.{Struct, Term, Numeric, Atom}
 
 import scala.jdk.CollectionConverters._
 import std.coms._
@@ -21,17 +23,11 @@ intention(goalPlans,class_name) ::= <<
 
 object Intention {
 
-      def apply(p_executionContext: ExecutionContext): Behavior[ISubGoalMessage] = Behaviors.setup { context =>
+      def apply(executionContext: ExecutionContext): Behavior[ISubGoalMessage] = Behaviors.setup { context =>
 
-
+        implicit val l_executionContext = executionContext.copy(intention = context)
         Behaviors.receive {
-        (context, message) =>
-
-        implicit val executionContext = p_executionContext.copy(intention = context,sender = Sender(message.c_sender_name,message.c_sender))
-
-        message match {
-           case SubGoalMessage(_,_,_,_) =>
-              message.goal match {
+        (context, message) => message.goal match {
 
         < goalPlans :  { goalPlan |
       case <class_name>.<goalPlan.goal.atom.name> =>
@@ -41,12 +37,9 @@ object Intention {
       case _ =>
           context.log.error("This actor can not handle goal of type {}", message.goal)
         }
-          Behaviors.same
-        case InitEndMessage(s,r) => r ! message
-                        Behaviors.stopped
+          Behaviors.stopped
       }
      }
-    }
     }
 
 >>
@@ -57,12 +50,12 @@ object Agent extends IAgent {
 
         override def agent_type: String = "<class_name>"
 
-        def initGoals()(implicit executionContext: ExecutionContext) = List[(IGoal,IParams)](
+        def initGoals = List[(IGoal,IParams)](
           < initialGoals : { initialGoal |
           (<initialGoal.goal.literal.atom.name>,<initialGoal.goal.literal.atom.name>.Parameters(List( <initialGoal.goal.literal.terms : { term | <term.refName> }; separator=", ">)))}; separator=",\n ">
         )
 
-        def initBeliefs()(implicit executionContext: ExecutionContext) = List[Struct](
+        def initBeliefs = List[Struct](
           < initialBeliefs : { ib |
           <ib.literal.refName>
           }; separator=",\n " >
@@ -72,47 +65,22 @@ object Agent extends IAgent {
               Behaviors.setup { context =>
                 val yp : ActorRef[IMessage] = yellowPages
                 val bb : BeliefBaseKT = BeliefBaseFactory()
-                val logger = AgentLogger()
-                implicit val executionContext : ExecutionContext = ExecutionContext(name,agent_type,context,yp,bb,logger)
                 bb.assert(initBeliefs)
-
-                val initiator = context.spawn(Intention(executionContext),"initiator")
-
+                val logger = AgentLogger()
+                val executionContext : ExecutionContext = ExecutionContext(name,agent_type,context,null,yp,bb,logger)
                 MAS ! ReadyMessage(context.self)
                 Behaviors.receive {
                   (context, message) => message match {
-                    case StartMessage() =>
-                      logger.start()
-                      initGoals.foreach( tuple => initiator ! SubGoalMessage(tuple._1,tuple._2,name,context.self))
-                      initiator ! InitEndMessage(name,context.self)
-                      Behaviors.same
-                    case InitEndMessage(_,_) =>
-                      context.log.debug(f"$name: I have started, switching behavior")
-                      normal_behavior()
-                  }
-
-                }
-              }
-            }
-
-        def normal_behavior() (implicit executionContext: ExecutionContext): Behavior[IMessage] = {
-              Behaviors.setup { context =>
-
-                val pool = Routers.pool(poolSize = 8)(
-                  Behaviors.supervise(Intention(executionContext)).onFailure[Exception](SupervisorStrategy.restart))
-
-                val router = context.spawn(pool, "intention-pool")
-
-                Behaviors.receive {
-                  (context, message) => message match {
                     case SubGoalMessage(_, _, _,_) =>
-                      router ! message.asInstanceOf[SubGoalMessage]
-                    case GoalMessage(m,r,ref) =>
-                      m match {
-                        case t: Struct =>
+                      context.spawn(Intention(executionContext), "GOAL_" + Random.nextInt(Int.MaxValue)) ! message.asInstanceOf[SubGoalMessage]
+                    case StartMessage() =>
+                      initGoals.foreach( tuple => context.self.tell(SubGoalMessage(tuple._1,tuple._2,name,context.self)))
+                    case BeliefMessage(m,r,ref) =>
+                       m match {
+                         case t: Struct =>
                           < goalPlans :  { goalPlan | if(t.getFunctor=="<goalPlan.goal.atom.name>" && t.getArity == <goalPlan.arity> ) {
                                val args : <goalPlan.goal.atom.name>.Parameters = if(t.getArity== 0)  <goalPlan.goal.atom.name>.Parameters(List( )) else <goalPlan.goal.atom.name>.Parameters(t.getArgs.toList)
-                               context.self ! SubGoalMessage(<goalPlan.goal.atom.name>, args,r,ref)
+                               context.spawn(Intention(executionContext), "GOAL_" + Random.nextInt(Int.MaxValue)) ! SubGoalMessage(<goalPlan.goal.atom.name>, args,r,ref)
                            \} else }> if(true) { println("no plan for this goal") }
                          }
                   }
@@ -140,13 +108,11 @@ goal_plans(class_name,goalPlans) ::= <<
                 vars +=( <plan.literal.terms : { term | <if(term.is_var)>"<term.name>" -> params.l_params(<i0>)<else>"<i0>" -> params.l_params(<i0>)<endif>}; separator=", "> )
                <endif>
 
-                val m<i0> = executionContext.beliefBase.matchTerms(<plan.headCheck>);
-
-               if(m<i0>.result)
+               if(<plan.headCheck>)
                 {
-                m<i0>.bindings foreach { case (k, v) => vars += (k -> v) \}
 
-                val r<i0> = executionContext.beliefBase.query(<plan.expression.st4>)
+
+                val r<i0> = executionContext.beliefBase.query(<plan.expression.scala>)
 
                 if (r<i0>.result) {
                     r<i0>.bindings foreach { case (k, v) => vars += (k -> v) \}
@@ -191,18 +157,6 @@ code_block(steps) ::= <<
                         \}
                         vars -= ("<step.varName>")
                     \}
-                <elseif(step.for_loop_simple)>
-                         val ex_<step.iterationVarName> = executionContext.beliefBase.rawQuery( <step.querySimple> )
-                         while (ex_<step.iterationVarName>.hasNext) {
-                             val sol_<step.iterationVarName> = ex_<step.iterationVarName>.next
-                             if(sol_<step.iterationVarName>.isYes) {
-                             vars += ("<step.varName>" -> sol_<step.iterationVarName><step.subs>)
-                             <code_block(step.steps)>
-                             \}
-                         \}
-                     vars -= ("<step.varName>")
-                <elseif(step.assign)>
-                     <step.call>
                 <elseif(step.belief_action)>
                      BeliefUpdateAction.execute(BeliefUpdateAction.Parameters(<step.operator>, <step.literal.refName>))
                 <endif>

@@ -9,11 +9,9 @@ import agentscript.language.entities.goals.*;
 import grammar.AgentBaseVisitor;
 import grammar.AgentParser;
 import lombok.Getter;
+import org.antlr.v4.runtime.misc.Pair;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class CAgentVisitor extends AgentBaseVisitor<Optional<Object>> {
@@ -109,34 +107,7 @@ public class CAgentVisitor extends AgentBaseVisitor<Optional<Object>> {
     public Optional<Object> visitBody(AgentParser.BodyContext ctx) {
         PlanDefinition.PlanDefinitionBuilder builder = PlanDefinition.builder();
 
-        ctx.bodyformula().forEach(formula -> {
-
-                    if (Objects.nonNull(formula.beliefaction())) {
-
-                        builder.step((BeliefAction) visitBeliefaction(formula.beliefaction()).orElse(BeliefAction.empty()));
-
-                    } else if (Objects.nonNull(formula.achievementgoal())) {
-
-                        builder.step((AchievementGoal) visitAchievementgoal(formula.achievementgoal()).orElse(AchievementGoal.empty()));
-
-                    } else if (Objects.nonNull(formula.primitiveaction())) {
-
-                        builder.step((PrimitiveAction) visitPrimitiveaction(formula.primitiveaction()).orElse(PrimitiveAction.empty()));
-
-                    } else if (Objects.nonNull(formula.testgoal())) {
-
-                        builder.step((TestGoal) visitTestgoal(formula.testgoal()).orElse(TestGoal.empty()));
-
-                    } else if (Objects.nonNull(formula.for_loop())) {
-
-                        builder.step((ForLoop) visitFor_loop(formula.for_loop()).orElse(ForLoop.empty()));
-
-                    } else {
-
-                    }
-
-                }
-        );
+        ctx.bodyformula().forEach( formula -> builder.step((IPlanStep)(visitBodyformula(formula).get())));
 
         return Optional.of(builder.build());
     }
@@ -164,7 +135,6 @@ public class CAgentVisitor extends AgentBaseVisitor<Optional<Object>> {
         return Optional.empty();
 
     }
-
 
     @Override
     public Optional<Object> visitPlantrigger(AgentParser.PlantriggerContext ctx) {
@@ -197,23 +167,27 @@ public class CAgentVisitor extends AgentBaseVisitor<Optional<Object>> {
         builder.variable((Variable) visitVariable(ctx.variable()).orElse(Variable.empty()));
         builder.expression((Expression) visitExpression(ctx.expression()).orElse(Expression.empty()));
 
-        ctx.bodyformula().forEach(formula -> {
-                    if (Objects.nonNull(formula.beliefaction())) {
-                        builder.step((BeliefAction) visitBeliefaction(formula.beliefaction()).orElse(BeliefAction.empty()));
-                    } else if (Objects.nonNull(formula.achievementgoal())) {
-                        builder.step((AchievementGoal) visitAchievementgoal(formula.achievementgoal()).orElse(AchievementGoal.empty()));
-                    } else if (Objects.nonNull(formula.primitiveaction())) {
-                        builder.step((PrimitiveAction) visitPrimitiveaction(formula.primitiveaction()).orElse(PrimitiveAction.empty()));
-                    } else if (Objects.nonNull(formula.testgoal())) {
-                        builder.step((TestGoal) visitTestgoal(formula.testgoal()).orElse(TestGoal.empty()));
-                    } else if (Objects.nonNull(formula.for_loop())) {
-                        builder.step((ForLoop) visitFor_loop(formula.for_loop()).orElse(ForLoop.empty()));
-                    } else {
-                    }
-                }
-        );
+        ctx.bodyformula().forEach( formula -> builder.step((IPlanStep)(visitBodyformula(formula).get())));
+
         return Optional.of(builder.build());
     }
+
+//    @Override
+//    public Optional<Object> visitIf_else(AgentParser.If_elseContext ctx) {
+//
+//        IfElse.IfElseBuilder builder = IfElse.builder();
+//
+//        builder.ifBlock(
+//                new Pair<Expression,PlanDefinition>(
+//                        (Expression)visitExpression(ctx.if_exp).get(),
+//                        (PlanDefinition) visitBody(ctx.if_body).get()
+//                )
+//        );
+//
+//        if(ctx.elif_exp.)
+//
+//        return super.visitIf_else(ctx);
+//    }
 
     @Override
     public Optional<Object> visitTestgoal(AgentParser.TestgoalContext ctx) {
@@ -261,9 +235,25 @@ public class CAgentVisitor extends AgentBaseVisitor<Optional<Object>> {
     public Optional<Object> visitPrimitiveaction(AgentParser.PrimitiveactionContext ctx) {
         return Optional.of(
                 PrimitiveAction.from(
-                        Atom.from(ctx.REFERENCEATOM().getText().replace("#","")),
-                        Objects.nonNull(ctx.termlist()) ? (List) this.visitTermlist(ctx.termlist()).orElse(Collections.EMPTY_LIST) : Collections.EMPTY_LIST
+                        Atom.from(ctx.OBJECT_ATOM().getText().replace("#","")),
+                        Objects.nonNull(ctx.paramlist()) ? (List) this.visitParamlist(ctx.paramlist()).orElse(Collections.EMPTY_LIST) : null,
+                        ctx.function_call().stream().map(this::visitFunction_call).map(i -> (PrimitiveAction) i.orElse(PrimitiveAction.empty())).collect(Collectors.toList())
                 ));
+    }
+
+    @Override
+    public Optional<Object> visitFunction_call(AgentParser.Function_callContext ctx) {
+        return Optional.of(
+                PrimitiveAction.from(
+                        Atom.from(ctx.FUNC_NAME().getText().replace(".","")),
+                        Objects.nonNull(ctx.paramlist()) ? (List) this.visitParamlist(ctx.paramlist()).orElse(Collections.EMPTY_LIST) : null,
+                        Collections.EMPTY_LIST
+                ));
+    }
+
+    @Override
+    public Optional<Object> visitParamlist(AgentParser.ParamlistContext ctx) {
+        return Optional.of(ctx.expression().stream().map(this::visitExpression).map(i -> (Expression) i.orElse(Expression.empty())).collect(Collectors.toList()));
     }
 
     @Override
@@ -319,5 +309,52 @@ public class CAgentVisitor extends AgentBaseVisitor<Optional<Object>> {
             return Optional.of(NumericTermValue.from(Double.valueOf(ctx.NUMBER().getText())));
         }
         return Optional.empty();
+    }
+
+    @Override
+    public Optional<Object> visitAssignment_statement(AgentParser.Assignment_statementContext ctx) {
+        if(Objects.nonNull(ctx.variable()) && Objects.nonNull(ctx.term())) {
+            return Optional.of(AssignmentAction.from(
+                    (Variable) visitVariable(ctx.variable()).get(),
+                    (PrimitiveAction) visitTerm(ctx.term()).get()
+            ));
+        }
+
+        return Optional.empty();
+
+    }
+
+    @Override
+    public Optional<Object> visitBodyformula(AgentParser.BodyformulaContext ctx) {
+
+
+            if (Objects.nonNull(ctx.beliefaction())) {
+
+                return Optional.of((BeliefAction) visitBeliefaction(ctx.beliefaction()).orElse(BeliefAction.empty()));
+
+            } else if (Objects.nonNull(ctx.achievementgoal())) {
+
+                return Optional.of((AchievementGoal) visitAchievementgoal(ctx.achievementgoal()).orElse(AchievementGoal.empty()));
+
+            } else if (Objects.nonNull(ctx.primitiveaction())) {
+
+                return Optional.of((PrimitiveAction) visitPrimitiveaction(ctx.primitiveaction()).orElse(PrimitiveAction.empty()));
+
+            } else if (Objects.nonNull(ctx.testgoal())) {
+
+                return Optional.of((TestGoal) visitTestgoal(ctx.testgoal()).orElse(TestGoal.empty()));
+
+            } else if (Objects.nonNull(ctx.assignment_statement())) {
+
+                return Optional.of((AssignmentAction) visitAssignment_statement(ctx.assignment_statement()).orElse(TestGoal.empty()));
+
+            } else if (Objects.nonNull(ctx.for_loop())) {
+
+                return Optional.of((ForLoop) visitFor_loop(ctx.for_loop()).orElse(ForLoop.empty()));
+
+            }
+
+            throw new RuntimeException("unknown step");
+
     }
 }

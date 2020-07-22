@@ -19,7 +19,7 @@ public class ForLoop implements IPlanStep {
     @Singular
     private List<IPlanStep> steps;
 
-    public final boolean for_loop = true;
+    public final boolean for_loop_simple = true;
 
     public String getVarName() {
         return variable.getName();
@@ -35,12 +35,29 @@ public class ForLoop implements IPlanStep {
 
     public String getQuery() {
         String query = String.format("Struct.of(\"findall\",%s,%s,%s)",
-                variable.getRefName(),
+                variable.getRefName(false),
                 expression.getSt4(),
-                itName.getRefName()
+                itName.getRefName(false)
         );
         return query;
     }
+
+    public String getSubs() {
+        return ".getSubstitution.get( " + Variable.from(getIterationVarName()).getRefName(false) + ").asInstanceOf[Term]";
+    }
+
+    public String getQuerySimple() {
+        String query = String.format("%s",
+                expression.getSt4().replace(
+                        variable.getRefName(false),
+                        Variable.from(getIterationVarName()).getRefName(false)
+                )
+
+        );
+        return query;
+    }
+
+
 
     public static ForLoop empty() {
         return ForLoop.builder().build();

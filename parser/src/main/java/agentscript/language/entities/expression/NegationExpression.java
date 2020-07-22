@@ -5,9 +5,18 @@ import lombok.Getter;
 
 @AllArgsConstructor(staticName = "from")
 @Getter
-public class NegationExpression extends Expression {
+public class NegationExpression extends Expression implements IExpression {
     Expression expression;
+    @Override
     public String getSt4() {
         return String.format("Struct.of(\"not\",%s)",expression.getSt4());
+    }
+    @Override
+    public String getNative() {
+        return String.format("!( %s )",expression.getSt4());
+    }
+
+    public String getScala() {
+        return String.format("!( %s )",expression.getSt4());
     }
 }

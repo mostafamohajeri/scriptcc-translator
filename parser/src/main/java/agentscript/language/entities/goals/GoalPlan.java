@@ -15,6 +15,7 @@ public class GoalPlan {
     Literal goal;
     List<Plan> plans;
 
+    public int getArity() {return this.goal.getTerms().size();}
     public void addPlan(Plan p) {
         plans.add(p);
     }

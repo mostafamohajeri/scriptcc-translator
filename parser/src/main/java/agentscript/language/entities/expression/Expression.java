@@ -1,14 +1,12 @@
 package agentscript.language.entities.expression;
 
+import jdk.jshell.spi.ExecutionControl;
 import lombok.NoArgsConstructor;
 
 @NoArgsConstructor()
-public class Expression {
-    public static Expression empty() {
-        return new Expression();
-    }
-    public String getSt4() {
-        return "UNKNOWN EXPRESSION";
-    }
 
+public abstract class Expression implements IExpression {
+    public static Expression empty() {
+        return NestedExpression.from(null);
+    }
 }

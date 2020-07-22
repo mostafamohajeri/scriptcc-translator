@@ -136,6 +136,7 @@ bodyformula :
     | testgoal
     | achievementgoal
     | primitiveaction
+    | assignment_statement
 
     ;
 
@@ -156,10 +157,14 @@ bodyformula :
  * expression rule
  */
 expression :
-    lhs=expression binaryoperator=ARITHMETICOPERATOR1 rhs=expression
+    lhs=expression binaryoperator=AS rhs=expression
+    | lhs=expression binaryoperator=ARITHMETICOPERATOR1 rhs=expression
     | lhs=expression binaryoperator=ARITHMETICOPERATOR2 rhs=expression
     | lhs=expression binaryoperator=ARITHMETICOPERATOR3 rhs=expression
+    | lhs=expression binaryoperator=ASSIGNOPERATOR rhs=expression
     | lhs=expression binaryoperator=RELATIONALOPERATOR rhs=expression
+    | lhs=expression binaryoperator=OBJECT_REF rhs=expression
+    | lhs=expression binaryoperator=RETURNS rhs=expression
     | DEFAULTNEGATION single=expression
     | lhs=expression binaryoperator=LOGICALOPERATOR1 rhs=expression
     | lhs=expression binaryoperator=LOGICALOPERATOR2 rhs=expression
@@ -168,7 +173,9 @@ expression :
     | term
     ;
 
-
+assignment_statement :
+    variable (ASSIGNOPERATOR) term
+;
 
 
 /**
@@ -196,6 +203,22 @@ for_loop :
         (bodyformula SEMICOLON)*
         RIGHTCURVEDBRACKET;
 
+//if_else :
+//    (IF main=if_block)
+//    (ELSE if_block)*
+//    (ELSE
+//        LEFTCURVEDBRACKET
+//        el_body = body SEMICOLON
+//        RIGHTCURVEDBRACKET)?
+//        ;
+//
+//if_block : (LEFTROUNDBRACKET if_exp = expression RIGHTROUNDBRACKET
+//                   LEFTCURVEDBRACKET
+//                   if_body = body SEMICOLON
+//                   RIGHTCURVEDBRACKET)
+//                   ;
+
+
 testgoal :
     ( QUESTIONMARK )
     ( literal )
@@ -216,10 +239,12 @@ maintenancegoal :
 
 
 primitiveaction :
-    ( REFERENCEATOM )
-    (termlist)
+    OBJECT_ATOM paramlist? function_call*
     ;
 
+function_call :
+    FUNC_NAME paramlist?
+;
 // ---------------------------------------------------------------------------------------
 
 
@@ -440,6 +465,10 @@ literal :
  */
 termlist :
     LEFTROUNDBRACKET term ( COMMA term )* RIGHTROUNDBRACKET
+    ;
+
+paramlist :
+    LEFTROUNDBRACKET (expression ( COMMA expression )*)? RIGHTROUNDBRACKET
     ;
 
 ///**
