@@ -27,7 +27,7 @@ Currently very simple and not useful translation as conditional expressions and 
 usage (in Main.java)
 
 ```java
- Translator t = new Translator();
+ translation.Translator t = new translation.Translator();
  t.translate(new File(t.getClass().getClassLoader().getResource("In.asl").getFile()).getAbsolutePath(),
              new File(t.getClass().getClassLoader().getResource("Test3.scala.stg").getFile()).getAbsolutePath(),
              "GeneratedAgent1");

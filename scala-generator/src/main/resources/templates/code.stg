@@ -1,13 +1,13 @@
 group code;
 
 header() ::= <<
-import scala.collection.mutable
+import _root_.scala.collection.mutable.HashMap
 
-import akka.actor.typed.{ActorRef, Behavior, SupervisorStrategy}
-import akka.actor.typed.scaladsl.{ActorContext, Behaviors, Routers}
-import it.unibo.tuprolog.core.{Atom, Numeric, Struct, Term, Truth}
+import _root_.akka.actor.typed.{ActorRef, Behavior, SupervisorStrategy}
+import _root_.akka.actor.typed.scaladsl.{ActorContext, Behaviors, Routers}
+import _root_.it.unibo.tuprolog.core.{Atom, Numeric, Struct, Term, Truth}
 
-import scala.jdk.CollectionConverters._
+import _root_.scala.jdk.CollectionConverters._
 import std.coms._
 import scala.util.Random
 import bb._
@@ -131,7 +131,7 @@ goal_plans(class_name,goalPlans) ::= <<
 
        def execute(params: Parameters) (implicit executionContext: ExecutionContext) : Unit = {
         <goalPlan.goal.terms : { term | //var <term.name> = params.l_params(<i0>)  }; separator="\n">
-        var vars = new mutable.HashMap[String,Term]
+        var vars = new HashMap[String,Term]
         <goalPlan.plans : { plan |
         //plan <i0>
 
@@ -160,7 +160,7 @@ goal_plans(class_name,goalPlans) ::= <<
 
 
         < goalPlan.plans : { plan |
-             def plan<i0>(vars: mutable.HashMap[String,Term])(implicit executionContext: ExecutionContext): Unit = {
+             def plan<i0>(vars: HashMap[String,Term])(implicit executionContext: ExecutionContext): Unit = {
 
              <code_block(plan.planDefinition.steps)>
 
