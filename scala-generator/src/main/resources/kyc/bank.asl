@@ -1,5 +1,10 @@
 employee(#toTerm(#kyc.data_gen.bank_data(#myName).employee(0))).
 
+!init.
+
++!init =>
+    #add_norm_source("apps/banking/bank_gdpr.eflint", #List("apps/banking/bank_gdpr_specialization.eflint"))
+    .
 
 +!register : employee(E) =>
     #achieve(E,interview(#toTerm(#executionContext.sender.name)))

@@ -33,7 +33,7 @@ public class Translator {
     }
 
     public void translate_to_file(String input_file_address ,String generatedName,String output_address) {
-        InputStream in = getClass().getResourceAsStream("templates/code.stg");
+        InputStream in = getClass().getResourceAsStream("/templates/code.stg");
         BufferedReader reader = new BufferedReader(new InputStreamReader(in));
         this.translate_to_file(input_file_address,
                 reader.lines().collect(Collectors.joining("\n")),
