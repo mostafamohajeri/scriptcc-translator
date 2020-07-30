@@ -172,22 +172,46 @@ public class CAgentVisitor extends AgentBaseVisitor<Optional<Object>> {
         return Optional.of(builder.build());
     }
 
-//    @Override
-//    public Optional<Object> visitIf_else(AgentParser.If_elseContext ctx) {
-//
-//        IfElse.IfElseBuilder builder = IfElse.builder();
-//
-//        builder.ifBlock(
-//                new Pair<Expression,PlanDefinition>(
-//                        (Expression)visitExpression(ctx.if_exp).get(),
-//                        (PlanDefinition) visitBody(ctx.if_body).get()
-//                )
-//        );
-//
-//        if(ctx.elif_exp.)
-//
-//        return super.visitIf_else(ctx);
-//    }
+    @Override
+    public Optional<Object> visitIf_else(AgentParser.If_elseContext ctx) {
+
+        IfElse.IfElseBuilder builder = IfElse.builder();
+
+        if(Objects.nonNull(ctx.condition_block()))
+        {
+           ctx.condition_block().forEach(condition_block -> builder.conditionBlock((ConditionBlock)visitCondition_block(condition_block).get()));
+        }
+
+        if(Objects.nonNull(ctx.code_block())) {
+            builder.elseBlock((PlanDefinition) visitCode_block(ctx.code_block()).get());
+        }
+
+        return Optional.of(builder.build());
+    }
+
+
+    @Override
+    public Optional<Object> visitCode_block(AgentParser.Code_blockContext ctx) {
+        PlanDefinition.PlanDefinitionBuilder builder = PlanDefinition.builder();
+
+        if(Objects.nonNull(ctx.single))
+            builder.step((IPlanStep)(visitBodyformula(ctx.single).get()));
+        else
+            ctx.bodyformula().forEach( formula -> builder.step((IPlanStep)(visitBodyformula(formula).get())));
+
+        return Optional.of(builder.build());
+    }
+
+    @Override
+    public Optional<Object> visitCondition_block(AgentParser.Condition_blockContext ctx) {
+        ConditionBlock.ConditionBlockBuilder builder = ConditionBlock.builder();
+
+        builder.expression((Expression) (visitExpression(ctx.expression()).get()));
+        builder.planDefinition((PlanDefinition) (visitCode_block(ctx.code_block()).get()));
+
+
+        return Optional.of(builder.build());
+    }
 
     @Override
     public Optional<Object> visitTestgoal(AgentParser.TestgoalContext ctx) {
@@ -352,9 +376,14 @@ public class CAgentVisitor extends AgentBaseVisitor<Optional<Object>> {
 
                 return Optional.of((ForLoop) visitFor_loop(ctx.for_loop()).orElse(ForLoop.empty()));
 
+            } else if (Objects.nonNull(ctx.if_else())) {
+
+                return Optional.of((IfElse) visitIf_else(ctx.if_else()).orElse(IfElse.empty()));
+
             }
 
-            throw new RuntimeException("unknown step");
+
+        throw new RuntimeException("unknown step");
 
     }
 }

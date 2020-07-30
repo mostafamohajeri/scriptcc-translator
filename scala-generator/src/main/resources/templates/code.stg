@@ -238,6 +238,20 @@ code_block(steps) ::= <<
                              \}
                          \}
                      vars -= ("<step.varName>")
+                <elseif(step.if_else)>
+                    if(<step.ifBlock.expression.native>) {
+                        <code_block(step.ifBlock.planDefinition.steps)>
+                    \}
+                    <step.elseIfBlocks : { elseBlock |
+                     else if(<elseBlock.expression.native>) {
+                           <code_block(elseBlock.planDefinition.steps)>
+                     \}
+                     }>
+                     <if(step.elseBlock)>
+                     else {
+                        <code_block(step.elseBlock.steps)>
+                     \}
+                     <endif>
                 <elseif(step.assign)>
                      <step.call>
                 <elseif(step.belief_action)>

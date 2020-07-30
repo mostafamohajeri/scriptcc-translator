@@ -1,4 +1,3 @@
-my_speech("hello world").
 
 !give_speech.
 

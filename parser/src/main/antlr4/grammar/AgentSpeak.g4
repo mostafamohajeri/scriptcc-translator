@@ -132,11 +132,13 @@ body :
 
 bodyformula :
     for_loop
+    | if_else
     | beliefaction
     | testgoal
     | achievementgoal
     | primitiveaction
     | assignment_statement
+
 
     ;
 
@@ -203,7 +205,25 @@ for_loop :
         (bodyformula SEMICOLON)*
         RIGHTCURVEDBRACKET;
 
-//if_else :
+if_else :
+     IF condition_block (ELSE IF condition_block)* (ELSE code_block)?
+ ;
+
+condition_block
+    : LEFTROUNDBRACKET expression RIGHTROUNDBRACKET
+    code_block
+ ;
+
+code_block
+    :
+    (
+         (LEFTCURVEDBRACKET (bodyformula SEMICOLON)* RIGHTCURVEDBRACKET)
+         |
+         single=bodyformula SEMICOLON
+    )
+    ;
+
+
 //    (IF main=if_block)
 //    (ELSE if_block)*
 //    (ELSE
@@ -214,14 +234,14 @@ for_loop :
 //
 //if_block : (LEFTROUNDBRACKET if_exp = expression RIGHTROUNDBRACKET
 //                   LEFTCURVEDBRACKET
-//                   if_body = body SEMICOLON
+//                   (if_body = body SEMICOLON)*
 //                   RIGHTCURVEDBRACKET)
 //                   ;
 
 
 testgoal :
     ( QUESTIONMARK )
-    ( literal )
+    ( literal  )
     ;
 
 /**
