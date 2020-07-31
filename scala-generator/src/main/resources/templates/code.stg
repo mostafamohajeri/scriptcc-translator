@@ -12,15 +12,18 @@ import _root_.scala.util.Success
 import _root_.akka.util.Timeout
 import _root_.scala.concurrent.duration._
 import _root_.akka.actor.typed.scaladsl.AskPattern._
-
+import _root_.scala.language.implicitConversions
 import _root_.scala.concurrent.{Await, Future}
 import _root_.scala.jdk.CollectionConverters._
 import std.coms._
+import std.converters._
+
 import scala.util.Random
 import bb._
 import infrastructure._
 import infrastructure.termutils.ExTermFactoryKT._
 import infrastructure.termutils.ExTermVisitorKT._
+import bb.exp._
 
 >>
 
@@ -66,16 +69,28 @@ object Agent extends IAgent {
 
         override def agent_type: String = "<class_name>"
 
-        def initGoals()(implicit executionContext: ExecutionContext) = List[(IGoal,IParams)](
+        def initGoals()(implicit executionContext: ExecutionContext) = List[StructTerm](
           < initialGoals : { initialGoal |
-          (<initialGoal.goal.literal.atom.name>,<initialGoal.goal.literal.atom.name>.Parameters(List( <initialGoal.goal.literal.terms : { term | <term.refName> }; separator=", ">)))}; separator=",\n ">
+
+          <initialGoal.goal.literal.refName>
+            }; separator=",\n " >
         )
 
-        def initBeliefs()(implicit executionContext: ExecutionContext) = List[Struct](
+        def initBeliefs()(implicit executionContext: ExecutionContext) = List[StructTerm](
           < initialBeliefs : { ib |
           <ib.literal.refName>
           }; separator=",\n " >
         )
+
+        def create_goal_message(t: StructTerm,r:String,ref:ActorRef[IMessage]) : Option[SubGoalMessage] = {
+            < goalPlans :  { goalPlan | if(t.functor=="<goalPlan.goal.atom.name>" && t.terms.size == <goalPlan.arity> ) {
+                                           val args : <goalPlan.goal.atom.name>.Parameters = if(t.terms.size == 0)  <goalPlan.goal.atom.name>.Parameters(List( )) else <goalPlan.goal.atom.name>.Parameters(t.terms.toList)
+                                            Option(SubGoalMessage(<goalPlan.goal.atom.name>, args,r,ref))
+                                       \} else }> {
+                                            println("no plan for this goal")
+                                            Option.empty[SubGoalMessage]
+                                            }
+        }
 
         def apply(name: String,yellowPages: ActorRef[IMessage],MAS: ActorRef[IMessage]): Behavior[IMessage] = {
               Behaviors.setup { context =>
@@ -99,13 +114,22 @@ object Agent extends IAgent {
 
 
               //              initGoals.foreach( tuple => initiator ! SubGoalMessage(tuple._1,tuple._2,name,context.self))
-                            initGoals.foreach(tuple => {
+                            initGoals.foreach(struct => {
 
-                              val result: Future[IMessage] =  initiator.ask[IMessage](ref => SubGoalMessage(tuple._1, tuple._2, name, ref))
+
+                                 val result: Future[IMessage] =  initiator.ask[IMessage](ref => {
+                                   val subGoal = create_goal_message(struct,name,ref)
+                                      if(subGoal.isDefined)
+                                        subGoal.get
+                                        else
+                                         throw new RuntimeException(s"No plan for initial goal $struct")
+                                    }
+                                 )
+
 
                               result.onComplete {
-                                case Success(IntentionDoneMessage(n, r)) => context.log.debug(f"$name: inital intention done")
-                                case Failure(_) => context.log.error(f"$name: inital error")
+                                   case Success(IntentionDoneMessage(n, r)) => IntentionDoneMessage(n,r)
+                                   case Failure(_) => IntentionFailedMessage()
                               }
 
                               Await.result(result,timeout.duration)
@@ -141,16 +165,18 @@ object Agent extends IAgent {
                 Behaviors.receive {
                   (context, message) => message match {
                     case IntentionDoneMessage(s,r) =>
-                      context.log.debug(f"${executionContext.name}: an intention was done by $s")
+                      //context.log.debug(f"${executionContext.name}: an intention was done by $s")
                     case SubGoalMessage(_, _, _,_) =>
                       router ! message.asInstanceOf[SubGoalMessage]
                     case GoalMessage(m,r,ref) =>
                       m match {
-                        case t: Struct =>
-                          < goalPlans :  { goalPlan | if(t.getFunctor=="<goalPlan.goal.atom.name>" && t.getArity == <goalPlan.arity> ) {
-                               val args : <goalPlan.goal.atom.name>.Parameters = if(t.getArity== 0)  <goalPlan.goal.atom.name>.Parameters(List( )) else <goalPlan.goal.atom.name>.Parameters(t.getArgs.toList)
-                               context.self ! SubGoalMessage(<goalPlan.goal.atom.name>, args,r,ref)
-                           \} else }> if(true) { println("no plan for this goal") }
+                        case t: StructTerm =>
+                          val subGoal = create_goal_message(t,r,ref)
+
+                          if(subGoal.isDefined)
+                              context.self ! subGoal.get
+
+
                          }
                   }
                     Behaviors.same
@@ -164,11 +190,11 @@ goal_plans(class_name,goalPlans) ::= <<
 
 <goalPlans : { goalPlan |
      object <goalPlan.goal.atom.name> extends IGoal {
-        case class Parameters(l_params: List[Term]) extends IParams {\}
+        case class Parameters(l_params: List[GenericTerm]) extends IParams {\}
 
        def execute(params: Parameters) (implicit executionContext: ExecutionContext) : Unit = {
         <goalPlan.goal.terms : { term | //var <term.name> = params.l_params(<i0>)  }; separator="\n">
-        var vars = new HashMap[String,Term]
+        var vars = new HashMap[String,GenericTerm]
         <goalPlan.plans : { plan |
         //plan <i0>
 
@@ -197,7 +223,7 @@ goal_plans(class_name,goalPlans) ::= <<
 
 
         < goalPlan.plans : { plan |
-             def plan<i0>(vars: HashMap[String,Term])(implicit executionContext: ExecutionContext): Unit = {
+             def plan<i0>(vars: HashMap[String,GenericTerm])(implicit executionContext: ExecutionContext): Unit = {
 
              <code_block(plan.planDefinition.steps)>
 
@@ -229,21 +255,21 @@ code_block(steps) ::= <<
                         vars -= ("<step.varName>")
                     \}
                 <elseif(step.for_loop_simple)>
-                         val ex_<step.iterationVarName> = executionContext.beliefBase.rawQuery( <step.querySimple> )
+                         val ex_<step.iterationVarName> = executionContext.beliefBase.bufferedQuery( <step.querySimple> )
                          while (ex_<step.iterationVarName>.hasNext) {
                              val sol_<step.iterationVarName> = ex_<step.iterationVarName>.next
-                             if(sol_<step.iterationVarName>.isYes) {
-                             vars += ("<step.varName>" -> sol_<step.iterationVarName><step.subs>)
+                             if(sol_<step.iterationVarName>.result) {
+                             vars += ("<step.varName>" -> sol_<step.iterationVarName>.bindings("<step.iterationVarName>"))
                              <code_block(step.steps)>
                              \}
                          \}
                      vars -= ("<step.varName>")
                 <elseif(step.if_else)>
-                    if(<step.ifBlock.expression.native>) {
+                    if((<step.ifBlock.expression.native>).holds) {
                         <code_block(step.ifBlock.planDefinition.steps)>
                     \}
                     <step.elseIfBlocks : { elseBlock |
-                     else if(<elseBlock.expression.native>) {
+                     else if((<elseBlock.expression.native>).holds) {
                            <code_block(elseBlock.planDefinition.steps)>
                      \}
                      }>

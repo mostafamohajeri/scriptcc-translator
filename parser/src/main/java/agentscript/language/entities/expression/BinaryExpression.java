@@ -78,10 +78,8 @@ public class BinaryExpression extends Expression implements IExpression {
             case "*": return "*";
             case "/": return "/";
             case "%": return "%";
-            case "=": return "=";
-            case "is": return "=";
         }
-        return "UNIDENTIFIED_OPERATOR_" + ASOperator;
+        return "UNIDENTIFIED_OPERATOR: " + ASOperator;
     }
 
 }

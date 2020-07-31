@@ -24,7 +24,7 @@ public class Plan {
         ).count() == 0) return "/* " + literal.getRefName(false) + " All vars no need to check */" ;
 
         return this.literal.getRefName(false) +
-                ",Struct.of(\""+literal.atom.name + "\",params.l_params.asJava)";
+                ",StructTerm(\""+literal.atom.name + "\",params.l_params)";
     }
 
 }

@@ -30,18 +30,7 @@ public class Literal extends Term {
 
     @Override
     public String getValue() {
-//        StringBuilder builder = new StringBuilder();
-//        builder.append(this.getAtom().getName());
-//        if(this.getTerms().size()>0) {
-//            builder.append("(");
-//            builder.append(this.getTerms()
-//                    .stream()
-//                    .map(t -> t.getValue())
-//                    .collect(Collectors.joining(",")));
-//            builder.append(")");
-//        }
-//        return builder.toString();
-        return getRefName(false);
+        return this.getRefName(false);
     }
 
     public String getScalaCode() {
@@ -52,28 +41,19 @@ public class Literal extends Term {
     public String getRefName(boolean isRoot) {
 
         StringBuilder builder = new StringBuilder();
-
-        builder.append("Struct.of(\"");
+        builder.append("StructTerm(\"");
         builder.append(this.getAtom().getName());
-        builder.append("\"");
-        builder.append(",");
+        builder.append("\",Seq[GenericTerm](");
         if(this.getTerms().size()>0) {
             builder.append(this.getTerms()
                     .stream()
                     .map(t -> t.getRefName(isRoot))
                     .collect(Collectors.joining(",")));
         }
-        else {
-            builder.append("java.util.List.of[Term]()");
-        }
-        builder.append(")");
+
+        builder.append("))");
         return builder.toString();
     }
 
-
-    private String agentSpecRefName() {
-        return
-                "Struct.of(executionContext.name," + this.getRefName(false) + ")";
-    }
 
 }

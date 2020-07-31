@@ -33,6 +33,7 @@ public class ForLoop implements IPlanStep {
         return itName.getName();
     }
 
+    @Deprecated
     public String getQuery() {
         String query = String.format("Struct.of(\"findall\",%s,%s,%s)",
                 variable.getRefName(false),
@@ -40,10 +41,6 @@ public class ForLoop implements IPlanStep {
                 itName.getRefName(false)
         );
         return query;
-    }
-
-    public String getSubs() {
-        return ".getSubstitution.get( " + Variable.from(getIterationVarName()).getRefName(false) + ").asInstanceOf[Term]";
     }
 
     public String getQuerySimple() {
