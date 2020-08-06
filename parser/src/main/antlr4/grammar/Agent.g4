@@ -33,10 +33,10 @@ import AgentSpeak;
 /**
  * initial grammar rule
  **/
-agent :
-    initialbeliefs?
+agent :                 // should be agentprogram
+    initialbeliefs?     // I'm not certain about the string ordering
     initialgoals?
-    plans?
+    plans?              // should be reactiverules? including goalplan and perceptplan rules?
     ;
 
 
