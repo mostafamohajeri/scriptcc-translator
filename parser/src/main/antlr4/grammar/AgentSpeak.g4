@@ -43,7 +43,7 @@ initialgoal :
     ;
 
 initialachievegoal :
-    (EXCLAMATIONMARK)  literal DOT
+    (EXCLAMATIONMARK) literal DOT
     ;
 
 initialmaintenancegoal :
@@ -138,8 +138,6 @@ bodyformula :
     | achievementgoal
     | primitiveaction
     | assignment_statement
-
-
     ;
 
 //    bodyformula :

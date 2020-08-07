@@ -1,12 +1,186 @@
-lexer grammar Terminal;
+grammar AgentScript2;
+
+// --- agent-script structure ---------------------------------------------------------
+
+script :
+    initialbeliefs |
+    initialgoals |
+    reactiverules
+    ;
+
+initialbeliefs:
+    belief+
+    ;
+
+initialgoals:
+    initialgoal+
+    ;
+
+reactiverules:
+    reactiverule+
+    ;
+
+// --- agent-behaviour structure ---------------------------------------------------------
+
+belief :
+    literal DOT
+    ;
+
+initialgoal :
+    achievementgoal DOT
+    ;
+
+reactiverule :
+    ANNOTATION*
+    plantrigger
+    literal
+    ( COLON condition = expression )?
+    plandefinition
+    DOT
+    ;
+
+/**
+ * plan trigger
+ */
+plantrigger :
+    ( ARITHMETICOPERATOR3 )
+    ( QUESTIONMARK | EXCLAMATIONMARK | DOUBLEEXCLAMATIONMARK )?
+    ;
+
+beliefactiontrigger :
+    first=ARITHMETICOPERATOR3 (second=ARITHMETICOPERATOR3)?
+    ;
+
+plandefinition :
+     RIGHTARROWDOUBLE planbody
+    ;
+
+planbody :
+    (  planbodyformula SEMICOLON )*
+    planbodyformula
+    ;
+
+/**
+ * basic executable formula
+ */
+
+
+planbodyformula :
+    for_loop
+    | if_else
+    | beliefaction
+    | testgoal
+    | achievementgoal
+    | primitiveaction
+    | assignment
+    ;
+
+expression :
+    lhs=expression binaryoperator=AS rhs=expression
+    | lhs=expression binaryoperator=ARITHMETICOPERATOR1 rhs=expression
+    | lhs=expression binaryoperator=ARITHMETICOPERATOR2 rhs=expression
+    | lhs=expression binaryoperator=ARITHMETICOPERATOR3 rhs=expression
+    | lhs=expression binaryoperator=ASSIGNOPERATOR rhs=expression
+    | lhs=expression binaryoperator=RELATIONALOPERATOR rhs=expression
+    | lhs=expression binaryoperator=OBJECT_REF rhs=expression
+    | lhs=expression binaryoperator=RETURNS rhs=expression
+    | DEFAULTNEGATION single=expression
+    | lhs=expression binaryoperator=LOGICALOPERATOR1 rhs=expression
+    | lhs=expression binaryoperator=LOGICALOPERATOR2 rhs=expression
+    | lhs=expression binaryoperator=LOGICALOPERATOR3 rhs=expression
+    | LEFTROUNDBRACKET single=expression RIGHTROUNDBRACKET
+    | term
+    ;
+
+assignment :
+    variable (ASSIGNOPERATOR) term
+;
+
+beliefaction :
+    beliefactiontrigger  literal
+    ;
+
+for_loop :
+    FOR LEFTROUNDBRACKET variable IN expression RIGHTROUNDBRACKET
+        LEFTCURVEDBRACKET
+        (planbodyformula SEMICOLON)*
+        RIGHTCURVEDBRACKET;
+
+if_else :
+     IF condition_block (ELSE IF condition_block)* (ELSE code_block)?
+;
+
+condition_block :
+    LEFTROUNDBRACKET expression RIGHTROUNDBRACKET
+    code_block
+;
+
+code_block :
+    (
+         (LEFTCURVEDBRACKET (planbodyformula SEMICOLON)* RIGHTCURVEDBRACKET)
+         |
+         single=planbodyformula SEMICOLON
+    )
+;
+
+testgoal :
+    ( QUESTIONMARK )
+    ( literal  )
+;
+
+achievementgoal :
+    ( EXCLAMATIONMARK )
+    ( literal )
+;
+
+primitiveaction :
+    OBJECT_ATOM paramlist? function_call*
+;
+
+function_call :
+    FUNC_NAME paramlist?
+;
+
+// --- logic base elements ---------------------------------------------------------------
+
+term :
+    primitiveaction
+    | termvalue
+    | variable
+    | literal
+    ;
+
+termvalue :
+    LOGICALVALUE
+    | NUMBER
+    | STRING
+    ;
+
+literal :
+    STRONGNEGATION?
+    ATOM
+    termlist?
+    ;
+
+termlist :
+    LEFTROUNDBRACKET term ( COMMA term )* RIGHTROUNDBRACKET
+    ;
+
+paramlist :
+    LEFTROUNDBRACKET (expression ( COMMA expression )*)? RIGHTROUNDBRACKET
+    ;
+
+variable :
+    VARIABLEATOM
+    ;
 
 // --- keyword rules must be first rules -----------------------------------------------------------------------------------------------------------------------
 
-FOR                        : 'for';
-IF                        : 'if';
-ELIF                        : 'elif';
-ELSE                        : 'else';
-IN                         : 'in';
+FOR : 'for';
+IF : 'if';
+ELIF : 'elif';
+ELSE : 'else';
+IN : 'in';
 
 LOGICALVALUE :
     TRUE
@@ -14,39 +188,14 @@ LOGICALVALUE :
 ;
 
 NUMBER :
-    MINUS?
-    ( CONSTANTNUMBER | DIGITSEQUENCE )
+    MINUS? DIGITSEQUENCE
 ;
 
-/**
- * floating-point constants
- */
-CONSTANTNUMBER :
-    PI
-    | EULER
-    | GRAVITY
-    | AVOGADRO
-    | BOLTZMANN
-    | ELECTRON
-    | PROTON
-    | NEUTRON
-    | LIGHTSPEED
-    | POSITIVEINFINITY
-    | NEGATIVEINFINITY
-    | MAXIMUMVALUE
-    | MINIMUMVALUE
-    | NAN
-    ;
 
-/**
- * string define with single or double quotes
- */
 STRING :
     SINGLEQUOTESTRING
     | DOUBLEQUOTESTRING
     ;
-
-
 
 // --- operators must be second rules---------------------------------------------------------------------------------------------------------------------------
 
@@ -72,82 +221,40 @@ ASSIGNOPERATOR :
     ASSIGN
     ;
 
-/**
- * assign operator
- */
-//ASSIGNOPERATOR :
-//    ASSIGN
-//    | ASSIGNINCREMENT
-//    | ASSIGNDECREMENT
-//    | ASSIGNMULTIPLY
-//    | ASSIGNDIVIDE
-//    | ASSIGNMODULO
-//    | ASSIGNPOW
-//    ;
-
-/**
- * logical operator with precendece 1
- */
 LOGICALOPERATOR1 :
     XOR
     ;
 
-/**
- * logical operator with precendece 2
- */
 LOGICALOPERATOR2 :
     AND
     ;
 
-/**
- * logical operator with precendece 3
- */
 LOGICALOPERATOR3 :
     OR
     ;
 
-/**
- * arithmetic operator with precendece 1
- */
 ARITHMETICOPERATOR1 :
     POW
     ;
 
-/**
- * arithmetic operator with precendece 2
- */
 ARITHMETICOPERATOR2 :
     MULTIPLY
     | DIVIDE
     | MODULO
     ;
 
-/**
- * arithmetic operator with precendece 3
- * @warning is also used for the belieftrigger
- */
 ARITHMETICOPERATOR3 :
     PLUS
     | MINUS
     ;
 
-
-
-/**
- * unary operator
- */
 UNARYOPERATOR :
     INCREMENT
     | DECREMENT
     ;
 
-
-
 // --- annotation and base structure ---------------------------------------------------------------------------------------------------------------------------
 
-/**
- * annotation for rules and plans
- */
 ANNOTATION :
     AT
     (
@@ -159,9 +266,6 @@ ANNOTATION :
     )
     ;
 
-/**
- * annotation with string value
- */
 ANNOTATION_STRING :
     ( DESCRIPTION | TAG )
     LEFTROUNDBRACKET
@@ -169,9 +273,6 @@ ANNOTATION_STRING :
     RIGHTROUNDBRACKET
     ;
 
-/**
- * variable description annotation
- */
 ANNOTATION_VARIABLEDESCRIPTION :
     VARIABLE
     LEFTROUNDBRACKET
@@ -181,9 +282,6 @@ ANNOTATION_VARIABLEDESCRIPTION :
     RIGHTROUNDBRACKET
     ;
 
-/**
- * constant annotation
- */
 ANNOTATION_CONSTANT :
     CONSTANT
     LEFTROUNDBRACKET
@@ -193,57 +291,30 @@ ANNOTATION_CONSTANT :
     RIGHTROUNDBRACKET
     ;
 
-/**
- * name structure of a variable
- */
-
-
-
-
 VARIABLEATOM :
     ( UPPERCASELETTER | UNDERSCORE )
     ( LOWERCASELETTER | UPPERCASELETTER | DIGIT | SLASH )*
     ;
-
-/**
- * atoms are defined like Prolog atoms
- */
 
 FUNC_NAME :
       DOT (LOWERCASELETTER | UPPERCASELETTER)
       ( LOWERCASELETTER | UPPERCASELETTER | DIGIT | UNDERSCORE )*
        ;
 
-
 ATOM :
     LOWERCASELETTER
     ( LOWERCASELETTER | UPPERCASELETTER | DIGIT | SLASH | MINUS | UNDERSCORE )*
     ;
 
-
-
 OBJECT_ATOM :
      HASH (ATOM | VARIABLEATOM)
      ;
 
-
-
-/**
- * rule to represent the initial goal
- */
-//INITIALGOAL :
-//    EXCLAMATIONMARK
-//    ATOM
-//    DOT
-//    ;
-
-
-
 // --- character structures ------------------------------------------------------------------------------------------------------------------------------------
 
+DOUBLEEXCLAMATIONMARK      : '!!';
 EXCLAMATIONMARK            : '!';
 COMMA                      : ',';
-DOUBLEEXCLAMATIONMARK      : '!!';
 QUESTIONMARK               : '?';
 DOLLAR                     : '$';
 VLINE                      : '|';
@@ -273,29 +344,12 @@ fragment PLUS              : '+';
 fragment MINUS             : '-';
 fragment DIVIDE            : '//';
 
-fragment PI                : 'pi';
-fragment EULER             : 'euler';
-fragment GRAVITY           : 'gravity';
-fragment AVOGADRO          : 'avogadro';
-fragment BOLTZMANN         : 'boltzmann';
-fragment ELECTRON          : 'electron';
-fragment PROTON            : 'proton';
-fragment NEUTRON           : 'neutron';
-fragment LIGHTSPEED        : 'lightspeed';
-fragment POSITIVEINFINITY  : 'positiveinfinity';
-fragment NEGATIVEINFINITY  : 'negativeinfinity';
-fragment MAXIMUMVALUE      : 'maximumvalue';
-fragment MINIMUMVALUE      : 'minimumvalue';
-fragment NAN               : 'notanumber';
-
 fragment AND               : '&&' ;
 fragment OR                : '||' ;
 fragment XOR               : '^' ;
 
-fragment TRUE              : 'true' | 'success';
+fragment TRUE              : 'true' | 'success';  // NOT THE SAME
 fragment FALSE             : 'false' | 'fail';
-
-
 fragment CONSTANT          : 'constant';
 fragment PARALLEL          : 'parallel';
 fragment ATOMIC            : 'atomic';
@@ -314,8 +368,6 @@ fragment ASSIGNMODULO      : '%=';
 fragment ASSIGNPOW         : '^=';
 fragment INCREMENT         : '++';
 fragment DECREMENT         : '--';
-
-
 fragment LESS              : '<';
 fragment LESSEQUAL         : '=<';
 fragment GREATER           : '>';
@@ -323,43 +375,22 @@ fragment GREATEREQUAL      : '>=';
 fragment EQUAL             : '==';
 fragment NOTEQUAL          : '!==';
 fragment NOTUNIFIABLE      : '!=';
-
-
 fragment POW               : '**';
 fragment MULTIPLY          : '*';
 fragment MODULO            : '%' | 'mod';
 
 fragment IS          : 'is';
-/**
- * string can be definied in single- and double-quotes
- */
+
 fragment SINGLEQUOTESTRING : '\'' ~('\'')* '\'';
 fragment DOUBLEQUOTESTRING : '"' ~('"')* '"';
 
-/**
- * char definitions
- */
 fragment LOWERCASELETTER   : [a-z];
 fragment UPPERCASELETTER   : [A-Z];
 fragment DIGIT             : [0-9];
 fragment DIGITSEQUENCE     : DIGIT+ ('.' DIGIT+)?;
 
-
-
-
-
 // --- skip items ----------------------------------------------------------------------------------------------------------------------------------------------
 
-/**
- * any whitespace
- */
 WHITESPACE                 : (' ' | '\n' | '\t' | '\r')+ -> skip;
-/**
- * add for line-comment also
- */
 LINECOMMENT                : '//' .*? '\r'? '\n' -> skip;
-/**
- * block comment allowed within the grammar
- * default behaviour does not allow block comments
- */
-BLOCKCOMMENT                    :   '/*' .*? '*/' -> skip;
+BLOCKCOMMENT               :   '/*' .*? '*/' -> skip;
