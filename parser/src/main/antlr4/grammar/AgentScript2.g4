@@ -3,108 +3,115 @@ grammar AgentScript2;
 // --- agent-script structure ---------------------------------------------------------
 
 script :
-    initialbeliefs |
-    initialgoals |
-    reactiverules
+    (
+      ( initialbelief | initialgoal | reactiverule | inferentialrule )
+    )+
     ;
 
-initialbeliefs:
-    belief+
-    ;
-
-initialgoals:
-    initialgoal+
-    ;
-
-reactiverules:
-    reactiverule+
-    ;
-
-// --- agent-behaviour structure ---------------------------------------------------------
-
-belief :
-    literal DOT
-    ;
-
-initialgoal :
-    achievementgoal DOT
-    ;
-
-reactiverule :
-    ANNOTATION*
-    plantrigger
-    literal
-    ( COLON condition = expression )?
-    plandefinition
+initialbelief:
+    belief
     DOT
     ;
 
-/**
- * plan trigger
- */
-plantrigger :
-    ( ARITHMETICOPERATOR3 )
-    ( QUESTIONMARK | EXCLAMATIONMARK | DOUBLEEXCLAMATIONMARK )?
+initialgoal:
+    ( proceduralgoal | achievementgoal | maintenancegoal  )
+    DOT
     ;
 
-beliefactiontrigger :
-    first=ARITHMETICOPERATOR3 (second=ARITHMETICOPERATOR3)?
+// --- main components ---------------------------------------------------------
+
+belief:
+    neg_literal
+;
+
+ext_belief:
+    naf_literal
+;
+
+testgoal :
+    QUESTIONMARK neg_literal
+;
+
+proceduralgoal :
+    EXCLAMATIONMARK AT pos_literal
+;
+
+achievementgoal :
+    EXCLAMATIONMARK neg_literal
+;
+
+maintenancegoal :
+    DOUBLEEXCLAMATIONMARK neg_literal
+;
+
+//-- reactive rules: goal-plan and percept-plan rules
+
+reactiverule :
+    // ANNOTATION*  // TODO: annotations are the last things that will be added (if ever)
+    trigger
+    ( COLON condition = expression )?
+    ( LEFTARROWDOUBLE | RIGHTARROWDOUBLE )
+    planbody
+    DOT
     ;
 
-plandefinition :
-     RIGHTARROWDOUBLE planbody
+trigger :
+    EVENTOPERATOR
+    ( belief | proceduralgoal | achievementgoal | maintenancegoal )
     ;
 
 planbody :
-    (  planbodyformula SEMICOLON )*
-    planbodyformula
+    ( instruction SEMICOLON )*
+    instruction
     ;
 
-/**
- * basic executable formula
- */
-
-
-planbodyformula :
+instruction :
     for_loop
     | if_else
-    | beliefaction
-    | testgoal
-    | achievementgoal
     | primitiveaction
+    | instruction1
+    | instruction2
+    | EVENTVALUE
     | assignment
     ;
 
-expression :
-    lhs=expression binaryoperator=AS rhs=expression
-    | lhs=expression binaryoperator=ARITHMETICOPERATOR1 rhs=expression
-    | lhs=expression binaryoperator=ARITHMETICOPERATOR2 rhs=expression
-    | lhs=expression binaryoperator=ARITHMETICOPERATOR3 rhs=expression
-    | lhs=expression binaryoperator=ASSIGNOPERATOR rhs=expression
-    | lhs=expression binaryoperator=RELATIONALOPERATOR rhs=expression
-    | lhs=expression binaryoperator=OBJECT_REF rhs=expression
-    | lhs=expression binaryoperator=RETURNS rhs=expression
-    | DEFAULTNEGATION single=expression
-    | lhs=expression binaryoperator=LOGICALOPERATOR1 rhs=expression
-    | lhs=expression binaryoperator=LOGICALOPERATOR2 rhs=expression
-    | lhs=expression binaryoperator=LOGICALOPERATOR3 rhs=expression
-    | LEFTROUNDBRACKET single=expression RIGHTROUNDBRACKET
-    | term
-    ;
-
-assignment :
-    variable (ASSIGNOPERATOR) term
+instruction1:
+    EVENTOPERATOR // TODO: took out the +- expression, it is confusing
+    (belief | maintenancegoal)
 ;
 
-beliefaction :
-    beliefactiontrigger  literal
+instruction2:
+    (EVENTOPERATOR)? // TODO: to consider the parallel activation
+    (proceduralgoal | achievementgoal | testgoal)
+;
+
+primitiveaction :
+    HASH primitiveinvokation
+    | PRIMITIVECODE
+;
+
+primitiveinvokation :
+    (
+      (LOWERCASEATOM (termlist)? | HIGHERCASEATOM) DOT
+    )?   // TODO: not sure we need this, or we should rather use primitive code for complex calls.
+    LOWERCASEATOM (termlist)?   // TODO: I constrain parameters to terms here. why we need more of them?
+;
+
+//-- transformational rules, e.g. inferential
+
+inferentialrule :
+    ( belief )?
+    ( RULEOPERATOR ext_belief (COMMA ext_belief)* )+
+    DOT
     ;
+
+// --- basic control structures ---------------------------------------------------------------
 
 for_loop :
     FOR LEFTROUNDBRACKET variable IN expression RIGHTROUNDBRACKET
-        LEFTCURVEDBRACKET
-        (planbodyformula SEMICOLON)*
-        RIGHTCURVEDBRACKET;
+    LEFTCURVEDBRACKET
+    (instruction SEMICOLON)*
+    RIGHTCURVEDBRACKET;
 
 if_else :
      IF condition_block (ELSE IF condition_block)* (ELSE code_block)?
@@ -117,48 +124,55 @@ condition_block :
 
 code_block :
     (
-         (LEFTCURVEDBRACKET (planbodyformula SEMICOLON)* RIGHTCURVEDBRACKET)
+         (LEFTCURVEDBRACKET (instruction SEMICOLON)* RIGHTCURVEDBRACKET)
          |
-         single=planbodyformula SEMICOLON
+         single=instruction SEMICOLON
     )
 ;
 
-testgoal :
-    ( QUESTIONMARK )
-    ( literal  )
+expression :
+    lhs=expression binaryoperator=AS rhs=expression  // TODO: what it is?
+    | lhs=expression binaryoperator=ARITHMETICBINARYOPERATOR1 rhs=expression
+    | lhs=expression binaryoperator=ARITHMETICBINARYOPERATOR2 rhs=expression
+    | lhs=expression binaryoperator=ARITHMETICBINARYOPERATOR3 rhs=expression
+    | lhs=expression binaryoperator=ASSIGNOPERATOR rhs=expression
+    | lhs=expression binaryoperator=RELATIONALOPERATOR rhs=expression
+    // | lhs=expression binaryoperator=OBJECT_REF rhs=expression // TODO: what it is?
+    | lhs=expression binaryoperator=RETURNS rhs=expression  // TODO: what it is?
+    | DEFAULTNEGATION single=expression  // TODO: why here?
+    | lhs=expression binaryoperator=LOGICALOPERATOR1 rhs=expression
+    | lhs=expression binaryoperator=LOGICALOPERATOR2 rhs=expression
+    | lhs=expression binaryoperator=LOGICALOPERATOR3 rhs=expression
+    | LEFTROUNDBRACKET single=expression RIGHTROUNDBRACKET  // TODO: what it is?
+    | term
+    ;
+
+assignment :
+    variable (ASSIGNOPERATOR) term
 ;
 
-achievementgoal :
-    ( EXCLAMATIONMARK )
-    ( literal )
-;
 
-primitiveaction :
-    OBJECT_ATOM paramlist? function_call*
-;
-
-function_call :
-    FUNC_NAME paramlist?
-;
-
-// --- logic base elements ---------------------------------------------------------------
+// --- term elements ---------------------------------------------------------------
 
 term :
-    primitiveaction
-    | termvalue
+    neg_literal
     | variable
-    | literal
+    | constant
+    | primitiveaction
     ;
 
-termvalue :
-    LOGICALVALUE
-    | NUMBER
-    | STRING
+naf_literal :
+    ( DEFAULTNEGATION )?
+    neg_literal
     ;
 
-literal :
-    STRONGNEGATION?
-    ATOM
+neg_literal :
+    ( STRONGNEGATION )?
+    pos_literal
+    ;
+
+pos_literal :
+    LOWERCASEATOM
     termlist?
     ;
 
@@ -166,13 +180,17 @@ termlist :
     LEFTROUNDBRACKET term ( COMMA term )* RIGHTROUNDBRACKET
     ;
 
-paramlist :
-    LEFTROUNDBRACKET (expression ( COMMA expression )*)? RIGHTROUNDBRACKET
+variable :
+    HIGHERCASEATOM
     ;
 
-variable :
-    VARIABLEATOM
+constant :
+    LOGICALVALUE
+    | EVENTVALUE
+    | NUMBER
+    | STRING
     ;
+
 
 // --- keyword rules must be first rules -----------------------------------------------------------------------------------------------------------------------
 
@@ -187,15 +205,21 @@ LOGICALVALUE :
     | FALSE
 ;
 
+EVENTVALUE:
+    SUCCESS
+    | FAIL
+;
+
 NUMBER :
     MINUS? DIGITSEQUENCE
 ;
-
 
 STRING :
     SINGLEQUOTESTRING
     | DOUBLEQUOTESTRING
     ;
+
+PRIMITIVECODE : '#{' ~('"')* '}#';
 
 // --- operators must be second rules---------------------------------------------------------------------------------------------------------------------------
 
@@ -203,8 +227,46 @@ STRONGNEGATION : '~';
 DEFAULTNEGATION : 'not';
 
 RETURNS    : 'returns';
-OBJECT_REF : '<-';
+OBJECT_REF : LEFTARROW;
 AS : 'as';
+
+EVENTOPERATOR:
+    PLUS
+    | MINUS
+    ;
+
+
+LOGICALOPERATOR1 : // TODO: check whether XOR should have higher precedence on AND...
+    XOR
+    ;
+
+LOGICALOPERATOR2 :
+    AND
+    ;
+
+LOGICALOPERATOR3 :
+    OR
+    ;
+
+ARITHMETICBINARYOPERATOR1 :
+    POW
+    ;
+
+ARITHMETICBINARYOPERATOR2 :
+    MULTIPLY
+    | DIVIDE
+    | MODULO
+    ;
+
+ARITHMETICBINARYOPERATOR3 :
+    PLUS
+    | MINUS
+    ;
+
+ARITHMETICUNARYOPERATOR :
+    INCREMENT
+    | DECREMENT
+    ;
 
 RELATIONALOPERATOR :
     EQUAL
@@ -221,94 +283,21 @@ ASSIGNOPERATOR :
     ASSIGN
     ;
 
-LOGICALOPERATOR1 :
-    XOR
-    ;
+// --- base structure ---------------------------------------------------------------------------------------------------------------------------
 
-LOGICALOPERATOR2 :
-    AND
-    ;
-
-LOGICALOPERATOR3 :
-    OR
-    ;
-
-ARITHMETICOPERATOR1 :
-    POW
-    ;
-
-ARITHMETICOPERATOR2 :
-    MULTIPLY
-    | DIVIDE
-    | MODULO
-    ;
-
-ARITHMETICOPERATOR3 :
-    PLUS
-    | MINUS
-    ;
-
-UNARYOPERATOR :
-    INCREMENT
-    | DECREMENT
-    ;
-
-// --- annotation and base structure ---------------------------------------------------------------------------------------------------------------------------
-
-ANNOTATION :
-    AT
-    (
-        ANNOTATION_CONSTANT
-        | ANNOTATION_VARIABLEDESCRIPTION
-        | ANNOTATION_STRING
-        | PARALLEL
-        | ATOMIC
-    )
-    ;
-
-ANNOTATION_STRING :
-    ( DESCRIPTION | TAG )
-    LEFTROUNDBRACKET
-    STRING
-    RIGHTROUNDBRACKET
-    ;
-
-ANNOTATION_VARIABLEDESCRIPTION :
-    VARIABLE
-    LEFTROUNDBRACKET
-    VARIABLEATOM
-    COMMA
-    STRING
-    RIGHTROUNDBRACKET
-    ;
-
-ANNOTATION_CONSTANT :
-    CONSTANT
-    LEFTROUNDBRACKET
-    VARIABLEATOM
-    COMMA
-    ( NUMBER | STRING )
-    RIGHTROUNDBRACKET
-    ;
-
-VARIABLEATOM :
+HIGHERCASEATOM :
     ( UPPERCASELETTER | UNDERSCORE )
     ( LOWERCASELETTER | UPPERCASELETTER | DIGIT | SLASH )*
-    ;
+;
 
-FUNC_NAME :
-      DOT (LOWERCASELETTER | UPPERCASELETTER)
-      ( LOWERCASELETTER | UPPERCASELETTER | DIGIT | UNDERSCORE )*
-       ;
-
-ATOM :
+LOWERCASEATOM :
     LOWERCASELETTER
     ( LOWERCASELETTER | UPPERCASELETTER | DIGIT | SLASH | MINUS | UNDERSCORE )*
-    ;
+;
 
-OBJECT_ATOM :
-     HASH (ATOM | VARIABLEATOM)
-     ;
+// for the underlying language
+
+
 
 // --- character structures ------------------------------------------------------------------------------------------------------------------------------------
 
@@ -322,6 +311,7 @@ HASH                       : '#';
 
 LEFTARROW                  : '<-';
 RIGHTARROW                 : '->';
+LEFTARROWDOUBLE            : '<=';
 RIGHTARROWDOUBLE           : '=>';
 RULEOPERATOR               : ':-';
 AT                         : '@';
@@ -340,30 +330,28 @@ RIGHTANGULARBRACKET        : ']';
 LEFTCURVEDBRACKET          : '{';
 RIGHTCURVEDBRACKET         : '}';
 
+
 fragment PLUS              : '+';
 fragment MINUS             : '-';
-fragment DIVIDE            : '//';
+fragment DIVIDE            : '/'; // TODO: check, I returned to the more usual syntax
 
 fragment AND               : '&&' ;
 fragment OR                : '||' ;
 fragment XOR               : '^' ;
 
-fragment TRUE              : 'true' | 'success';  // NOT THE SAME
-fragment FALSE             : 'false' | 'fail';
-fragment CONSTANT          : 'constant';
-fragment PARALLEL          : 'parallel';
-fragment ATOMIC            : 'atomic';
-fragment DESCRIPTION       : 'description';
-fragment TAG               : 'tag';
-fragment VARIABLE          : 'variable';
+fragment TRUE              : 'true' ;
+fragment FALSE             : 'false' ;
+fragment SUCCESS           : 'success' ;
+fragment FAIL              : 'fail' ;
 
+DECONSTRUCT                : '=..';  // TODO: PROLOG like component. to be taken out?
+fragment IS                : 'is';   // TODO: PROLOG like component. to be taken out?
 
-DECONSTRUCT                : '=..';
 fragment ASSIGN            : '=';
 fragment ASSIGNINCREMENT   : '+=';
 fragment ASSIGNDECREMENT   : '-=';
 fragment ASSIGNMULTIPLY    : '*=';
-fragment ASSIGNDIVIDE      : '//=';
+fragment ASSIGNDIVIDE      : '/=';
 fragment ASSIGNMODULO      : '%=';
 fragment ASSIGNPOW         : '^=';
 fragment INCREMENT         : '++';
@@ -373,13 +361,11 @@ fragment LESSEQUAL         : '=<';
 fragment GREATER           : '>';
 fragment GREATEREQUAL      : '>=';
 fragment EQUAL             : '==';
-fragment NOTEQUAL          : '!==';
-fragment NOTUNIFIABLE      : '!=';
+fragment NOTEQUAL          : '!=='; // TODO: PROLOG like component. to be taken out?
+fragment NOTUNIFIABLE      : '!=';  // TODO: PROLOG like component. to be taken out?
 fragment POW               : '**';
 fragment MULTIPLY          : '*';
 fragment MODULO            : '%' | 'mod';
-
-fragment IS          : 'is';
 
 fragment SINGLEQUOTESTRING : '\'' ~('\'')* '\'';
 fragment DOUBLEQUOTESTRING : '"' ~('"')* '"';
@@ -393,4 +379,4 @@ fragment DIGITSEQUENCE     : DIGIT+ ('.' DIGIT+)?;
 
 WHITESPACE                 : (' ' | '\n' | '\t' | '\r')+ -> skip;
 LINECOMMENT                : '//' .*? '\r'? '\n' -> skip;
-BLOCKCOMMENT               :   '/*' .*? '*/' -> skip;
+BLOCKCOMMENT               : '/*' .*? '*/' -> skip;
