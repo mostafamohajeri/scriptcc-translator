@@ -176,7 +176,7 @@ expression :
     ;
 
 assignment_statement :
-    variable (ASSIGNOPERATOR) term
+    variable (ASSIGNOPERATOR) expression
 ;
 
 
@@ -249,7 +249,7 @@ testgoal :
  */
 achievementgoal :
     ( EXCLAMATIONMARK )
-    ( literal )
+    ( ATOM paramlist? )
     ;
 
 maintenancegoal :
@@ -477,7 +477,7 @@ termvalue :
 literal :
     STRONGNEGATION?
     ATOM
-    termlist?
+    paramlist?
     ;
 
 /**

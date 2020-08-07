@@ -16,12 +16,19 @@ public class BinaryExpression extends Expression implements IExpression {
 
     @Override
     public String getSt4() {
-        return String.format("Struct.of(\"%s\",%s,%s)",TUPOperator(operator), lhs.getSt4(),rhs.getSt4());
+        return String.format("StructTerm(\"%s\",Seq[GenericTerm](%s,%s))",TUPOperator(operator), lhs.getSt4(),rhs.getSt4());
     }
 
     @Override
     public String getNative() {
-        return String.format(" %s %s %s ",lhs.getNative(), NativeOperator(operator),rhs.getNative());
+        if(operator.equals("=")) {
+            if(lhs instanceof TermExpression && ((TermExpression) lhs).getTerm() instanceof Variable)
+                return String.format(" (vars %s (\"%s\" -> %s)) ", NativeOperator(operator),
+                        ((Variable) ((TermExpression) lhs).getTerm()).getName() ,
+                        rhs.getNative());
+            else throw new RuntimeException("Assign to non-var:" + lhs.getNative());
+        }
+        return String.format(" (%s %s %s) ",lhs.getNative(), NativeOperator(operator),rhs.getNative());
     }
 
     @Override
@@ -78,6 +85,7 @@ public class BinaryExpression extends Expression implements IExpression {
             case "*": return "*";
             case "/": return "/";
             case "%": return "%";
+            case "=": return "+=+";
         }
         return "UNIDENTIFIED_OPERATOR: " + ASOperator;
     }

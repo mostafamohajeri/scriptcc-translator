@@ -1,5 +1,6 @@
 package agentscript.language.entities;
 
+import agentscript.language.entities.expression.Expression;
 import agentscript.language.entities.goals.IPlanStep;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -16,7 +17,7 @@ public class BeliefAction implements IPlanStep {
 
     public String getOperator() { return String.format("\"%s\"", actionOperator.getValue()); }
     public String getWritableName () {return literal.getAtom().getName();}
-    public List<Term> getWritableTerms() {return literal.getTerms();}
+    public List<Expression> getWritableTerms() {return literal.getExpressions();}
     public final boolean belief_action = true;
 
     public static BeliefAction empty() {

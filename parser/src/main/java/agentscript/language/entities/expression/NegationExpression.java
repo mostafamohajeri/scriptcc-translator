@@ -9,7 +9,7 @@ public class NegationExpression extends Expression implements IExpression {
     Expression expression;
     @Override
     public String getSt4() {
-        return String.format("StructTerm(\"not\",%s)",expression.getSt4());
+        return String.format("StructTerm(\"not\",Seq[GenericTerm](%s))",expression.getSt4());
     }
     @Override
     public String getNative() {

@@ -1,7 +1,6 @@
 package agentscript.language.entities.goals;
 
 import agentscript.language.entities.*;
-import agentscript.language.entities.expression.Expression;
 import lombok.*;
 
 import java.util.List;
@@ -15,7 +14,7 @@ public class GoalPlan {
     Literal goal;
     List<Plan> plans;
 
-    public int getArity() {return this.goal.getTerms().size();}
+    public int getArity() {return this.goal.getExpressions().size();}
     public void addPlan(Plan p) {
         plans.add(p);
     }

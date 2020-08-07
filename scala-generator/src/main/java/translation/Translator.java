@@ -1,6 +1,6 @@
 package translation;
 
-import agentscript.language.visitor.CAgentVisitor;
+import agentscript.language.visitor .CAgentVisitor;
 import grammar.AgentLexer;
 import grammar.AgentParser;
 import org.antlr.v4.runtime.ANTLRInputStream;
@@ -67,18 +67,7 @@ public class Translator {
     }
 
     private void translate_to_file(String input_file_address, String template,String generatedName,String output_address) {
-        createParser(new File(input_file_address));
-
-        CAgentVisitor agentVisitor = new CAgentVisitor();
-        agentVisitor.visit(parser.agent());
-
-        STGroupString stGroupString = new STGroupString(template);
-        ST st = stGroupString.getInstanceOf("agentdef");
-        st.add("initialGoals", agentVisitor.getFactory().getAgent().getInitialGoals());
-        st.add("initialBeliefs", agentVisitor.getFactory().getAgent().getInitialBeliefs());
-        st.add("goalPlans", agentVisitor.getFactory().getAgent().getGoalPlans());
-        st.add("class_name", generatedName);
-        String output = st.render();
+        String output = this.translate(input_file_address,template,generatedName);
         writeFile(String.format("%s/%s.scala",output_address,generatedName),output);
         deleteParser();
     }

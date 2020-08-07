@@ -23,7 +23,7 @@ import bb._
 import infrastructure._
 import infrastructure.termutils.ExTermFactoryKT._
 import infrastructure.termutils.ExTermVisitorKT._
-import bb.exp._
+import bb.expstyla.exp._
 
 >>
 
@@ -71,8 +71,8 @@ object Agent extends IAgent {
 
         def initGoals()(implicit executionContext: ExecutionContext) = List[StructTerm](
           < initialGoals : { initialGoal |
+          StructTerm("<initialGoal.goal.writableName>",Seq[GenericTerm]( <initialGoal.goal.writableTerms : { expression | <expression.native> } ; separator=", "> ))
 
-          <initialGoal.goal.literal.refName>
             }; separator=",\n " >
         )
 
@@ -95,7 +95,7 @@ object Agent extends IAgent {
         def apply(name: String,yellowPages: ActorRef[IMessage],MAS: ActorRef[IMessage]): Behavior[IMessage] = {
               Behaviors.setup { context =>
                 val yp : ActorRef[IMessage] = yellowPages
-                val bb : BeliefBaseKT = BeliefBaseFactory()
+                val bb : BeliefBaseStyla = BeliefBaseFactory()
                 val logger = AgentLogger()
                 implicit val executionContext : ExecutionContext = ExecutionContext(name,agent_type,context,yp,bb,logger)
                 bb.assert(initBeliefs)
@@ -108,7 +108,7 @@ object Agent extends IAgent {
                     case StartMessage() =>
                       logger.start()
 
-              implicit val timeout: Timeout = 20.seconds
+              implicit val timeout: Timeout = 99999.seconds
                             implicit val ec = context.executionContext
                             implicit val scheduler = context.system.scheduler
 
@@ -194,25 +194,25 @@ goal_plans(class_name,goalPlans) ::= <<
 
        def execute(params: Parameters) (implicit executionContext: ExecutionContext) : Unit = {
         <goalPlan.goal.terms : { term | //var <term.name> = params.l_params(<i0>)  }; separator="\n">
-        var vars = new HashMap[String,GenericTerm]
+        var vars = VarMap()
         <goalPlan.plans : { plan |
         //plan <i0>
 
                 vars.clear()
-                <if(plan.literal.terms)>
-                vars +=( <plan.literal.terms : { term | <if(term.is_var)>"<term.name>" -> params.l_params(<i0>)<else>"<i0>" -> params.l_params(<i0>)<endif>}; separator=", "> )
+                <if(plan.literal.expressions)>
+                vars +=( <plan.literal.expressions : { term | <if(term.term.is_var)>"<term.term.name>" -> params.l_params(<i0>)<else>"<i0>" -> params.l_params(<i0>)<endif>}; separator=", "> )
                <endif>
 
                 val m<i0> = executionContext.beliefBase.matchTerms(<plan.headCheck>);
 
                if(m<i0>.result)
                 {
-                m<i0>.bindings foreach { case (k, v) => vars += (k -> v) \}
+                m<i0>.bindings foreach { case (k, v) => vars += (k -> v.asInstanceOf[GenericTerm]) \}
 
                 val r<i0> = executionContext.beliefBase.query(<plan.expression.st4>)
 
                 if (r<i0>.result) {
-                    r<i0>.bindings foreach { case (k, v) => vars += (k -> v) \}
+                    r<i0>.bindings foreach { case (k, v) => vars += (k -> v.asInstanceOf[GenericTerm]) \}
                     plan<i0>(vars)
                     return
                 \}
@@ -223,7 +223,7 @@ goal_plans(class_name,goalPlans) ::= <<
 
 
         < goalPlan.plans : { plan |
-             def plan<i0>(vars: HashMap[String,GenericTerm])(implicit executionContext: ExecutionContext): Unit = {
+             def plan<i0>(vars: VarMap)(implicit executionContext: ExecutionContext): Unit = {
 
              <code_block(plan.planDefinition.steps)>
 
@@ -239,7 +239,7 @@ goal_plans(class_name,goalPlans) ::= <<
 code_block(steps) ::= <<
 <steps : { step |
                 <if(step.achieve)>
-                    <step.writableName>.execute(<step.writableName>.Parameters(List( <step.writableTerms : { term | <term.refName> } ; separator=", "> )))
+                    <step.writableName>.execute(<step.writableName>.Parameters(List( <step.writableTerms : { expression | <expression.native> } ; separator=", "> )))
                 <elseif(step.primitive)>
                     PrimitiveAction.execute(PrimitiveAction.Parameters(() => <step.call>))
                 <elseif(step.for_loop)>
@@ -281,7 +281,7 @@ code_block(steps) ::= <<
                 <elseif(step.assign)>
                      <step.call>
                 <elseif(step.belief_action)>
-                     BeliefUpdateAction.execute(BeliefUpdateAction.Parameters(<step.operator>, <step.literal.refName>))
+                     BeliefUpdateAction.execute(BeliefUpdateAction.Parameters(<step.operator>, <step.literal.value>))
                 <endif>
                 } >
 >>
