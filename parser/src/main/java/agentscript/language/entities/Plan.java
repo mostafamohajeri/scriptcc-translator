@@ -19,9 +19,7 @@ public class Plan {
 
     public String getHeadCheck() {
 
-        if(literal.getTerms().stream().filter(
-                t -> !(t instanceof Variable)
-        ).count() == 0) return "/* " + literal.getRefName(false) + " All vars no need to check */" ;
+        if(literal.getVars().size() == 0) return "/* " + literal.getRefName(false) + " All vars no need to check */" ;
 
         return this.literal.getRefName(false) +
                 ",StructTerm(\""+literal.atom.name + "\",params.l_params)";

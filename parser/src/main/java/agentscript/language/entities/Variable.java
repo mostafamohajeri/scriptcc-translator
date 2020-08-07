@@ -19,8 +19,7 @@ public class Variable extends Term {
     @Override
     public String getRefName(boolean isRoot) { return
 //           "toTerm(" +
-            "VarManager.bindVar(\"" + this.name + "\", vars)" +
-                    "";
+            "vars(\"" + this.name + "\")";
 //                    ")";
     }
 

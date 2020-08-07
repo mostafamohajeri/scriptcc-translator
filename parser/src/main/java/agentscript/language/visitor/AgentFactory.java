@@ -3,7 +3,6 @@ package agentscript.language.visitor;
 import agentscript.language.entities.InitialBelief;
 import agentscript.language.entities.Plan;
 import agentscript.language.entities.agent.Agent;
-import agentscript.language.entities.goals.AchievementGoal;
 import agentscript.language.entities.goals.GoalPlan;
 import agentscript.language.entities.goals.InitialGoal;
 import lombok.Getter;
@@ -30,7 +29,7 @@ public class AgentFactory {
             boolean add = true;
 
             for (GoalPlan gp : agent.getGoalPlans()) {
-                if (gp.getGoal().getAtom().equals(p.getLiteral().getAtom()) && gp.getGoal().getTerms().size() == p.getLiteral().getTerms().size()) {
+                if (gp.getGoal().getAtom().equals(p.getLiteral().getAtom()) && gp.getGoal().getExpressions().size() == p.getLiteral().getExpressions().size()) {
                     gp.addPlan(p);
                     add = false;
                     break;

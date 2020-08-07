@@ -9,7 +9,6 @@ import agentscript.language.entities.goals.*;
 import grammar.AgentBaseVisitor;
 import grammar.AgentParser;
 import lombok.Getter;
-import org.antlr.v4.runtime.misc.Pair;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -220,7 +219,10 @@ public class CAgentVisitor extends AgentBaseVisitor<Optional<Object>> {
 
     @Override
     public Optional<Object> visitAchievementgoal(AgentParser.AchievementgoalContext ctx) {
-        return Optional.of(AchievementGoal.from((Literal) visitLiteral(ctx.literal()).orElse(Literal.empty())));
+        return Optional.of(AchievementGoal.from((Atom) Atom.from(ctx.ATOM().getText()),
+                Objects.nonNull(ctx.paramlist()) ? (List) this.visitParamlist(ctx.paramlist()).orElse(Collections.EMPTY_LIST) : null
+                )
+                );
     }
 
     @Override
@@ -285,8 +287,8 @@ public class CAgentVisitor extends AgentBaseVisitor<Optional<Object>> {
         return Optional.of(Literal.builder()
                 .negated(Objects.nonNull(ctx.STRONGNEGATION()))
                 .atom(Atom.from(ctx.ATOM().getText()))
-                .terms(
-                        Objects.nonNull(ctx.termlist()) ? (List) this.visitTermlist(ctx.termlist()).orElse(Collections.EMPTY_LIST) : Collections.EMPTY_LIST
+                .expressions(
+                        Objects.nonNull(ctx.paramlist()) ? (List) this.visitParamlist(ctx.paramlist()).orElse(Collections.EMPTY_LIST) : Collections.EMPTY_LIST
                 ).build());
     }
 
@@ -337,10 +339,10 @@ public class CAgentVisitor extends AgentBaseVisitor<Optional<Object>> {
 
     @Override
     public Optional<Object> visitAssignment_statement(AgentParser.Assignment_statementContext ctx) {
-        if(Objects.nonNull(ctx.variable()) && Objects.nonNull(ctx.term())) {
+        if(Objects.nonNull(ctx.variable()) && Objects.nonNull(ctx.expression())) {
             return Optional.of(AssignmentAction.from(
                     (Variable) visitVariable(ctx.variable()).get(),
-                    (PrimitiveAction) visitTerm(ctx.term()).get()
+                    (Expression) visitExpression(ctx.expression()).get()
             ));
         }
 

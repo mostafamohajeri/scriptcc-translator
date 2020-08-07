@@ -5,9 +5,9 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>nl.uva.sne.cci</groupId>
-    <artifactId>antlr4grammars</artifactId>
+    <artifactId>core</artifactId>
     <packaging>pom</packaging>
-    <version>0.1</version>
+    <version>0.2.3</version>
     <modules>
         <module>java-generator</module>
         <module>parser</module>
@@ -68,8 +68,16 @@
         </dependency>
 
 
+
     </dependencies>
 
+    <distributionManagement>
+        <repository>
+            <id>bintray-uva-cci-script-cc-grammars</id>
+            <name>uva-cci-script-cc-grammars</name>
+            <url>https://api.bintray.com/maven/uva-cci/script-cc-grammars/core/;publish=1</url>
+        </repository>
+    </distributionManagement>
 
 
 </project>

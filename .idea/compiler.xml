@@ -14,5 +14,8 @@
         <module name="java-generator" />
       </profile>
     </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="antr4grammars" target="11" />
+    </bytecodeTargetLevel>
   </component>
 </project>

@@ -1,7 +1,8 @@
 package agentscript.language.entities;
 
+import agentscript.language.entities.expression.Expression;
+import agentscript.language.entities.expression.TermExpression;
 import lombok.Builder;
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Singular;
 
@@ -17,10 +18,10 @@ public class Literal extends Term {
     Atom atom;
 
     @Singular
-    List<Term> terms;
+    List<Expression> expressions;
 
-    public List<Term> getVars() {
-        return terms.stream().filter(t -> t instanceof Variable).collect(Collectors.toList());
+    public List<Expression> getVars() {
+        return expressions.stream().filter(t -> !(t instanceof TermExpression) || !(((TermExpression) t).getTerm() instanceof Variable)).collect(Collectors.toList());
     }
 
     public static Literal empty() {
@@ -30,7 +31,19 @@ public class Literal extends Term {
 
     @Override
     public String getValue() {
-        return this.getRefName(false);
+        StringBuilder builder = new StringBuilder();
+        builder.append("StructTerm(\"");
+        builder.append(this.getAtom().getName());
+        builder.append("\",Seq[GenericTerm](");
+        if(this.getExpressions().size()>0) {
+            builder.append(this.getExpressions()
+                    .stream()
+                    .map(t -> t.getNative())
+                    .collect(Collectors.joining(",")));
+        }
+
+        builder.append("))");
+        return builder.toString();
     }
 
     public String getScalaCode() {
@@ -44,10 +57,10 @@ public class Literal extends Term {
         builder.append("StructTerm(\"");
         builder.append(this.getAtom().getName());
         builder.append("\",Seq[GenericTerm](");
-        if(this.getTerms().size()>0) {
-            builder.append(this.getTerms()
+        if(this.getExpressions().size()>0) {
+            builder.append(this.getExpressions()
                     .stream()
-                    .map(t -> t.getRefName(isRoot))
+                    .map(t -> t.getSt4())
                     .collect(Collectors.joining(",")));
         }
 

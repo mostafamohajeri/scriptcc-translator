@@ -10,6 +10,8 @@ import lombok.Getter;
 public class TermExpression extends Expression implements IExpression{
     Term term;
 
+    public final boolean is_term = true;
+
     @Override
     public String getSt4() {
         if(term instanceof PrimitiveAction)

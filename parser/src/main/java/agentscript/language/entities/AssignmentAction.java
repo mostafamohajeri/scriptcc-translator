@@ -1,5 +1,6 @@
 package agentscript.language.entities;
 
+import agentscript.language.entities.expression.Expression;
 import agentscript.language.entities.goals.IPlanStep;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -11,12 +12,12 @@ import lombok.NoArgsConstructor;
 public class AssignmentAction implements IPlanStep {
 
     Variable v;
-    Term action;
+    Expression expression;
 
     public final boolean assign = true;
 
     public String getCall() {
-        String s = "vars += (\"" + v.getName() + "\" -> "+ action.getRefName(false) +")";
+        String s = "vars += (\"" + v.getName() + "\" -> "+ expression.getNative() +")";
         return s;
     }
 
