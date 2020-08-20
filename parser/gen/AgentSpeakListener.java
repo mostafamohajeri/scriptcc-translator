@@ -1,4 +1,4 @@
-// Generated from /home/mostafa/IdeaProjects/antr4grammars/parser/src/main/antlr4/grammar/AgentSpeak.g4 by ANTLR 4.8
+// Generated from /home/msotafa/IdeaProjects/antr4grammars/parser/src/main/antlr4/grammar/AgentSpeak.g4 by ANTLR 4.8
 import org.antlr.v4.runtime.tree.ParseTreeListener;
 
 /**
@@ -117,6 +117,16 @@ public interface AgentSpeakListener extends ParseTreeListener {
 	 */
 	void exitExpression(AgentSpeakParser.ExpressionContext ctx);
 	/**
+	 * Enter a parse tree produced by {@link AgentSpeakParser#assignment_statement}.
+	 * @param ctx the parse tree
+	 */
+	void enterAssignment_statement(AgentSpeakParser.Assignment_statementContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link AgentSpeakParser#assignment_statement}.
+	 * @param ctx the parse tree
+	 */
+	void exitAssignment_statement(AgentSpeakParser.Assignment_statementContext ctx);
+	/**
 	 * Enter a parse tree produced by {@link AgentSpeakParser#beliefaction}.
 	 * @param ctx the parse tree
 	 */
@@ -126,6 +136,46 @@ public interface AgentSpeakListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitBeliefaction(AgentSpeakParser.BeliefactionContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link AgentSpeakParser#for_loop}.
+	 * @param ctx the parse tree
+	 */
+	void enterFor_loop(AgentSpeakParser.For_loopContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link AgentSpeakParser#for_loop}.
+	 * @param ctx the parse tree
+	 */
+	void exitFor_loop(AgentSpeakParser.For_loopContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link AgentSpeakParser#if_else}.
+	 * @param ctx the parse tree
+	 */
+	void enterIf_else(AgentSpeakParser.If_elseContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link AgentSpeakParser#if_else}.
+	 * @param ctx the parse tree
+	 */
+	void exitIf_else(AgentSpeakParser.If_elseContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link AgentSpeakParser#condition_block}.
+	 * @param ctx the parse tree
+	 */
+	void enterCondition_block(AgentSpeakParser.Condition_blockContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link AgentSpeakParser#condition_block}.
+	 * @param ctx the parse tree
+	 */
+	void exitCondition_block(AgentSpeakParser.Condition_blockContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link AgentSpeakParser#code_block}.
+	 * @param ctx the parse tree
+	 */
+	void enterCode_block(AgentSpeakParser.Code_blockContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link AgentSpeakParser#code_block}.
+	 * @param ctx the parse tree
+	 */
+	void exitCode_block(AgentSpeakParser.Code_blockContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link AgentSpeakParser#testgoal}.
 	 * @param ctx the parse tree
@@ -167,6 +217,16 @@ public interface AgentSpeakListener extends ParseTreeListener {
 	 */
 	void exitPrimitiveaction(AgentSpeakParser.PrimitiveactionContext ctx);
 	/**
+	 * Enter a parse tree produced by {@link AgentSpeakParser#function_call}.
+	 * @param ctx the parse tree
+	 */
+	void enterFunction_call(AgentSpeakParser.Function_callContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link AgentSpeakParser#function_call}.
+	 * @param ctx the parse tree
+	 */
+	void exitFunction_call(AgentSpeakParser.Function_callContext ctx);
+	/**
 	 * Enter a parse tree produced by {@link AgentSpeakParser#term}.
 	 * @param ctx the parse tree
 	 */
@@ -207,6 +267,16 @@ public interface AgentSpeakListener extends ParseTreeListener {
 	 */
 	void exitTermlist(AgentSpeakParser.TermlistContext ctx);
 	/**
+	 * Enter a parse tree produced by {@link AgentSpeakParser#paramlist}.
+	 * @param ctx the parse tree
+	 */
+	void enterParamlist(AgentSpeakParser.ParamlistContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link AgentSpeakParser#paramlist}.
+	 * @param ctx the parse tree
+	 */
+	void exitParamlist(AgentSpeakParser.ParamlistContext ctx);
+	/**
 	 * Enter a parse tree produced by {@link AgentSpeakParser#variable}.
 	 * @param ctx the parse tree
 	 */
@@ -216,14 +286,4 @@ public interface AgentSpeakListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitVariable(AgentSpeakParser.VariableContext ctx);
-	/**
-	 * Enter a parse tree produced by {@link AgentSpeakParser#for_loop}.
-	 * @param ctx the parse tree
-	 */
-	void enterFor_loop(AgentSpeakParser.For_loopContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link AgentSpeakParser#for_loop}.
-	 * @param ctx the parse tree
-	 */
-	void exitFor_loop(AgentSpeakParser.For_loopContext ctx);
 }

@@ -1,4 +1,4 @@
-// Generated from /home/mostafa/IdeaProjects/antr4grammars/parser/src/main/antlr4/grammar/AgentSpeak.g4 by ANTLR 4.8
+// Generated from /home/msotafa/IdeaProjects/antr4grammars/parser/src/main/antlr4/grammar/AgentSpeak.g4 by ANTLR 4.8
 import org.antlr.v4.runtime.atn.*;
 import org.antlr.v4.runtime.dfa.DFA;
 import org.antlr.v4.runtime.*;
@@ -16,56 +16,62 @@ public class AgentSpeakParser extends Parser {
 	protected static final PredictionContextCache _sharedContextCache =
 		new PredictionContextCache();
 	public static final int
-		FOR=1, LOGICALVALUE=2, NUMBER=3, CONSTANTNUMBER=4, STRING=5, STRONGNEGATION=6, 
-		DEFAULTNEGATION=7, RELATIONALOPERATOR=8, LOGICALOPERATOR1=9, LOGICALOPERATOR2=10, 
-		LOGICALOPERATOR3=11, ARITHMETICOPERATOR1=12, ARITHMETICOPERATOR2=13, ARITHMETICOPERATOR3=14, 
-		UNARYOPERATOR=15, ANNOTATION=16, ANNOTATION_STRING=17, ANNOTATION_VARIABLEDESCRIPTION=18, 
-		ANNOTATION_CONSTANT=19, VARIABLEATOM=20, ATOM=21, REFERENCEATOM=22, EXCLAMATIONMARK=23, 
-		COMMA=24, DOUBLEEXCLAMATIONMARK=25, QUESTIONMARK=26, DOLLAR=27, VLINE=28, 
-		HASH=29, LEFTARROW=30, RIGHTARROW=31, RIGHTARROWDOUBLE=32, RULEOPERATOR=33, 
-		AT=34, COLON=35, SEMICOLON=36, DOT=37, UNDERSCORE=38, SLASH=39, LEFTSHIFT=40, 
-		RIGHTSHIFT=41, LEFTROUNDBRACKET=42, RIGHTROUNDBRACKET=43, LEFTANGULARBRACKET=44, 
-		RIGHTANGULARBRACKET=45, LEFTCURVEDBRACKET=46, RIGHTCURVEDBRACKET=47, DECONSTRUCT=48, 
-		WHITESPACE=49, LINECOMMENT=50, BLOCKCOMMENT=51;
+		FOR=1, IF=2, ELIF=3, ELSE=4, IN=5, LOGICALVALUE=6, NUMBER=7, CONSTANTNUMBER=8, 
+		STRING=9, STRONGNEGATION=10, DEFAULTNEGATION=11, RETURNS=12, OBJECT_REF=13, 
+		AS=14, RELATIONALOPERATOR=15, ASSIGNOPERATOR=16, LOGICALOPERATOR1=17, 
+		LOGICALOPERATOR2=18, LOGICALOPERATOR3=19, ARITHMETICOPERATOR1=20, ARITHMETICOPERATOR2=21, 
+		ARITHMETICOPERATOR3=22, UNARYOPERATOR=23, ANNOTATION=24, ANNOTATION_STRING=25, 
+		ANNOTATION_VARIABLEDESCRIPTION=26, ANNOTATION_CONSTANT=27, VARIABLEATOM=28, 
+		FUNC_NAME=29, ATOM=30, OBJECT_ATOM=31, EXCLAMATIONMARK=32, COMMA=33, DOUBLEEXCLAMATIONMARK=34, 
+		QUESTIONMARK=35, DOLLAR=36, VLINE=37, HASH=38, LEFTARROW=39, RIGHTARROW=40, 
+		RIGHTARROWDOUBLE=41, RULEOPERATOR=42, AT=43, COLON=44, SEMICOLON=45, DOT=46, 
+		UNDERSCORE=47, SLASH=48, LEFTSHIFT=49, RIGHTSHIFT=50, LEFTROUNDBRACKET=51, 
+		RIGHTROUNDBRACKET=52, LEFTANGULARBRACKET=53, RIGHTANGULARBRACKET=54, LEFTCURVEDBRACKET=55, 
+		RIGHTCURVEDBRACKET=56, DECONSTRUCT=57, WHITESPACE=58, LINECOMMENT=59, 
+		BLOCKCOMMENT=60;
 	public static final int
 		RULE_belief = 0, RULE_initialgoal = 1, RULE_initialachievegoal = 2, RULE_initialmaintenancegoal = 3, 
 		RULE_plan = 4, RULE_plantrigger = 5, RULE_beliefactiontrigger = 6, RULE_plandefinition = 7, 
-		RULE_body = 8, RULE_bodyformula = 9, RULE_expression = 10, RULE_beliefaction = 11, 
-		RULE_testgoal = 12, RULE_achievementgoal = 13, RULE_maintenancegoal = 14, 
-		RULE_primitiveaction = 15, RULE_term = 16, RULE_termvalue = 17, RULE_literal = 18, 
-		RULE_termlist = 19, RULE_variable = 20, RULE_for_loop = 21;
+		RULE_body = 8, RULE_bodyformula = 9, RULE_expression = 10, RULE_assignment_statement = 11, 
+		RULE_beliefaction = 12, RULE_for_loop = 13, RULE_if_else = 14, RULE_condition_block = 15, 
+		RULE_code_block = 16, RULE_testgoal = 17, RULE_achievementgoal = 18, RULE_maintenancegoal = 19, 
+		RULE_primitiveaction = 20, RULE_function_call = 21, RULE_term = 22, RULE_termvalue = 23, 
+		RULE_literal = 24, RULE_termlist = 25, RULE_paramlist = 26, RULE_variable = 27;
 	private static String[] makeRuleNames() {
 		return new String[] {
 			"belief", "initialgoal", "initialachievegoal", "initialmaintenancegoal", 
 			"plan", "plantrigger", "beliefactiontrigger", "plandefinition", "body", 
-			"bodyformula", "expression", "beliefaction", "testgoal", "achievementgoal", 
-			"maintenancegoal", "primitiveaction", "term", "termvalue", "literal", 
-			"termlist", "variable", "for_loop"
+			"bodyformula", "expression", "assignment_statement", "beliefaction", 
+			"for_loop", "if_else", "condition_block", "code_block", "testgoal", "achievementgoal", 
+			"maintenancegoal", "primitiveaction", "function_call", "term", "termvalue", 
+			"literal", "termlist", "paramlist", "variable"
 		};
 	}
 	public static final String[] ruleNames = makeRuleNames();
 
 	private static String[] makeLiteralNames() {
 		return new String[] {
-			null, "'for'", null, null, null, null, "'~'", "'not'", null, null, null, 
+			null, "'for'", "'if'", "'elif'", "'else'", "'in'", null, null, null, 
+			null, "'~'", "'not'", "'returns'", null, "'as'", null, null, null, null, 
 			null, null, null, null, null, null, null, null, null, null, null, null, 
-			"'!'", "','", "'!!'", "'?'", "'$'", "'|'", "'#'", "'<-'", "'->'", "'=>'", 
-			"':-'", "'@'", "':'", "';'", "'.'", "'_'", "'/'", "'<<'", "'>>'", "'('", 
-			"')'", "'['", "']'", "'{'", "'}'", "'=..'"
+			null, "'!'", "','", "'!!'", "'?'", "'$'", "'|'", "'#'", null, "'->'", 
+			"'=>'", "':-'", "'@'", "':'", "';'", "'.'", "'_'", "'/'", "'<<'", "'>>'", 
+			"'('", "')'", "'['", "']'", "'{'", "'}'", "'=..'"
 		};
 	}
 	private static final String[] _LITERAL_NAMES = makeLiteralNames();
 	private static String[] makeSymbolicNames() {
 		return new String[] {
-			null, "FOR", "LOGICALVALUE", "NUMBER", "CONSTANTNUMBER", "STRING", "STRONGNEGATION", 
-			"DEFAULTNEGATION", "RELATIONALOPERATOR", "LOGICALOPERATOR1", "LOGICALOPERATOR2", 
+			null, "FOR", "IF", "ELIF", "ELSE", "IN", "LOGICALVALUE", "NUMBER", "CONSTANTNUMBER", 
+			"STRING", "STRONGNEGATION", "DEFAULTNEGATION", "RETURNS", "OBJECT_REF", 
+			"AS", "RELATIONALOPERATOR", "ASSIGNOPERATOR", "LOGICALOPERATOR1", "LOGICALOPERATOR2", 
 			"LOGICALOPERATOR3", "ARITHMETICOPERATOR1", "ARITHMETICOPERATOR2", "ARITHMETICOPERATOR3", 
 			"UNARYOPERATOR", "ANNOTATION", "ANNOTATION_STRING", "ANNOTATION_VARIABLEDESCRIPTION", 
-			"ANNOTATION_CONSTANT", "VARIABLEATOM", "ATOM", "REFERENCEATOM", "EXCLAMATIONMARK", 
-			"COMMA", "DOUBLEEXCLAMATIONMARK", "QUESTIONMARK", "DOLLAR", "VLINE", 
-			"HASH", "LEFTARROW", "RIGHTARROW", "RIGHTARROWDOUBLE", "RULEOPERATOR", 
-			"AT", "COLON", "SEMICOLON", "DOT", "UNDERSCORE", "SLASH", "LEFTSHIFT", 
-			"RIGHTSHIFT", "LEFTROUNDBRACKET", "RIGHTROUNDBRACKET", "LEFTANGULARBRACKET", 
+			"ANNOTATION_CONSTANT", "VARIABLEATOM", "FUNC_NAME", "ATOM", "OBJECT_ATOM", 
+			"EXCLAMATIONMARK", "COMMA", "DOUBLEEXCLAMATIONMARK", "QUESTIONMARK", 
+			"DOLLAR", "VLINE", "HASH", "LEFTARROW", "RIGHTARROW", "RIGHTARROWDOUBLE", 
+			"RULEOPERATOR", "AT", "COLON", "SEMICOLON", "DOT", "UNDERSCORE", "SLASH", 
+			"LEFTSHIFT", "RIGHTSHIFT", "LEFTROUNDBRACKET", "RIGHTROUNDBRACKET", "LEFTANGULARBRACKET", 
 			"RIGHTANGULARBRACKET", "LEFTCURVEDBRACKET", "RIGHTCURVEDBRACKET", "DECONSTRUCT", 
 			"WHITESPACE", "LINECOMMENT", "BLOCKCOMMENT"
 		};
@@ -151,9 +157,9 @@ public class AgentSpeakParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(44);
+			setState(56);
 			literal();
-			setState(45);
+			setState(57);
 			match(DOT);
 			}
 		}
@@ -201,25 +207,25 @@ public class AgentSpeakParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(49);
+			setState(61);
 			_errHandler.sync(this);
 			switch (_input.LA(1)) {
 			case EXCLAMATIONMARK:
 				{
-				setState(47);
+				setState(59);
 				achievementgoal();
 				}
 				break;
 			case DOUBLEEXCLAMATIONMARK:
 				{
-				setState(48);
+				setState(60);
 				maintenancegoal();
 				}
 				break;
 			default:
 				throw new NoViableAltException(this);
 			}
-			setState(51);
+			setState(63);
 			match(DOT);
 			}
 		}
@@ -266,12 +272,12 @@ public class AgentSpeakParser extends Parser {
 			enterOuterAlt(_localctx, 1);
 			{
 			{
-			setState(53);
+			setState(65);
 			match(EXCLAMATIONMARK);
 			}
-			setState(54);
+			setState(66);
 			literal();
-			setState(55);
+			setState(67);
 			match(DOT);
 			}
 		}
@@ -318,12 +324,12 @@ public class AgentSpeakParser extends Parser {
 			enterOuterAlt(_localctx, 1);
 			{
 			{
-			setState(57);
+			setState(69);
 			match(DOUBLEEXCLAMATIONMARK);
 			}
-			setState(58);
+			setState(70);
 			literal();
-			setState(59);
+			setState(71);
 			match(DOT);
 			}
 		}
@@ -384,39 +390,39 @@ public class AgentSpeakParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(64);
+			setState(76);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
 			while (_la==ANNOTATION) {
 				{
 				{
-				setState(61);
+				setState(73);
 				match(ANNOTATION);
 				}
 				}
-				setState(66);
+				setState(78);
 				_errHandler.sync(this);
 				_la = _input.LA(1);
 			}
-			setState(67);
+			setState(79);
 			plantrigger();
-			setState(68);
+			setState(80);
 			literal();
-			setState(71);
+			setState(83);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
 			if (_la==COLON) {
 				{
-				setState(69);
+				setState(81);
 				match(COLON);
-				setState(70);
+				setState(82);
 				((PlanContext)_localctx).condition = expression(0);
 				}
 			}
 
-			setState(73);
+			setState(85);
 			plandefinition();
-			setState(74);
+			setState(86);
 			match(DOT);
 			}
 		}
@@ -463,15 +469,15 @@ public class AgentSpeakParser extends Parser {
 			enterOuterAlt(_localctx, 1);
 			{
 			{
-			setState(76);
+			setState(88);
 			match(ARITHMETICOPERATOR3);
 			}
-			setState(78);
+			setState(90);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
 			if ((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << EXCLAMATIONMARK) | (1L << DOUBLEEXCLAMATIONMARK) | (1L << QUESTIONMARK))) != 0)) {
 				{
-				setState(77);
+				setState(89);
 				_la = _input.LA(1);
 				if ( !((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << EXCLAMATIONMARK) | (1L << DOUBLEEXCLAMATIONMARK) | (1L << QUESTIONMARK))) != 0)) ) {
 				_errHandler.recoverInline(this);
@@ -530,14 +536,14 @@ public class AgentSpeakParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(80);
+			setState(92);
 			((BeliefactiontriggerContext)_localctx).first = match(ARITHMETICOPERATOR3);
-			setState(82);
+			setState(94);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
 			if (_la==ARITHMETICOPERATOR3) {
 				{
-				setState(81);
+				setState(93);
 				((BeliefactiontriggerContext)_localctx).second = match(ARITHMETICOPERATOR3);
 				}
 			}
@@ -585,9 +591,9 @@ public class AgentSpeakParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(84);
+			setState(96);
 			match(RIGHTARROWDOUBLE);
-			setState(85);
+			setState(97);
 			body();
 			}
 		}
@@ -639,25 +645,25 @@ public class AgentSpeakParser extends Parser {
 			int _alt;
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(92);
+			setState(104);
 			_errHandler.sync(this);
 			_alt = getInterpreter().adaptivePredict(_input,5,_ctx);
 			while ( _alt!=2 && _alt!=org.antlr.v4.runtime.atn.ATN.INVALID_ALT_NUMBER ) {
 				if ( _alt==1 ) {
 					{
 					{
-					setState(87);
+					setState(99);
 					bodyformula();
-					setState(88);
+					setState(100);
 					match(SEMICOLON);
 					}
 					} 
 				}
-				setState(94);
+				setState(106);
 				_errHandler.sync(this);
 				_alt = getInterpreter().adaptivePredict(_input,5,_ctx);
 			}
-			setState(95);
+			setState(107);
 			bodyformula();
 			}
 		}
@@ -676,6 +682,9 @@ public class AgentSpeakParser extends Parser {
 		public For_loopContext for_loop() {
 			return getRuleContext(For_loopContext.class,0);
 		}
+		public If_elseContext if_else() {
+			return getRuleContext(If_elseContext.class,0);
+		}
 		public BeliefactionContext beliefaction() {
 			return getRuleContext(BeliefactionContext.class,0);
 		}
@@ -687,6 +696,9 @@ public class AgentSpeakParser extends Parser {
 		}
 		public PrimitiveactionContext primitiveaction() {
 			return getRuleContext(PrimitiveactionContext.class,0);
+		}
+		public Assignment_statementContext assignment_statement() {
+			return getRuleContext(Assignment_statementContext.class,0);
 		}
 		public BodyformulaContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
@@ -711,42 +723,56 @@ public class AgentSpeakParser extends Parser {
 		BodyformulaContext _localctx = new BodyformulaContext(_ctx, getState());
 		enterRule(_localctx, 18, RULE_bodyformula);
 		try {
-			setState(102);
+			setState(116);
 			_errHandler.sync(this);
 			switch (_input.LA(1)) {
 			case FOR:
 				enterOuterAlt(_localctx, 1);
 				{
-				setState(97);
+				setState(109);
 				for_loop();
 				}
 				break;
-			case ARITHMETICOPERATOR3:
+			case IF:
 				enterOuterAlt(_localctx, 2);
 				{
-				setState(98);
+				setState(110);
+				if_else();
+				}
+				break;
+			case ARITHMETICOPERATOR3:
+				enterOuterAlt(_localctx, 3);
+				{
+				setState(111);
 				beliefaction();
 				}
 				break;
 			case QUESTIONMARK:
-				enterOuterAlt(_localctx, 3);
+				enterOuterAlt(_localctx, 4);
 				{
-				setState(99);
+				setState(112);
 				testgoal();
 				}
 				break;
 			case EXCLAMATIONMARK:
-				enterOuterAlt(_localctx, 4);
+				enterOuterAlt(_localctx, 5);
 				{
-				setState(100);
+				setState(113);
 				achievementgoal();
 				}
 				break;
-			case REFERENCEATOM:
-				enterOuterAlt(_localctx, 5);
+			case OBJECT_ATOM:
+				enterOuterAlt(_localctx, 6);
 				{
-				setState(101);
+				setState(114);
 				primitiveaction();
+				}
+				break;
+			case VARIABLEATOM:
+				enterOuterAlt(_localctx, 7);
+				{
+				setState(115);
+				assignment_statement();
 				}
 				break;
 			default:
@@ -781,10 +807,14 @@ public class AgentSpeakParser extends Parser {
 		public TermContext term() {
 			return getRuleContext(TermContext.class,0);
 		}
+		public TerminalNode AS() { return getToken(AgentSpeakParser.AS, 0); }
 		public TerminalNode ARITHMETICOPERATOR1() { return getToken(AgentSpeakParser.ARITHMETICOPERATOR1, 0); }
 		public TerminalNode ARITHMETICOPERATOR2() { return getToken(AgentSpeakParser.ARITHMETICOPERATOR2, 0); }
 		public TerminalNode ARITHMETICOPERATOR3() { return getToken(AgentSpeakParser.ARITHMETICOPERATOR3, 0); }
+		public TerminalNode ASSIGNOPERATOR() { return getToken(AgentSpeakParser.ASSIGNOPERATOR, 0); }
 		public TerminalNode RELATIONALOPERATOR() { return getToken(AgentSpeakParser.RELATIONALOPERATOR, 0); }
+		public TerminalNode OBJECT_REF() { return getToken(AgentSpeakParser.OBJECT_REF, 0); }
+		public TerminalNode RETURNS() { return getToken(AgentSpeakParser.RETURNS, 0); }
 		public TerminalNode LOGICALOPERATOR1() { return getToken(AgentSpeakParser.LOGICALOPERATOR1, 0); }
 		public TerminalNode LOGICALOPERATOR2() { return getToken(AgentSpeakParser.LOGICALOPERATOR2, 0); }
 		public TerminalNode LOGICALOPERATOR3() { return getToken(AgentSpeakParser.LOGICALOPERATOR3, 0); }
@@ -822,24 +852,24 @@ public class AgentSpeakParser extends Parser {
 			int _alt;
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(112);
+			setState(126);
 			_errHandler.sync(this);
 			switch (_input.LA(1)) {
 			case DEFAULTNEGATION:
 				{
-				setState(105);
+				setState(119);
 				match(DEFAULTNEGATION);
-				setState(106);
+				setState(120);
 				((ExpressionContext)_localctx).single = expression(6);
 				}
 				break;
 			case LEFTROUNDBRACKET:
 				{
-				setState(107);
+				setState(121);
 				match(LEFTROUNDBRACKET);
-				setState(108);
+				setState(122);
 				((ExpressionContext)_localctx).single = expression(0);
-				setState(109);
+				setState(123);
 				match(RIGHTROUNDBRACKET);
 				}
 				break;
@@ -849,9 +879,9 @@ public class AgentSpeakParser extends Parser {
 			case STRONGNEGATION:
 			case VARIABLEATOM:
 			case ATOM:
-			case REFERENCEATOM:
+			case OBJECT_ATOM:
 				{
-				setState(111);
+				setState(125);
 				term();
 				}
 				break;
@@ -859,7 +889,7 @@ public class AgentSpeakParser extends Parser {
 				throw new NoViableAltException(this);
 			}
 			_ctx.stop = _input.LT(-1);
-			setState(137);
+			setState(163);
 			_errHandler.sync(this);
 			_alt = getInterpreter().adaptivePredict(_input,9,_ctx);
 			while ( _alt!=2 && _alt!=org.antlr.v4.runtime.atn.ATN.INVALID_ALT_NUMBER ) {
@@ -867,7 +897,7 @@ public class AgentSpeakParser extends Parser {
 					if ( _parseListeners!=null ) triggerExitRuleEvent();
 					_prevctx = _localctx;
 					{
-					setState(135);
+					setState(161);
 					_errHandler.sync(this);
 					switch ( getInterpreter().adaptivePredict(_input,8,_ctx) ) {
 					case 1:
@@ -876,12 +906,12 @@ public class AgentSpeakParser extends Parser {
 						_localctx.lhs = _prevctx;
 						_localctx.lhs = _prevctx;
 						pushNewRecursionContext(_localctx, _startState, RULE_expression);
-						setState(114);
-						if (!(precpred(_ctx, 10))) throw new FailedPredicateException(this, "precpred(_ctx, 10)");
-						setState(115);
-						((ExpressionContext)_localctx).binaryoperator = match(ARITHMETICOPERATOR1);
-						setState(116);
-						((ExpressionContext)_localctx).rhs = expression(11);
+						setState(128);
+						if (!(precpred(_ctx, 14))) throw new FailedPredicateException(this, "precpred(_ctx, 14)");
+						setState(129);
+						((ExpressionContext)_localctx).binaryoperator = match(AS);
+						setState(130);
+						((ExpressionContext)_localctx).rhs = expression(15);
 						}
 						break;
 					case 2:
@@ -890,12 +920,12 @@ public class AgentSpeakParser extends Parser {
 						_localctx.lhs = _prevctx;
 						_localctx.lhs = _prevctx;
 						pushNewRecursionContext(_localctx, _startState, RULE_expression);
-						setState(117);
-						if (!(precpred(_ctx, 9))) throw new FailedPredicateException(this, "precpred(_ctx, 9)");
-						setState(118);
-						((ExpressionContext)_localctx).binaryoperator = match(ARITHMETICOPERATOR2);
-						setState(119);
-						((ExpressionContext)_localctx).rhs = expression(10);
+						setState(131);
+						if (!(precpred(_ctx, 13))) throw new FailedPredicateException(this, "precpred(_ctx, 13)");
+						setState(132);
+						((ExpressionContext)_localctx).binaryoperator = match(ARITHMETICOPERATOR1);
+						setState(133);
+						((ExpressionContext)_localctx).rhs = expression(14);
 						}
 						break;
 					case 3:
@@ -904,12 +934,12 @@ public class AgentSpeakParser extends Parser {
 						_localctx.lhs = _prevctx;
 						_localctx.lhs = _prevctx;
 						pushNewRecursionContext(_localctx, _startState, RULE_expression);
-						setState(120);
-						if (!(precpred(_ctx, 8))) throw new FailedPredicateException(this, "precpred(_ctx, 8)");
-						setState(121);
-						((ExpressionContext)_localctx).binaryoperator = match(ARITHMETICOPERATOR3);
-						setState(122);
-						((ExpressionContext)_localctx).rhs = expression(9);
+						setState(134);
+						if (!(precpred(_ctx, 12))) throw new FailedPredicateException(this, "precpred(_ctx, 12)");
+						setState(135);
+						((ExpressionContext)_localctx).binaryoperator = match(ARITHMETICOPERATOR2);
+						setState(136);
+						((ExpressionContext)_localctx).rhs = expression(13);
 						}
 						break;
 					case 4:
@@ -918,12 +948,12 @@ public class AgentSpeakParser extends Parser {
 						_localctx.lhs = _prevctx;
 						_localctx.lhs = _prevctx;
 						pushNewRecursionContext(_localctx, _startState, RULE_expression);
-						setState(123);
-						if (!(precpred(_ctx, 7))) throw new FailedPredicateException(this, "precpred(_ctx, 7)");
-						setState(124);
-						((ExpressionContext)_localctx).binaryoperator = match(RELATIONALOPERATOR);
-						setState(125);
-						((ExpressionContext)_localctx).rhs = expression(8);
+						setState(137);
+						if (!(precpred(_ctx, 11))) throw new FailedPredicateException(this, "precpred(_ctx, 11)");
+						setState(138);
+						((ExpressionContext)_localctx).binaryoperator = match(ARITHMETICOPERATOR3);
+						setState(139);
+						((ExpressionContext)_localctx).rhs = expression(12);
 						}
 						break;
 					case 5:
@@ -932,12 +962,12 @@ public class AgentSpeakParser extends Parser {
 						_localctx.lhs = _prevctx;
 						_localctx.lhs = _prevctx;
 						pushNewRecursionContext(_localctx, _startState, RULE_expression);
-						setState(126);
-						if (!(precpred(_ctx, 5))) throw new FailedPredicateException(this, "precpred(_ctx, 5)");
-						setState(127);
-						((ExpressionContext)_localctx).binaryoperator = match(LOGICALOPERATOR1);
-						setState(128);
-						((ExpressionContext)_localctx).rhs = expression(6);
+						setState(140);
+						if (!(precpred(_ctx, 10))) throw new FailedPredicateException(this, "precpred(_ctx, 10)");
+						setState(141);
+						((ExpressionContext)_localctx).binaryoperator = match(ASSIGNOPERATOR);
+						setState(142);
+						((ExpressionContext)_localctx).rhs = expression(11);
 						}
 						break;
 					case 6:
@@ -946,12 +976,12 @@ public class AgentSpeakParser extends Parser {
 						_localctx.lhs = _prevctx;
 						_localctx.lhs = _prevctx;
 						pushNewRecursionContext(_localctx, _startState, RULE_expression);
-						setState(129);
-						if (!(precpred(_ctx, 4))) throw new FailedPredicateException(this, "precpred(_ctx, 4)");
-						setState(130);
-						((ExpressionContext)_localctx).binaryoperator = match(LOGICALOPERATOR2);
-						setState(131);
-						((ExpressionContext)_localctx).rhs = expression(5);
+						setState(143);
+						if (!(precpred(_ctx, 9))) throw new FailedPredicateException(this, "precpred(_ctx, 9)");
+						setState(144);
+						((ExpressionContext)_localctx).binaryoperator = match(RELATIONALOPERATOR);
+						setState(145);
+						((ExpressionContext)_localctx).rhs = expression(10);
 						}
 						break;
 					case 7:
@@ -960,18 +990,74 @@ public class AgentSpeakParser extends Parser {
 						_localctx.lhs = _prevctx;
 						_localctx.lhs = _prevctx;
 						pushNewRecursionContext(_localctx, _startState, RULE_expression);
-						setState(132);
+						setState(146);
+						if (!(precpred(_ctx, 8))) throw new FailedPredicateException(this, "precpred(_ctx, 8)");
+						setState(147);
+						((ExpressionContext)_localctx).binaryoperator = match(OBJECT_REF);
+						setState(148);
+						((ExpressionContext)_localctx).rhs = expression(9);
+						}
+						break;
+					case 8:
+						{
+						_localctx = new ExpressionContext(_parentctx, _parentState);
+						_localctx.lhs = _prevctx;
+						_localctx.lhs = _prevctx;
+						pushNewRecursionContext(_localctx, _startState, RULE_expression);
+						setState(149);
+						if (!(precpred(_ctx, 7))) throw new FailedPredicateException(this, "precpred(_ctx, 7)");
+						setState(150);
+						((ExpressionContext)_localctx).binaryoperator = match(RETURNS);
+						setState(151);
+						((ExpressionContext)_localctx).rhs = expression(8);
+						}
+						break;
+					case 9:
+						{
+						_localctx = new ExpressionContext(_parentctx, _parentState);
+						_localctx.lhs = _prevctx;
+						_localctx.lhs = _prevctx;
+						pushNewRecursionContext(_localctx, _startState, RULE_expression);
+						setState(152);
+						if (!(precpred(_ctx, 5))) throw new FailedPredicateException(this, "precpred(_ctx, 5)");
+						setState(153);
+						((ExpressionContext)_localctx).binaryoperator = match(LOGICALOPERATOR1);
+						setState(154);
+						((ExpressionContext)_localctx).rhs = expression(6);
+						}
+						break;
+					case 10:
+						{
+						_localctx = new ExpressionContext(_parentctx, _parentState);
+						_localctx.lhs = _prevctx;
+						_localctx.lhs = _prevctx;
+						pushNewRecursionContext(_localctx, _startState, RULE_expression);
+						setState(155);
+						if (!(precpred(_ctx, 4))) throw new FailedPredicateException(this, "precpred(_ctx, 4)");
+						setState(156);
+						((ExpressionContext)_localctx).binaryoperator = match(LOGICALOPERATOR2);
+						setState(157);
+						((ExpressionContext)_localctx).rhs = expression(5);
+						}
+						break;
+					case 11:
+						{
+						_localctx = new ExpressionContext(_parentctx, _parentState);
+						_localctx.lhs = _prevctx;
+						_localctx.lhs = _prevctx;
+						pushNewRecursionContext(_localctx, _startState, RULE_expression);
+						setState(158);
 						if (!(precpred(_ctx, 3))) throw new FailedPredicateException(this, "precpred(_ctx, 3)");
-						setState(133);
+						setState(159);
 						((ExpressionContext)_localctx).binaryoperator = match(LOGICALOPERATOR3);
-						setState(134);
+						setState(160);
 						((ExpressionContext)_localctx).rhs = expression(4);
 						}
 						break;
 					}
 					} 
 				}
-				setState(139);
+				setState(165);
 				_errHandler.sync(this);
 				_alt = getInterpreter().adaptivePredict(_input,9,_ctx);
 			}
@@ -984,6 +1070,60 @@ public class AgentSpeakParser extends Parser {
 		}
 		finally {
 			unrollRecursionContexts(_parentctx);
+		}
+		return _localctx;
+	}
+
+	public static class Assignment_statementContext extends ParserRuleContext {
+		public VariableContext variable() {
+			return getRuleContext(VariableContext.class,0);
+		}
+		public ExpressionContext expression() {
+			return getRuleContext(ExpressionContext.class,0);
+		}
+		public TerminalNode ASSIGNOPERATOR() { return getToken(AgentSpeakParser.ASSIGNOPERATOR, 0); }
+		public Assignment_statementContext(ParserRuleContext parent, int invokingState) {
+			super(parent, invokingState);
+		}
+		@Override public int getRuleIndex() { return RULE_assignment_statement; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof AgentSpeakListener ) ((AgentSpeakListener)listener).enterAssignment_statement(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof AgentSpeakListener ) ((AgentSpeakListener)listener).exitAssignment_statement(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof AgentSpeakVisitor ) return ((AgentSpeakVisitor<? extends T>)visitor).visitAssignment_statement(this);
+			else return visitor.visitChildren(this);
+		}
+	}
+
+	public final Assignment_statementContext assignment_statement() throws RecognitionException {
+		Assignment_statementContext _localctx = new Assignment_statementContext(_ctx, getState());
+		enterRule(_localctx, 22, RULE_assignment_statement);
+		try {
+			enterOuterAlt(_localctx, 1);
+			{
+			setState(166);
+			variable();
+			{
+			setState(167);
+			match(ASSIGNOPERATOR);
+			}
+			setState(168);
+			expression(0);
+			}
+		}
+		catch (RecognitionException re) {
+			_localctx.exception = re;
+			_errHandler.reportError(this, re);
+			_errHandler.recover(this, re);
+		}
+		finally {
+			exitRule();
 		}
 		return _localctx;
 	}
@@ -1016,14 +1156,356 @@ public class AgentSpeakParser extends Parser {
 
 	public final BeliefactionContext beliefaction() throws RecognitionException {
 		BeliefactionContext _localctx = new BeliefactionContext(_ctx, getState());
-		enterRule(_localctx, 22, RULE_beliefaction);
+		enterRule(_localctx, 24, RULE_beliefaction);
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(140);
+			setState(170);
 			beliefactiontrigger();
-			setState(141);
+			setState(171);
 			literal();
+			}
+		}
+		catch (RecognitionException re) {
+			_localctx.exception = re;
+			_errHandler.reportError(this, re);
+			_errHandler.recover(this, re);
+		}
+		finally {
+			exitRule();
+		}
+		return _localctx;
+	}
+
+	public static class For_loopContext extends ParserRuleContext {
+		public TerminalNode FOR() { return getToken(AgentSpeakParser.FOR, 0); }
+		public TerminalNode LEFTROUNDBRACKET() { return getToken(AgentSpeakParser.LEFTROUNDBRACKET, 0); }
+		public VariableContext variable() {
+			return getRuleContext(VariableContext.class,0);
+		}
+		public TerminalNode IN() { return getToken(AgentSpeakParser.IN, 0); }
+		public ExpressionContext expression() {
+			return getRuleContext(ExpressionContext.class,0);
+		}
+		public TerminalNode RIGHTROUNDBRACKET() { return getToken(AgentSpeakParser.RIGHTROUNDBRACKET, 0); }
+		public TerminalNode LEFTCURVEDBRACKET() { return getToken(AgentSpeakParser.LEFTCURVEDBRACKET, 0); }
+		public TerminalNode RIGHTCURVEDBRACKET() { return getToken(AgentSpeakParser.RIGHTCURVEDBRACKET, 0); }
+		public List<BodyformulaContext> bodyformula() {
+			return getRuleContexts(BodyformulaContext.class);
+		}
+		public BodyformulaContext bodyformula(int i) {
+			return getRuleContext(BodyformulaContext.class,i);
+		}
+		public List<TerminalNode> SEMICOLON() { return getTokens(AgentSpeakParser.SEMICOLON); }
+		public TerminalNode SEMICOLON(int i) {
+			return getToken(AgentSpeakParser.SEMICOLON, i);
+		}
+		public For_loopContext(ParserRuleContext parent, int invokingState) {
+			super(parent, invokingState);
+		}
+		@Override public int getRuleIndex() { return RULE_for_loop; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof AgentSpeakListener ) ((AgentSpeakListener)listener).enterFor_loop(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof AgentSpeakListener ) ((AgentSpeakListener)listener).exitFor_loop(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof AgentSpeakVisitor ) return ((AgentSpeakVisitor<? extends T>)visitor).visitFor_loop(this);
+			else return visitor.visitChildren(this);
+		}
+	}
+
+	public final For_loopContext for_loop() throws RecognitionException {
+		For_loopContext _localctx = new For_loopContext(_ctx, getState());
+		enterRule(_localctx, 26, RULE_for_loop);
+		int _la;
+		try {
+			enterOuterAlt(_localctx, 1);
+			{
+			setState(173);
+			match(FOR);
+			setState(174);
+			match(LEFTROUNDBRACKET);
+			setState(175);
+			variable();
+			setState(176);
+			match(IN);
+			setState(177);
+			expression(0);
+			setState(178);
+			match(RIGHTROUNDBRACKET);
+			setState(179);
+			match(LEFTCURVEDBRACKET);
+			setState(185);
+			_errHandler.sync(this);
+			_la = _input.LA(1);
+			while ((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << FOR) | (1L << IF) | (1L << ARITHMETICOPERATOR3) | (1L << VARIABLEATOM) | (1L << OBJECT_ATOM) | (1L << EXCLAMATIONMARK) | (1L << QUESTIONMARK))) != 0)) {
+				{
+				{
+				setState(180);
+				bodyformula();
+				setState(181);
+				match(SEMICOLON);
+				}
+				}
+				setState(187);
+				_errHandler.sync(this);
+				_la = _input.LA(1);
+			}
+			setState(188);
+			match(RIGHTCURVEDBRACKET);
+			}
+		}
+		catch (RecognitionException re) {
+			_localctx.exception = re;
+			_errHandler.reportError(this, re);
+			_errHandler.recover(this, re);
+		}
+		finally {
+			exitRule();
+		}
+		return _localctx;
+	}
+
+	public static class If_elseContext extends ParserRuleContext {
+		public List<TerminalNode> IF() { return getTokens(AgentSpeakParser.IF); }
+		public TerminalNode IF(int i) {
+			return getToken(AgentSpeakParser.IF, i);
+		}
+		public List<Condition_blockContext> condition_block() {
+			return getRuleContexts(Condition_blockContext.class);
+		}
+		public Condition_blockContext condition_block(int i) {
+			return getRuleContext(Condition_blockContext.class,i);
+		}
+		public List<TerminalNode> ELSE() { return getTokens(AgentSpeakParser.ELSE); }
+		public TerminalNode ELSE(int i) {
+			return getToken(AgentSpeakParser.ELSE, i);
+		}
+		public Code_blockContext code_block() {
+			return getRuleContext(Code_blockContext.class,0);
+		}
+		public If_elseContext(ParserRuleContext parent, int invokingState) {
+			super(parent, invokingState);
+		}
+		@Override public int getRuleIndex() { return RULE_if_else; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof AgentSpeakListener ) ((AgentSpeakListener)listener).enterIf_else(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof AgentSpeakListener ) ((AgentSpeakListener)listener).exitIf_else(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof AgentSpeakVisitor ) return ((AgentSpeakVisitor<? extends T>)visitor).visitIf_else(this);
+			else return visitor.visitChildren(this);
+		}
+	}
+
+	public final If_elseContext if_else() throws RecognitionException {
+		If_elseContext _localctx = new If_elseContext(_ctx, getState());
+		enterRule(_localctx, 28, RULE_if_else);
+		int _la;
+		try {
+			int _alt;
+			enterOuterAlt(_localctx, 1);
+			{
+			setState(190);
+			match(IF);
+			setState(191);
+			condition_block();
+			setState(197);
+			_errHandler.sync(this);
+			_alt = getInterpreter().adaptivePredict(_input,11,_ctx);
+			while ( _alt!=2 && _alt!=org.antlr.v4.runtime.atn.ATN.INVALID_ALT_NUMBER ) {
+				if ( _alt==1 ) {
+					{
+					{
+					setState(192);
+					match(ELSE);
+					setState(193);
+					match(IF);
+					setState(194);
+					condition_block();
+					}
+					} 
+				}
+				setState(199);
+				_errHandler.sync(this);
+				_alt = getInterpreter().adaptivePredict(_input,11,_ctx);
+			}
+			setState(202);
+			_errHandler.sync(this);
+			_la = _input.LA(1);
+			if (_la==ELSE) {
+				{
+				setState(200);
+				match(ELSE);
+				setState(201);
+				code_block();
+				}
+			}
+
+			}
+		}
+		catch (RecognitionException re) {
+			_localctx.exception = re;
+			_errHandler.reportError(this, re);
+			_errHandler.recover(this, re);
+		}
+		finally {
+			exitRule();
+		}
+		return _localctx;
+	}
+
+	public static class Condition_blockContext extends ParserRuleContext {
+		public TerminalNode LEFTROUNDBRACKET() { return getToken(AgentSpeakParser.LEFTROUNDBRACKET, 0); }
+		public ExpressionContext expression() {
+			return getRuleContext(ExpressionContext.class,0);
+		}
+		public TerminalNode RIGHTROUNDBRACKET() { return getToken(AgentSpeakParser.RIGHTROUNDBRACKET, 0); }
+		public Code_blockContext code_block() {
+			return getRuleContext(Code_blockContext.class,0);
+		}
+		public Condition_blockContext(ParserRuleContext parent, int invokingState) {
+			super(parent, invokingState);
+		}
+		@Override public int getRuleIndex() { return RULE_condition_block; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof AgentSpeakListener ) ((AgentSpeakListener)listener).enterCondition_block(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof AgentSpeakListener ) ((AgentSpeakListener)listener).exitCondition_block(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof AgentSpeakVisitor ) return ((AgentSpeakVisitor<? extends T>)visitor).visitCondition_block(this);
+			else return visitor.visitChildren(this);
+		}
+	}
+
+	public final Condition_blockContext condition_block() throws RecognitionException {
+		Condition_blockContext _localctx = new Condition_blockContext(_ctx, getState());
+		enterRule(_localctx, 30, RULE_condition_block);
+		try {
+			enterOuterAlt(_localctx, 1);
+			{
+			setState(204);
+			match(LEFTROUNDBRACKET);
+			setState(205);
+			expression(0);
+			setState(206);
+			match(RIGHTROUNDBRACKET);
+			setState(207);
+			code_block();
+			}
+		}
+		catch (RecognitionException re) {
+			_localctx.exception = re;
+			_errHandler.reportError(this, re);
+			_errHandler.recover(this, re);
+		}
+		finally {
+			exitRule();
+		}
+		return _localctx;
+	}
+
+	public static class Code_blockContext extends ParserRuleContext {
+		public BodyformulaContext single;
+		public List<TerminalNode> SEMICOLON() { return getTokens(AgentSpeakParser.SEMICOLON); }
+		public TerminalNode SEMICOLON(int i) {
+			return getToken(AgentSpeakParser.SEMICOLON, i);
+		}
+		public List<BodyformulaContext> bodyformula() {
+			return getRuleContexts(BodyformulaContext.class);
+		}
+		public BodyformulaContext bodyformula(int i) {
+			return getRuleContext(BodyformulaContext.class,i);
+		}
+		public TerminalNode LEFTCURVEDBRACKET() { return getToken(AgentSpeakParser.LEFTCURVEDBRACKET, 0); }
+		public TerminalNode RIGHTCURVEDBRACKET() { return getToken(AgentSpeakParser.RIGHTCURVEDBRACKET, 0); }
+		public Code_blockContext(ParserRuleContext parent, int invokingState) {
+			super(parent, invokingState);
+		}
+		@Override public int getRuleIndex() { return RULE_code_block; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof AgentSpeakListener ) ((AgentSpeakListener)listener).enterCode_block(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof AgentSpeakListener ) ((AgentSpeakListener)listener).exitCode_block(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof AgentSpeakVisitor ) return ((AgentSpeakVisitor<? extends T>)visitor).visitCode_block(this);
+			else return visitor.visitChildren(this);
+		}
+	}
+
+	public final Code_blockContext code_block() throws RecognitionException {
+		Code_blockContext _localctx = new Code_blockContext(_ctx, getState());
+		enterRule(_localctx, 32, RULE_code_block);
+		int _la;
+		try {
+			enterOuterAlt(_localctx, 1);
+			{
+			setState(222);
+			_errHandler.sync(this);
+			switch (_input.LA(1)) {
+			case LEFTCURVEDBRACKET:
+				{
+				{
+				setState(209);
+				match(LEFTCURVEDBRACKET);
+				setState(215);
+				_errHandler.sync(this);
+				_la = _input.LA(1);
+				while ((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << FOR) | (1L << IF) | (1L << ARITHMETICOPERATOR3) | (1L << VARIABLEATOM) | (1L << OBJECT_ATOM) | (1L << EXCLAMATIONMARK) | (1L << QUESTIONMARK))) != 0)) {
+					{
+					{
+					setState(210);
+					bodyformula();
+					setState(211);
+					match(SEMICOLON);
+					}
+					}
+					setState(217);
+					_errHandler.sync(this);
+					_la = _input.LA(1);
+				}
+				setState(218);
+				match(RIGHTCURVEDBRACKET);
+				}
+				}
+				break;
+			case FOR:
+			case IF:
+			case ARITHMETICOPERATOR3:
+			case VARIABLEATOM:
+			case OBJECT_ATOM:
+			case EXCLAMATIONMARK:
+			case QUESTIONMARK:
+				{
+				setState(219);
+				((Code_blockContext)_localctx).single = bodyformula();
+				setState(220);
+				match(SEMICOLON);
+				}
+				break;
+			default:
+				throw new NoViableAltException(this);
+			}
 			}
 		}
 		catch (RecognitionException re) {
@@ -1063,16 +1545,16 @@ public class AgentSpeakParser extends Parser {
 
 	public final TestgoalContext testgoal() throws RecognitionException {
 		TestgoalContext _localctx = new TestgoalContext(_ctx, getState());
-		enterRule(_localctx, 24, RULE_testgoal);
+		enterRule(_localctx, 34, RULE_testgoal);
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
 			{
-			setState(143);
+			setState(224);
 			match(QUESTIONMARK);
 			}
 			{
-			setState(144);
+			setState(225);
 			literal();
 			}
 			}
@@ -1090,8 +1572,9 @@ public class AgentSpeakParser extends Parser {
 
 	public static class AchievementgoalContext extends ParserRuleContext {
 		public TerminalNode EXCLAMATIONMARK() { return getToken(AgentSpeakParser.EXCLAMATIONMARK, 0); }
-		public LiteralContext literal() {
-			return getRuleContext(LiteralContext.class,0);
+		public TerminalNode ATOM() { return getToken(AgentSpeakParser.ATOM, 0); }
+		public ParamlistContext paramlist() {
+			return getRuleContext(ParamlistContext.class,0);
 		}
 		public AchievementgoalContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
@@ -1114,17 +1597,28 @@ public class AgentSpeakParser extends Parser {
 
 	public final AchievementgoalContext achievementgoal() throws RecognitionException {
 		AchievementgoalContext _localctx = new AchievementgoalContext(_ctx, getState());
-		enterRule(_localctx, 26, RULE_achievementgoal);
+		enterRule(_localctx, 36, RULE_achievementgoal);
+		int _la;
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
 			{
-			setState(146);
+			setState(227);
 			match(EXCLAMATIONMARK);
 			}
 			{
-			setState(147);
-			literal();
+			setState(228);
+			match(ATOM);
+			setState(230);
+			_errHandler.sync(this);
+			_la = _input.LA(1);
+			if (_la==LEFTROUNDBRACKET) {
+				{
+				setState(229);
+				paramlist();
+				}
+			}
+
 			}
 			}
 		}
@@ -1165,16 +1659,16 @@ public class AgentSpeakParser extends Parser {
 
 	public final MaintenancegoalContext maintenancegoal() throws RecognitionException {
 		MaintenancegoalContext _localctx = new MaintenancegoalContext(_ctx, getState());
-		enterRule(_localctx, 28, RULE_maintenancegoal);
+		enterRule(_localctx, 38, RULE_maintenancegoal);
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
 			{
-			setState(149);
+			setState(232);
 			match(DOUBLEEXCLAMATIONMARK);
 			}
 			{
-			setState(150);
+			setState(233);
 			literal();
 			}
 			}
@@ -1191,9 +1685,15 @@ public class AgentSpeakParser extends Parser {
 	}
 
 	public static class PrimitiveactionContext extends ParserRuleContext {
-		public TerminalNode REFERENCEATOM() { return getToken(AgentSpeakParser.REFERENCEATOM, 0); }
-		public TermlistContext termlist() {
-			return getRuleContext(TermlistContext.class,0);
+		public TerminalNode OBJECT_ATOM() { return getToken(AgentSpeakParser.OBJECT_ATOM, 0); }
+		public ParamlistContext paramlist() {
+			return getRuleContext(ParamlistContext.class,0);
+		}
+		public List<Function_callContext> function_call() {
+			return getRuleContexts(Function_callContext.class);
+		}
+		public Function_callContext function_call(int i) {
+			return getRuleContext(Function_callContext.class,i);
 		}
 		public PrimitiveactionContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
@@ -1216,17 +1716,93 @@ public class AgentSpeakParser extends Parser {
 
 	public final PrimitiveactionContext primitiveaction() throws RecognitionException {
 		PrimitiveactionContext _localctx = new PrimitiveactionContext(_ctx, getState());
-		enterRule(_localctx, 30, RULE_primitiveaction);
+		enterRule(_localctx, 40, RULE_primitiveaction);
+		try {
+			int _alt;
+			enterOuterAlt(_localctx, 1);
+			{
+			setState(235);
+			match(OBJECT_ATOM);
+			setState(237);
+			_errHandler.sync(this);
+			switch ( getInterpreter().adaptivePredict(_input,16,_ctx) ) {
+			case 1:
+				{
+				setState(236);
+				paramlist();
+				}
+				break;
+			}
+			setState(242);
+			_errHandler.sync(this);
+			_alt = getInterpreter().adaptivePredict(_input,17,_ctx);
+			while ( _alt!=2 && _alt!=org.antlr.v4.runtime.atn.ATN.INVALID_ALT_NUMBER ) {
+				if ( _alt==1 ) {
+					{
+					{
+					setState(239);
+					function_call();
+					}
+					} 
+				}
+				setState(244);
+				_errHandler.sync(this);
+				_alt = getInterpreter().adaptivePredict(_input,17,_ctx);
+			}
+			}
+		}
+		catch (RecognitionException re) {
+			_localctx.exception = re;
+			_errHandler.reportError(this, re);
+			_errHandler.recover(this, re);
+		}
+		finally {
+			exitRule();
+		}
+		return _localctx;
+	}
+
+	public static class Function_callContext extends ParserRuleContext {
+		public TerminalNode FUNC_NAME() { return getToken(AgentSpeakParser.FUNC_NAME, 0); }
+		public ParamlistContext paramlist() {
+			return getRuleContext(ParamlistContext.class,0);
+		}
+		public Function_callContext(ParserRuleContext parent, int invokingState) {
+			super(parent, invokingState);
+		}
+		@Override public int getRuleIndex() { return RULE_function_call; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof AgentSpeakListener ) ((AgentSpeakListener)listener).enterFunction_call(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof AgentSpeakListener ) ((AgentSpeakListener)listener).exitFunction_call(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof AgentSpeakVisitor ) return ((AgentSpeakVisitor<? extends T>)visitor).visitFunction_call(this);
+			else return visitor.visitChildren(this);
+		}
+	}
+
+	public final Function_callContext function_call() throws RecognitionException {
+		Function_callContext _localctx = new Function_callContext(_ctx, getState());
+		enterRule(_localctx, 42, RULE_function_call);
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			{
-			setState(152);
-			match(REFERENCEATOM);
-			}
-			{
-			setState(153);
-			termlist();
+			setState(245);
+			match(FUNC_NAME);
+			setState(247);
+			_errHandler.sync(this);
+			switch ( getInterpreter().adaptivePredict(_input,18,_ctx) ) {
+			case 1:
+				{
+				setState(246);
+				paramlist();
+				}
+				break;
 			}
 			}
 		}
@@ -1275,15 +1851,15 @@ public class AgentSpeakParser extends Parser {
 
 	public final TermContext term() throws RecognitionException {
 		TermContext _localctx = new TermContext(_ctx, getState());
-		enterRule(_localctx, 32, RULE_term);
+		enterRule(_localctx, 44, RULE_term);
 		try {
-			setState(159);
+			setState(253);
 			_errHandler.sync(this);
 			switch (_input.LA(1)) {
-			case REFERENCEATOM:
+			case OBJECT_ATOM:
 				enterOuterAlt(_localctx, 1);
 				{
-				setState(155);
+				setState(249);
 				primitiveaction();
 				}
 				break;
@@ -1292,14 +1868,14 @@ public class AgentSpeakParser extends Parser {
 			case STRING:
 				enterOuterAlt(_localctx, 2);
 				{
-				setState(156);
+				setState(250);
 				termvalue();
 				}
 				break;
 			case VARIABLEATOM:
 				enterOuterAlt(_localctx, 3);
 				{
-				setState(157);
+				setState(251);
 				variable();
 				}
 				break;
@@ -1307,7 +1883,7 @@ public class AgentSpeakParser extends Parser {
 			case ATOM:
 				enterOuterAlt(_localctx, 4);
 				{
-				setState(158);
+				setState(252);
 				literal();
 				}
 				break;
@@ -1351,12 +1927,12 @@ public class AgentSpeakParser extends Parser {
 
 	public final TermvalueContext termvalue() throws RecognitionException {
 		TermvalueContext _localctx = new TermvalueContext(_ctx, getState());
-		enterRule(_localctx, 34, RULE_termvalue);
+		enterRule(_localctx, 46, RULE_termvalue);
 		int _la;
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(161);
+			setState(255);
 			_la = _input.LA(1);
 			if ( !((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << LOGICALVALUE) | (1L << NUMBER) | (1L << STRING))) != 0)) ) {
 			_errHandler.recoverInline(this);
@@ -1382,8 +1958,8 @@ public class AgentSpeakParser extends Parser {
 	public static class LiteralContext extends ParserRuleContext {
 		public TerminalNode ATOM() { return getToken(AgentSpeakParser.ATOM, 0); }
 		public TerminalNode STRONGNEGATION() { return getToken(AgentSpeakParser.STRONGNEGATION, 0); }
-		public TermlistContext termlist() {
-			return getRuleContext(TermlistContext.class,0);
+		public ParamlistContext paramlist() {
+			return getRuleContext(ParamlistContext.class,0);
 		}
 		public LiteralContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
@@ -1406,30 +1982,30 @@ public class AgentSpeakParser extends Parser {
 
 	public final LiteralContext literal() throws RecognitionException {
 		LiteralContext _localctx = new LiteralContext(_ctx, getState());
-		enterRule(_localctx, 36, RULE_literal);
+		enterRule(_localctx, 48, RULE_literal);
 		int _la;
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(164);
+			setState(258);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
 			if (_la==STRONGNEGATION) {
 				{
-				setState(163);
+				setState(257);
 				match(STRONGNEGATION);
 				}
 			}
 
-			setState(166);
+			setState(260);
 			match(ATOM);
-			setState(168);
+			setState(262);
 			_errHandler.sync(this);
-			switch ( getInterpreter().adaptivePredict(_input,12,_ctx) ) {
+			switch ( getInterpreter().adaptivePredict(_input,21,_ctx) ) {
 			case 1:
 				{
-				setState(167);
-				termlist();
+				setState(261);
+				paramlist();
 				}
 				break;
 			}
@@ -1480,32 +2056,114 @@ public class AgentSpeakParser extends Parser {
 
 	public final TermlistContext termlist() throws RecognitionException {
 		TermlistContext _localctx = new TermlistContext(_ctx, getState());
-		enterRule(_localctx, 38, RULE_termlist);
+		enterRule(_localctx, 50, RULE_termlist);
 		int _la;
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(170);
+			setState(264);
 			match(LEFTROUNDBRACKET);
-			setState(171);
+			setState(265);
 			term();
-			setState(176);
+			setState(270);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
 			while (_la==COMMA) {
 				{
 				{
-				setState(172);
+				setState(266);
 				match(COMMA);
-				setState(173);
+				setState(267);
 				term();
 				}
 				}
-				setState(178);
+				setState(272);
 				_errHandler.sync(this);
 				_la = _input.LA(1);
 			}
-			setState(179);
+			setState(273);
+			match(RIGHTROUNDBRACKET);
+			}
+		}
+		catch (RecognitionException re) {
+			_localctx.exception = re;
+			_errHandler.reportError(this, re);
+			_errHandler.recover(this, re);
+		}
+		finally {
+			exitRule();
+		}
+		return _localctx;
+	}
+
+	public static class ParamlistContext extends ParserRuleContext {
+		public TerminalNode LEFTROUNDBRACKET() { return getToken(AgentSpeakParser.LEFTROUNDBRACKET, 0); }
+		public TerminalNode RIGHTROUNDBRACKET() { return getToken(AgentSpeakParser.RIGHTROUNDBRACKET, 0); }
+		public List<ExpressionContext> expression() {
+			return getRuleContexts(ExpressionContext.class);
+		}
+		public ExpressionContext expression(int i) {
+			return getRuleContext(ExpressionContext.class,i);
+		}
+		public List<TerminalNode> COMMA() { return getTokens(AgentSpeakParser.COMMA); }
+		public TerminalNode COMMA(int i) {
+			return getToken(AgentSpeakParser.COMMA, i);
+		}
+		public ParamlistContext(ParserRuleContext parent, int invokingState) {
+			super(parent, invokingState);
+		}
+		@Override public int getRuleIndex() { return RULE_paramlist; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof AgentSpeakListener ) ((AgentSpeakListener)listener).enterParamlist(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof AgentSpeakListener ) ((AgentSpeakListener)listener).exitParamlist(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof AgentSpeakVisitor ) return ((AgentSpeakVisitor<? extends T>)visitor).visitParamlist(this);
+			else return visitor.visitChildren(this);
+		}
+	}
+
+	public final ParamlistContext paramlist() throws RecognitionException {
+		ParamlistContext _localctx = new ParamlistContext(_ctx, getState());
+		enterRule(_localctx, 52, RULE_paramlist);
+		int _la;
+		try {
+			enterOuterAlt(_localctx, 1);
+			{
+			setState(275);
+			match(LEFTROUNDBRACKET);
+			setState(284);
+			_errHandler.sync(this);
+			_la = _input.LA(1);
+			if ((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << LOGICALVALUE) | (1L << NUMBER) | (1L << STRING) | (1L << STRONGNEGATION) | (1L << DEFAULTNEGATION) | (1L << VARIABLEATOM) | (1L << ATOM) | (1L << OBJECT_ATOM) | (1L << LEFTROUNDBRACKET))) != 0)) {
+				{
+				setState(276);
+				expression(0);
+				setState(281);
+				_errHandler.sync(this);
+				_la = _input.LA(1);
+				while (_la==COMMA) {
+					{
+					{
+					setState(277);
+					match(COMMA);
+					setState(278);
+					expression(0);
+					}
+					}
+					setState(283);
+					_errHandler.sync(this);
+					_la = _input.LA(1);
+				}
+				}
+			}
+
+			setState(286);
 			match(RIGHTROUNDBRACKET);
 			}
 		}
@@ -1543,98 +2201,12 @@ public class AgentSpeakParser extends Parser {
 
 	public final VariableContext variable() throws RecognitionException {
 		VariableContext _localctx = new VariableContext(_ctx, getState());
-		enterRule(_localctx, 40, RULE_variable);
+		enterRule(_localctx, 54, RULE_variable);
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(181);
+			setState(288);
 			match(VARIABLEATOM);
-			}
-		}
-		catch (RecognitionException re) {
-			_localctx.exception = re;
-			_errHandler.reportError(this, re);
-			_errHandler.recover(this, re);
-		}
-		finally {
-			exitRule();
-		}
-		return _localctx;
-	}
-
-	public static class For_loopContext extends ParserRuleContext {
-		public TerminalNode FOR() { return getToken(AgentSpeakParser.FOR, 0); }
-		public TerminalNode LEFTROUNDBRACKET() { return getToken(AgentSpeakParser.LEFTROUNDBRACKET, 0); }
-		public ExpressionContext expression() {
-			return getRuleContext(ExpressionContext.class,0);
-		}
-		public TerminalNode RIGHTROUNDBRACKET() { return getToken(AgentSpeakParser.RIGHTROUNDBRACKET, 0); }
-		public TerminalNode LEFTCURVEDBRACKET() { return getToken(AgentSpeakParser.LEFTCURVEDBRACKET, 0); }
-		public TerminalNode RIGHTCURVEDBRACKET() { return getToken(AgentSpeakParser.RIGHTCURVEDBRACKET, 0); }
-		public List<BodyformulaContext> bodyformula() {
-			return getRuleContexts(BodyformulaContext.class);
-		}
-		public BodyformulaContext bodyformula(int i) {
-			return getRuleContext(BodyformulaContext.class,i);
-		}
-		public List<TerminalNode> SEMICOLON() { return getTokens(AgentSpeakParser.SEMICOLON); }
-		public TerminalNode SEMICOLON(int i) {
-			return getToken(AgentSpeakParser.SEMICOLON, i);
-		}
-		public For_loopContext(ParserRuleContext parent, int invokingState) {
-			super(parent, invokingState);
-		}
-		@Override public int getRuleIndex() { return RULE_for_loop; }
-		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof AgentSpeakListener ) ((AgentSpeakListener)listener).enterFor_loop(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof AgentSpeakListener ) ((AgentSpeakListener)listener).exitFor_loop(this);
-		}
-		@Override
-		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof AgentSpeakVisitor ) return ((AgentSpeakVisitor<? extends T>)visitor).visitFor_loop(this);
-			else return visitor.visitChildren(this);
-		}
-	}
-
-	public final For_loopContext for_loop() throws RecognitionException {
-		For_loopContext _localctx = new For_loopContext(_ctx, getState());
-		enterRule(_localctx, 42, RULE_for_loop);
-		int _la;
-		try {
-			enterOuterAlt(_localctx, 1);
-			{
-			setState(183);
-			match(FOR);
-			setState(184);
-			match(LEFTROUNDBRACKET);
-			setState(185);
-			expression(0);
-			setState(186);
-			match(RIGHTROUNDBRACKET);
-			setState(187);
-			match(LEFTCURVEDBRACKET);
-			setState(193);
-			_errHandler.sync(this);
-			_la = _input.LA(1);
-			while ((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << FOR) | (1L << ARITHMETICOPERATOR3) | (1L << REFERENCEATOM) | (1L << EXCLAMATIONMARK) | (1L << QUESTIONMARK))) != 0)) {
-				{
-				{
-				setState(188);
-				bodyformula();
-				setState(189);
-				match(SEMICOLON);
-				}
-				}
-				setState(195);
-				_errHandler.sync(this);
-				_la = _input.LA(1);
-			}
-			setState(196);
-			match(RIGHTCURVEDBRACKET);
 			}
 		}
 		catch (RecognitionException re) {
@@ -1658,84 +2230,131 @@ public class AgentSpeakParser extends Parser {
 	private boolean expression_sempred(ExpressionContext _localctx, int predIndex) {
 		switch (predIndex) {
 		case 0:
-			return precpred(_ctx, 10);
+			return precpred(_ctx, 14);
 		case 1:
-			return precpred(_ctx, 9);
+			return precpred(_ctx, 13);
 		case 2:
-			return precpred(_ctx, 8);
+			return precpred(_ctx, 12);
 		case 3:
-			return precpred(_ctx, 7);
+			return precpred(_ctx, 11);
 		case 4:
-			return precpred(_ctx, 5);
+			return precpred(_ctx, 10);
 		case 5:
-			return precpred(_ctx, 4);
+			return precpred(_ctx, 9);
 		case 6:
+			return precpred(_ctx, 8);
+		case 7:
+			return precpred(_ctx, 7);
+		case 8:
+			return precpred(_ctx, 5);
+		case 9:
+			return precpred(_ctx, 4);
+		case 10:
 			return precpred(_ctx, 3);
 		}
 		return true;
 	}
 
 	public static final String _serializedATN =
-		"\3\u608b\ua72a\u8133\ub9ed\u417c\u3be7\u7786\u5964\3\65\u00c9\4\2\t\2"+
-		"\4\3\t\3\4\4\t\4\4\5\t\5\4\6\t\6\4\7\t\7\4\b\t\b\4\t\t\t\4\n\t\n\4\13"+
-		"\t\13\4\f\t\f\4\r\t\r\4\16\t\16\4\17\t\17\4\20\t\20\4\21\t\21\4\22\t\22"+
-		"\4\23\t\23\4\24\t\24\4\25\t\25\4\26\t\26\4\27\t\27\3\2\3\2\3\2\3\3\3\3"+
-		"\5\3\64\n\3\3\3\3\3\3\4\3\4\3\4\3\4\3\5\3\5\3\5\3\5\3\6\7\6A\n\6\f\6\16"+
-		"\6D\13\6\3\6\3\6\3\6\3\6\5\6J\n\6\3\6\3\6\3\6\3\7\3\7\5\7Q\n\7\3\b\3\b"+
-		"\5\bU\n\b\3\t\3\t\3\t\3\n\3\n\3\n\7\n]\n\n\f\n\16\n`\13\n\3\n\3\n\3\13"+
-		"\3\13\3\13\3\13\3\13\5\13i\n\13\3\f\3\f\3\f\3\f\3\f\3\f\3\f\3\f\5\fs\n"+
-		"\f\3\f\3\f\3\f\3\f\3\f\3\f\3\f\3\f\3\f\3\f\3\f\3\f\3\f\3\f\3\f\3\f\3\f"+
-		"\3\f\3\f\3\f\3\f\7\f\u008a\n\f\f\f\16\f\u008d\13\f\3\r\3\r\3\r\3\16\3"+
-		"\16\3\16\3\17\3\17\3\17\3\20\3\20\3\20\3\21\3\21\3\21\3\22\3\22\3\22\3"+
-		"\22\5\22\u00a2\n\22\3\23\3\23\3\24\5\24\u00a7\n\24\3\24\3\24\5\24\u00ab"+
-		"\n\24\3\25\3\25\3\25\3\25\7\25\u00b1\n\25\f\25\16\25\u00b4\13\25\3\25"+
-		"\3\25\3\26\3\26\3\27\3\27\3\27\3\27\3\27\3\27\3\27\3\27\7\27\u00c2\n\27"+
-		"\f\27\16\27\u00c5\13\27\3\27\3\27\3\27\2\3\26\30\2\4\6\b\n\f\16\20\22"+
-		"\24\26\30\32\34\36 \"$&(*,\2\4\4\2\31\31\33\34\4\2\4\5\7\7\2\u00cc\2."+
-		"\3\2\2\2\4\63\3\2\2\2\6\67\3\2\2\2\b;\3\2\2\2\nB\3\2\2\2\fN\3\2\2\2\16"+
-		"R\3\2\2\2\20V\3\2\2\2\22^\3\2\2\2\24h\3\2\2\2\26r\3\2\2\2\30\u008e\3\2"+
-		"\2\2\32\u0091\3\2\2\2\34\u0094\3\2\2\2\36\u0097\3\2\2\2 \u009a\3\2\2\2"+
-		"\"\u00a1\3\2\2\2$\u00a3\3\2\2\2&\u00a6\3\2\2\2(\u00ac\3\2\2\2*\u00b7\3"+
-		"\2\2\2,\u00b9\3\2\2\2./\5&\24\2/\60\7\'\2\2\60\3\3\2\2\2\61\64\5\34\17"+
-		"\2\62\64\5\36\20\2\63\61\3\2\2\2\63\62\3\2\2\2\64\65\3\2\2\2\65\66\7\'"+
-		"\2\2\66\5\3\2\2\2\678\7\31\2\289\5&\24\29:\7\'\2\2:\7\3\2\2\2;<\7\33\2"+
-		"\2<=\5&\24\2=>\7\'\2\2>\t\3\2\2\2?A\7\22\2\2@?\3\2\2\2AD\3\2\2\2B@\3\2"+
-		"\2\2BC\3\2\2\2CE\3\2\2\2DB\3\2\2\2EF\5\f\7\2FI\5&\24\2GH\7%\2\2HJ\5\26"+
-		"\f\2IG\3\2\2\2IJ\3\2\2\2JK\3\2\2\2KL\5\20\t\2LM\7\'\2\2M\13\3\2\2\2NP"+
-		"\7\20\2\2OQ\t\2\2\2PO\3\2\2\2PQ\3\2\2\2Q\r\3\2\2\2RT\7\20\2\2SU\7\20\2"+
-		"\2TS\3\2\2\2TU\3\2\2\2U\17\3\2\2\2VW\7\"\2\2WX\5\22\n\2X\21\3\2\2\2YZ"+
-		"\5\24\13\2Z[\7&\2\2[]\3\2\2\2\\Y\3\2\2\2]`\3\2\2\2^\\\3\2\2\2^_\3\2\2"+
-		"\2_a\3\2\2\2`^\3\2\2\2ab\5\24\13\2b\23\3\2\2\2ci\5,\27\2di\5\30\r\2ei"+
-		"\5\32\16\2fi\5\34\17\2gi\5 \21\2hc\3\2\2\2hd\3\2\2\2he\3\2\2\2hf\3\2\2"+
-		"\2hg\3\2\2\2i\25\3\2\2\2jk\b\f\1\2kl\7\t\2\2ls\5\26\f\bmn\7,\2\2no\5\26"+
-		"\f\2op\7-\2\2ps\3\2\2\2qs\5\"\22\2rj\3\2\2\2rm\3\2\2\2rq\3\2\2\2s\u008b"+
-		"\3\2\2\2tu\f\f\2\2uv\7\16\2\2v\u008a\5\26\f\rwx\f\13\2\2xy\7\17\2\2y\u008a"+
-		"\5\26\f\fz{\f\n\2\2{|\7\20\2\2|\u008a\5\26\f\13}~\f\t\2\2~\177\7\n\2\2"+
-		"\177\u008a\5\26\f\n\u0080\u0081\f\7\2\2\u0081\u0082\7\13\2\2\u0082\u008a"+
-		"\5\26\f\b\u0083\u0084\f\6\2\2\u0084\u0085\7\f\2\2\u0085\u008a\5\26\f\7"+
-		"\u0086\u0087\f\5\2\2\u0087\u0088\7\r\2\2\u0088\u008a\5\26\f\6\u0089t\3"+
-		"\2\2\2\u0089w\3\2\2\2\u0089z\3\2\2\2\u0089}\3\2\2\2\u0089\u0080\3\2\2"+
-		"\2\u0089\u0083\3\2\2\2\u0089\u0086\3\2\2\2\u008a\u008d\3\2\2\2\u008b\u0089"+
-		"\3\2\2\2\u008b\u008c\3\2\2\2\u008c\27\3\2\2\2\u008d\u008b\3\2\2\2\u008e"+
-		"\u008f\5\16\b\2\u008f\u0090\5&\24\2\u0090\31\3\2\2\2\u0091\u0092\7\34"+
-		"\2\2\u0092\u0093\5&\24\2\u0093\33\3\2\2\2\u0094\u0095\7\31\2\2\u0095\u0096"+
-		"\5&\24\2\u0096\35\3\2\2\2\u0097\u0098\7\33\2\2\u0098\u0099\5&\24\2\u0099"+
-		"\37\3\2\2\2\u009a\u009b\7\30\2\2\u009b\u009c\5(\25\2\u009c!\3\2\2\2\u009d"+
-		"\u00a2\5 \21\2\u009e\u00a2\5$\23\2\u009f\u00a2\5*\26\2\u00a0\u00a2\5&"+
-		"\24\2\u00a1\u009d\3\2\2\2\u00a1\u009e\3\2\2\2\u00a1\u009f\3\2\2\2\u00a1"+
-		"\u00a0\3\2\2\2\u00a2#\3\2\2\2\u00a3\u00a4\t\3\2\2\u00a4%\3\2\2\2\u00a5"+
-		"\u00a7\7\b\2\2\u00a6\u00a5\3\2\2\2\u00a6\u00a7\3\2\2\2\u00a7\u00a8\3\2"+
-		"\2\2\u00a8\u00aa\7\27\2\2\u00a9\u00ab\5(\25\2\u00aa\u00a9\3\2\2\2\u00aa"+
-		"\u00ab\3\2\2\2\u00ab\'\3\2\2\2\u00ac\u00ad\7,\2\2\u00ad\u00b2\5\"\22\2"+
-		"\u00ae\u00af\7\32\2\2\u00af\u00b1\5\"\22\2\u00b0\u00ae\3\2\2\2\u00b1\u00b4"+
-		"\3\2\2\2\u00b2\u00b0\3\2\2\2\u00b2\u00b3\3\2\2\2\u00b3\u00b5\3\2\2\2\u00b4"+
-		"\u00b2\3\2\2\2\u00b5\u00b6\7-\2\2\u00b6)\3\2\2\2\u00b7\u00b8\7\26\2\2"+
-		"\u00b8+\3\2\2\2\u00b9\u00ba\7\3\2\2\u00ba\u00bb\7,\2\2\u00bb\u00bc\5\26"+
-		"\f\2\u00bc\u00bd\7-\2\2\u00bd\u00c3\7\60\2\2\u00be\u00bf\5\24\13\2\u00bf"+
-		"\u00c0\7&\2\2\u00c0\u00c2\3\2\2\2\u00c1\u00be\3\2\2\2\u00c2\u00c5\3\2"+
-		"\2\2\u00c3\u00c1\3\2\2\2\u00c3\u00c4\3\2\2\2\u00c4\u00c6\3\2\2\2\u00c5"+
-		"\u00c3\3\2\2\2\u00c6\u00c7\7\61\2\2\u00c7-\3\2\2\2\21\63BIPT^hr\u0089"+
-		"\u008b\u00a1\u00a6\u00aa\u00b2\u00c3";
+		"\3\u608b\ua72a\u8133\ub9ed\u417c\u3be7\u7786\u5964\3>\u0125\4\2\t\2\4"+
+		"\3\t\3\4\4\t\4\4\5\t\5\4\6\t\6\4\7\t\7\4\b\t\b\4\t\t\t\4\n\t\n\4\13\t"+
+		"\13\4\f\t\f\4\r\t\r\4\16\t\16\4\17\t\17\4\20\t\20\4\21\t\21\4\22\t\22"+
+		"\4\23\t\23\4\24\t\24\4\25\t\25\4\26\t\26\4\27\t\27\4\30\t\30\4\31\t\31"+
+		"\4\32\t\32\4\33\t\33\4\34\t\34\4\35\t\35\3\2\3\2\3\2\3\3\3\3\5\3@\n\3"+
+		"\3\3\3\3\3\4\3\4\3\4\3\4\3\5\3\5\3\5\3\5\3\6\7\6M\n\6\f\6\16\6P\13\6\3"+
+		"\6\3\6\3\6\3\6\5\6V\n\6\3\6\3\6\3\6\3\7\3\7\5\7]\n\7\3\b\3\b\5\ba\n\b"+
+		"\3\t\3\t\3\t\3\n\3\n\3\n\7\ni\n\n\f\n\16\nl\13\n\3\n\3\n\3\13\3\13\3\13"+
+		"\3\13\3\13\3\13\3\13\5\13w\n\13\3\f\3\f\3\f\3\f\3\f\3\f\3\f\3\f\5\f\u0081"+
+		"\n\f\3\f\3\f\3\f\3\f\3\f\3\f\3\f\3\f\3\f\3\f\3\f\3\f\3\f\3\f\3\f\3\f\3"+
+		"\f\3\f\3\f\3\f\3\f\3\f\3\f\3\f\3\f\3\f\3\f\3\f\3\f\3\f\3\f\3\f\3\f\7\f"+
+		"\u00a4\n\f\f\f\16\f\u00a7\13\f\3\r\3\r\3\r\3\r\3\16\3\16\3\16\3\17\3\17"+
+		"\3\17\3\17\3\17\3\17\3\17\3\17\3\17\3\17\7\17\u00ba\n\17\f\17\16\17\u00bd"+
+		"\13\17\3\17\3\17\3\20\3\20\3\20\3\20\3\20\7\20\u00c6\n\20\f\20\16\20\u00c9"+
+		"\13\20\3\20\3\20\5\20\u00cd\n\20\3\21\3\21\3\21\3\21\3\21\3\22\3\22\3"+
+		"\22\3\22\7\22\u00d8\n\22\f\22\16\22\u00db\13\22\3\22\3\22\3\22\3\22\5"+
+		"\22\u00e1\n\22\3\23\3\23\3\23\3\24\3\24\3\24\5\24\u00e9\n\24\3\25\3\25"+
+		"\3\25\3\26\3\26\5\26\u00f0\n\26\3\26\7\26\u00f3\n\26\f\26\16\26\u00f6"+
+		"\13\26\3\27\3\27\5\27\u00fa\n\27\3\30\3\30\3\30\3\30\5\30\u0100\n\30\3"+
+		"\31\3\31\3\32\5\32\u0105\n\32\3\32\3\32\5\32\u0109\n\32\3\33\3\33\3\33"+
+		"\3\33\7\33\u010f\n\33\f\33\16\33\u0112\13\33\3\33\3\33\3\34\3\34\3\34"+
+		"\3\34\7\34\u011a\n\34\f\34\16\34\u011d\13\34\5\34\u011f\n\34\3\34\3\34"+
+		"\3\35\3\35\3\35\2\3\26\36\2\4\6\b\n\f\16\20\22\24\26\30\32\34\36 \"$&"+
+		"(*,.\60\62\64\668\2\4\4\2\"\"$%\4\2\b\t\13\13\2\u0132\2:\3\2\2\2\4?\3"+
+		"\2\2\2\6C\3\2\2\2\bG\3\2\2\2\nN\3\2\2\2\fZ\3\2\2\2\16^\3\2\2\2\20b\3\2"+
+		"\2\2\22j\3\2\2\2\24v\3\2\2\2\26\u0080\3\2\2\2\30\u00a8\3\2\2\2\32\u00ac"+
+		"\3\2\2\2\34\u00af\3\2\2\2\36\u00c0\3\2\2\2 \u00ce\3\2\2\2\"\u00e0\3\2"+
+		"\2\2$\u00e2\3\2\2\2&\u00e5\3\2\2\2(\u00ea\3\2\2\2*\u00ed\3\2\2\2,\u00f7"+
+		"\3\2\2\2.\u00ff\3\2\2\2\60\u0101\3\2\2\2\62\u0104\3\2\2\2\64\u010a\3\2"+
+		"\2\2\66\u0115\3\2\2\28\u0122\3\2\2\2:;\5\62\32\2;<\7\60\2\2<\3\3\2\2\2"+
+		"=@\5&\24\2>@\5(\25\2?=\3\2\2\2?>\3\2\2\2@A\3\2\2\2AB\7\60\2\2B\5\3\2\2"+
+		"\2CD\7\"\2\2DE\5\62\32\2EF\7\60\2\2F\7\3\2\2\2GH\7$\2\2HI\5\62\32\2IJ"+
+		"\7\60\2\2J\t\3\2\2\2KM\7\32\2\2LK\3\2\2\2MP\3\2\2\2NL\3\2\2\2NO\3\2\2"+
+		"\2OQ\3\2\2\2PN\3\2\2\2QR\5\f\7\2RU\5\62\32\2ST\7.\2\2TV\5\26\f\2US\3\2"+
+		"\2\2UV\3\2\2\2VW\3\2\2\2WX\5\20\t\2XY\7\60\2\2Y\13\3\2\2\2Z\\\7\30\2\2"+
+		"[]\t\2\2\2\\[\3\2\2\2\\]\3\2\2\2]\r\3\2\2\2^`\7\30\2\2_a\7\30\2\2`_\3"+
+		"\2\2\2`a\3\2\2\2a\17\3\2\2\2bc\7+\2\2cd\5\22\n\2d\21\3\2\2\2ef\5\24\13"+
+		"\2fg\7/\2\2gi\3\2\2\2he\3\2\2\2il\3\2\2\2jh\3\2\2\2jk\3\2\2\2km\3\2\2"+
+		"\2lj\3\2\2\2mn\5\24\13\2n\23\3\2\2\2ow\5\34\17\2pw\5\36\20\2qw\5\32\16"+
+		"\2rw\5$\23\2sw\5&\24\2tw\5*\26\2uw\5\30\r\2vo\3\2\2\2vp\3\2\2\2vq\3\2"+
+		"\2\2vr\3\2\2\2vs\3\2\2\2vt\3\2\2\2vu\3\2\2\2w\25\3\2\2\2xy\b\f\1\2yz\7"+
+		"\r\2\2z\u0081\5\26\f\b{|\7\65\2\2|}\5\26\f\2}~\7\66\2\2~\u0081\3\2\2\2"+
+		"\177\u0081\5.\30\2\u0080x\3\2\2\2\u0080{\3\2\2\2\u0080\177\3\2\2\2\u0081"+
+		"\u00a5\3\2\2\2\u0082\u0083\f\20\2\2\u0083\u0084\7\20\2\2\u0084\u00a4\5"+
+		"\26\f\21\u0085\u0086\f\17\2\2\u0086\u0087\7\26\2\2\u0087\u00a4\5\26\f"+
+		"\20\u0088\u0089\f\16\2\2\u0089\u008a\7\27\2\2\u008a\u00a4\5\26\f\17\u008b"+
+		"\u008c\f\r\2\2\u008c\u008d\7\30\2\2\u008d\u00a4\5\26\f\16\u008e\u008f"+
+		"\f\f\2\2\u008f\u0090\7\22\2\2\u0090\u00a4\5\26\f\r\u0091\u0092\f\13\2"+
+		"\2\u0092\u0093\7\21\2\2\u0093\u00a4\5\26\f\f\u0094\u0095\f\n\2\2\u0095"+
+		"\u0096\7\17\2\2\u0096\u00a4\5\26\f\13\u0097\u0098\f\t\2\2\u0098\u0099"+
+		"\7\16\2\2\u0099\u00a4\5\26\f\n\u009a\u009b\f\7\2\2\u009b\u009c\7\23\2"+
+		"\2\u009c\u00a4\5\26\f\b\u009d\u009e\f\6\2\2\u009e\u009f\7\24\2\2\u009f"+
+		"\u00a4\5\26\f\7\u00a0\u00a1\f\5\2\2\u00a1\u00a2\7\25\2\2\u00a2\u00a4\5"+
+		"\26\f\6\u00a3\u0082\3\2\2\2\u00a3\u0085\3\2\2\2\u00a3\u0088\3\2\2\2\u00a3"+
+		"\u008b\3\2\2\2\u00a3\u008e\3\2\2\2\u00a3\u0091\3\2\2\2\u00a3\u0094\3\2"+
+		"\2\2\u00a3\u0097\3\2\2\2\u00a3\u009a\3\2\2\2\u00a3\u009d\3\2\2\2\u00a3"+
+		"\u00a0\3\2\2\2\u00a4\u00a7\3\2\2\2\u00a5\u00a3\3\2\2\2\u00a5\u00a6\3\2"+
+		"\2\2\u00a6\27\3\2\2\2\u00a7\u00a5\3\2\2\2\u00a8\u00a9\58\35\2\u00a9\u00aa"+
+		"\7\22\2\2\u00aa\u00ab\5\26\f\2\u00ab\31\3\2\2\2\u00ac\u00ad\5\16\b\2\u00ad"+
+		"\u00ae\5\62\32\2\u00ae\33\3\2\2\2\u00af\u00b0\7\3\2\2\u00b0\u00b1\7\65"+
+		"\2\2\u00b1\u00b2\58\35\2\u00b2\u00b3\7\7\2\2\u00b3\u00b4\5\26\f\2\u00b4"+
+		"\u00b5\7\66\2\2\u00b5\u00bb\79\2\2\u00b6\u00b7\5\24\13\2\u00b7\u00b8\7"+
+		"/\2\2\u00b8\u00ba\3\2\2\2\u00b9\u00b6\3\2\2\2\u00ba\u00bd\3\2\2\2\u00bb"+
+		"\u00b9\3\2\2\2\u00bb\u00bc\3\2\2\2\u00bc\u00be\3\2\2\2\u00bd\u00bb\3\2"+
+		"\2\2\u00be\u00bf\7:\2\2\u00bf\35\3\2\2\2\u00c0\u00c1\7\4\2\2\u00c1\u00c7"+
+		"\5 \21\2\u00c2\u00c3\7\6\2\2\u00c3\u00c4\7\4\2\2\u00c4\u00c6\5 \21\2\u00c5"+
+		"\u00c2\3\2\2\2\u00c6\u00c9\3\2\2\2\u00c7\u00c5\3\2\2\2\u00c7\u00c8\3\2"+
+		"\2\2\u00c8\u00cc\3\2\2\2\u00c9\u00c7\3\2\2\2\u00ca\u00cb\7\6\2\2\u00cb"+
+		"\u00cd\5\"\22\2\u00cc\u00ca\3\2\2\2\u00cc\u00cd\3\2\2\2\u00cd\37\3\2\2"+
+		"\2\u00ce\u00cf\7\65\2\2\u00cf\u00d0\5\26\f\2\u00d0\u00d1\7\66\2\2\u00d1"+
+		"\u00d2\5\"\22\2\u00d2!\3\2\2\2\u00d3\u00d9\79\2\2\u00d4\u00d5\5\24\13"+
+		"\2\u00d5\u00d6\7/\2\2\u00d6\u00d8\3\2\2\2\u00d7\u00d4\3\2\2\2\u00d8\u00db"+
+		"\3\2\2\2\u00d9\u00d7\3\2\2\2\u00d9\u00da\3\2\2\2\u00da\u00dc\3\2\2\2\u00db"+
+		"\u00d9\3\2\2\2\u00dc\u00e1\7:\2\2\u00dd\u00de\5\24\13\2\u00de\u00df\7"+
+		"/\2\2\u00df\u00e1\3\2\2\2\u00e0\u00d3\3\2\2\2\u00e0\u00dd\3\2\2\2\u00e1"+
+		"#\3\2\2\2\u00e2\u00e3\7%\2\2\u00e3\u00e4\5\62\32\2\u00e4%\3\2\2\2\u00e5"+
+		"\u00e6\7\"\2\2\u00e6\u00e8\7 \2\2\u00e7\u00e9\5\66\34\2\u00e8\u00e7\3"+
+		"\2\2\2\u00e8\u00e9\3\2\2\2\u00e9\'\3\2\2\2\u00ea\u00eb\7$\2\2\u00eb\u00ec"+
+		"\5\62\32\2\u00ec)\3\2\2\2\u00ed\u00ef\7!\2\2\u00ee\u00f0\5\66\34\2\u00ef"+
+		"\u00ee\3\2\2\2\u00ef\u00f0\3\2\2\2\u00f0\u00f4\3\2\2\2\u00f1\u00f3\5,"+
+		"\27\2\u00f2\u00f1\3\2\2\2\u00f3\u00f6\3\2\2\2\u00f4\u00f2\3\2\2\2\u00f4"+
+		"\u00f5\3\2\2\2\u00f5+\3\2\2\2\u00f6\u00f4\3\2\2\2\u00f7\u00f9\7\37\2\2"+
+		"\u00f8\u00fa\5\66\34\2\u00f9\u00f8\3\2\2\2\u00f9\u00fa\3\2\2\2\u00fa-"+
+		"\3\2\2\2\u00fb\u0100\5*\26\2\u00fc\u0100\5\60\31\2\u00fd\u0100\58\35\2"+
+		"\u00fe\u0100\5\62\32\2\u00ff\u00fb\3\2\2\2\u00ff\u00fc\3\2\2\2\u00ff\u00fd"+
+		"\3\2\2\2\u00ff\u00fe\3\2\2\2\u0100/\3\2\2\2\u0101\u0102\t\3\2\2\u0102"+
+		"\61\3\2\2\2\u0103\u0105\7\f\2\2\u0104\u0103\3\2\2\2\u0104\u0105\3\2\2"+
+		"\2\u0105\u0106\3\2\2\2\u0106\u0108\7 \2\2\u0107\u0109\5\66\34\2\u0108"+
+		"\u0107\3\2\2\2\u0108\u0109\3\2\2\2\u0109\63\3\2\2\2\u010a\u010b\7\65\2"+
+		"\2\u010b\u0110\5.\30\2\u010c\u010d\7#\2\2\u010d\u010f\5.\30\2\u010e\u010c"+
+		"\3\2\2\2\u010f\u0112\3\2\2\2\u0110\u010e\3\2\2\2\u0110\u0111\3\2\2\2\u0111"+
+		"\u0113\3\2\2\2\u0112\u0110\3\2\2\2\u0113\u0114\7\66\2\2\u0114\65\3\2\2"+
+		"\2\u0115\u011e\7\65\2\2\u0116\u011b\5\26\f\2\u0117\u0118\7#\2\2\u0118"+
+		"\u011a\5\26\f\2\u0119\u0117\3\2\2\2\u011a\u011d\3\2\2\2\u011b\u0119\3"+
+		"\2\2\2\u011b\u011c\3\2\2\2\u011c\u011f\3\2\2\2\u011d\u011b\3\2\2\2\u011e"+
+		"\u0116\3\2\2\2\u011e\u011f\3\2\2\2\u011f\u0120\3\2\2\2\u0120\u0121\7\66"+
+		"\2\2\u0121\67\3\2\2\2\u0122\u0123\7\36\2\2\u01239\3\2\2\2\33?NU\\`jv\u0080"+
+		"\u00a3\u00a5\u00bb\u00c7\u00cc\u00d9\u00e0\u00e8\u00ef\u00f4\u00f9\u00ff"+
+		"\u0104\u0108\u0110\u011b\u011e";
 	public static final ATN _ATN =
 		new ATNDeserializer().deserialize(_serializedATN.toCharArray());
 	static {

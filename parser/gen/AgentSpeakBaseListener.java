@@ -1,4 +1,4 @@
-// Generated from /home/mostafa/IdeaProjects/antr4grammars/parser/src/main/antlr4/grammar/AgentSpeak.g4 by ANTLR 4.8
+// Generated from /home/msotafa/IdeaProjects/antr4grammars/parser/src/main/antlr4/grammar/AgentSpeak.g4 by ANTLR 4.8
 
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.tree.ErrorNode;
@@ -147,6 +147,18 @@ public class AgentSpeakBaseListener implements AgentSpeakListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
+	@Override public void enterAssignment_statement(AgentSpeakParser.Assignment_statementContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitAssignment_statement(AgentSpeakParser.Assignment_statementContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
 	@Override public void enterBeliefaction(AgentSpeakParser.BeliefactionContext ctx) { }
 	/**
 	 * {@inheritDoc}
@@ -154,6 +166,54 @@ public class AgentSpeakBaseListener implements AgentSpeakListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitBeliefaction(AgentSpeakParser.BeliefactionContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterFor_loop(AgentSpeakParser.For_loopContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitFor_loop(AgentSpeakParser.For_loopContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterIf_else(AgentSpeakParser.If_elseContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitIf_else(AgentSpeakParser.If_elseContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterCondition_block(AgentSpeakParser.Condition_blockContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitCondition_block(AgentSpeakParser.Condition_blockContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterCode_block(AgentSpeakParser.Code_blockContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitCode_block(AgentSpeakParser.Code_blockContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
@@ -207,6 +267,18 @@ public class AgentSpeakBaseListener implements AgentSpeakListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
+	@Override public void enterFunction_call(AgentSpeakParser.Function_callContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitFunction_call(AgentSpeakParser.Function_callContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
 	@Override public void enterTerm(AgentSpeakParser.TermContext ctx) { }
 	/**
 	 * {@inheritDoc}
@@ -255,6 +327,18 @@ public class AgentSpeakBaseListener implements AgentSpeakListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
+	@Override public void enterParamlist(AgentSpeakParser.ParamlistContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitParamlist(AgentSpeakParser.ParamlistContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
 	@Override public void enterVariable(AgentSpeakParser.VariableContext ctx) { }
 	/**
 	 * {@inheritDoc}
@@ -262,18 +346,6 @@ public class AgentSpeakBaseListener implements AgentSpeakListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitVariable(AgentSpeakParser.VariableContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void enterFor_loop(AgentSpeakParser.For_loopContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitFor_loop(AgentSpeakParser.For_loopContext ctx) { }
 
 	/**
 	 * {@inheritDoc}

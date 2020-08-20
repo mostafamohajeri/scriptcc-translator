@@ -5,12 +5,12 @@
     <parent>
         <artifactId>core</artifactId>
         <groupId>nl.uva.sne.cci</groupId>
-        <version>0.2.3</version>
+        <version>0.2.5</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>parser</artifactId>
-    <version>0.2.3</version>
+    <version>0.2.5</version>
 
     <properties>
         <maven.compiler.target>11</maven.compiler.target>

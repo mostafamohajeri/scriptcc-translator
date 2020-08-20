@@ -69,6 +69,8 @@ object Agent extends IAgent {
 
         override def agent_type: String = "<class_name>"
 
+        var vars = VarMap()
+
         def initGoals()(implicit executionContext: ExecutionContext) = List[StructTerm](
           < initialGoals : { initialGoal |
           StructTerm("<initialGoal.goal.writableName>",Seq[GenericTerm]( <initialGoal.goal.writableTerms : { expression | <expression.native> } ; separator=", "> ))
@@ -87,7 +89,7 @@ object Agent extends IAgent {
                                            val args : <goalPlan.goal.atom.name>.Parameters = if(t.terms.size == 0)  <goalPlan.goal.atom.name>.Parameters(List( )) else <goalPlan.goal.atom.name>.Parameters(t.terms.toList)
                                             Option(SubGoalMessage(<goalPlan.goal.atom.name>, args,r,ref))
                                        \} else }> {
-                                            println("no plan for this goal")
+                                            println("no plan for this goal: " + t.toString)
                                             Option.empty[SubGoalMessage]
                                             }
         }
@@ -142,7 +144,7 @@ object Agent extends IAgent {
                             )
 
               initiator ! InitEndMessage(name,context.self)
-              context.log.debug(f"$name: I have started, switching behavior")
+              //context.log.debug(f"$name: I have started, switching behavior")
               normal_behavior()
 
 //            case InitEndMessage(_,_) =>
@@ -196,11 +198,15 @@ goal_plans(class_name,goalPlans) ::= <<
         <goalPlan.goal.terms : { term | //var <term.name> = params.l_params(<i0>)  }; separator="\n">
         var vars = VarMap()
         <goalPlan.plans : { plan |
-        //plan <i0>
 
+        //plan <i0> start
+
+           <if(plan.atomic)>
+           this.synchronized {
+           <endif>
                 vars.clear()
                 <if(plan.literal.expressions)>
-                vars +=( <plan.literal.expressions : { term | <if(term.term.is_var)>"<term.term.name>" -> params.l_params(<i0>)<else>"<i0>" -> params.l_params(<i0>)<endif>}; separator=", "> )
+                <plan.literal.expressions : { term | vars +=( <if(term.term.is_var)>  "<term.term.name>" -> params.l_params(<i0>)<else>"<i0>" -> params.l_params(<i0>)<endif>)}; separator="\n ">
                <endif>
 
                 val m<i0> = executionContext.beliefBase.matchTerms(<plan.headCheck>);
@@ -217,7 +223,12 @@ goal_plans(class_name,goalPlans) ::= <<
                     return
                 \}
 
-                 \} } >
+                 \}
+                 <if(plan.atomic)>
+                            \}
+                            <endif>
+                 // plan <i0>
+                 } >
 
        \}
 
@@ -259,7 +270,7 @@ code_block(steps) ::= <<
                          while (ex_<step.iterationVarName>.hasNext) {
                              val sol_<step.iterationVarName> = ex_<step.iterationVarName>.next
                              if(sol_<step.iterationVarName>.result) {
-                             vars += ("<step.varName>" -> sol_<step.iterationVarName>.bindings("<step.iterationVarName>"))
+                             vars += ("<step.varName>" -> sol_<step.iterationVarName>.bindings("<step.iterationVarName>").asInstanceOf[GenericTerm])
                              <code_block(step.steps)>
                              \}
                          \}

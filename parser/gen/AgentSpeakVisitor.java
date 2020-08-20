@@ -1,4 +1,4 @@
-// Generated from /home/mostafa/IdeaProjects/antr4grammars/parser/src/main/antlr4/grammar/AgentSpeak.g4 by ANTLR 4.8
+// Generated from /home/msotafa/IdeaProjects/antr4grammars/parser/src/main/antlr4/grammar/AgentSpeak.g4 by ANTLR 4.8
 import org.antlr.v4.runtime.tree.ParseTreeVisitor;
 
 /**
@@ -76,11 +76,41 @@ public interface AgentSpeakVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitExpression(AgentSpeakParser.ExpressionContext ctx);
 	/**
+	 * Visit a parse tree produced by {@link AgentSpeakParser#assignment_statement}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitAssignment_statement(AgentSpeakParser.Assignment_statementContext ctx);
+	/**
 	 * Visit a parse tree produced by {@link AgentSpeakParser#beliefaction}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
 	T visitBeliefaction(AgentSpeakParser.BeliefactionContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link AgentSpeakParser#for_loop}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitFor_loop(AgentSpeakParser.For_loopContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link AgentSpeakParser#if_else}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitIf_else(AgentSpeakParser.If_elseContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link AgentSpeakParser#condition_block}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitCondition_block(AgentSpeakParser.Condition_blockContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link AgentSpeakParser#code_block}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitCode_block(AgentSpeakParser.Code_blockContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link AgentSpeakParser#testgoal}.
 	 * @param ctx the parse tree
@@ -106,6 +136,12 @@ public interface AgentSpeakVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitPrimitiveaction(AgentSpeakParser.PrimitiveactionContext ctx);
 	/**
+	 * Visit a parse tree produced by {@link AgentSpeakParser#function_call}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitFunction_call(AgentSpeakParser.Function_callContext ctx);
+	/**
 	 * Visit a parse tree produced by {@link AgentSpeakParser#term}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
@@ -130,15 +166,15 @@ public interface AgentSpeakVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitTermlist(AgentSpeakParser.TermlistContext ctx);
 	/**
+	 * Visit a parse tree produced by {@link AgentSpeakParser#paramlist}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitParamlist(AgentSpeakParser.ParamlistContext ctx);
+	/**
 	 * Visit a parse tree produced by {@link AgentSpeakParser#variable}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
 	T visitVariable(AgentSpeakParser.VariableContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link AgentSpeakParser#for_loop}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitFor_loop(AgentSpeakParser.For_loopContext ctx);
 }

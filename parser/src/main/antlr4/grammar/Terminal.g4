@@ -202,7 +202,7 @@ ANNOTATION_CONSTANT :
 
 VARIABLEATOM :
     ( UPPERCASELETTER | UNDERSCORE )
-    ( LOWERCASELETTER | UPPERCASELETTER | DIGIT | SLASH )*
+    ( LOWERCASELETTER | UPPERCASELETTER | DIGIT )*
     ;
 
 /**
@@ -217,7 +217,7 @@ FUNC_NAME :
 
 ATOM :
     LOWERCASELETTER
-    ( LOWERCASELETTER | UPPERCASELETTER | DIGIT | SLASH | MINUS | UNDERSCORE )*
+    ( LOWERCASELETTER | UPPERCASELETTER | DIGIT | MINUS | UNDERSCORE )*
     ;
 
 
@@ -258,7 +258,7 @@ COLON                      : ':';
 SEMICOLON                  : ';';
 DOT                        : '.';
 UNDERSCORE                 : '_';
-SLASH                      : '/';
+//SLASH                      : '/';
 LEFTSHIFT                  : '<<';
 RIGHTSHIFT                 : '>>';
 
@@ -271,7 +271,7 @@ RIGHTCURVEDBRACKET         : '}';
 
 fragment PLUS              : '+';
 fragment MINUS             : '-';
-fragment DIVIDE            : '//';
+fragment DIVIDE            : '/';
 
 fragment PI                : 'pi';
 fragment EULER             : 'euler';

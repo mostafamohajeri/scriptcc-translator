@@ -88,6 +88,8 @@ public class CAgentVisitor extends AgentBaseVisitor<Optional<Object>> {
         if (Objects.nonNull(ctx.plandefinition()))
             planBuilder.planDefinition((PlanDefinition) visitPlandefinition(ctx.plandefinition()).orElse(PlanDefinition.empty()));
 
+        if(Objects.nonNull(ctx.ANNOTATION()))
+            ctx.ANNOTATION().forEach(a -> planBuilder.annotation(a.getText()));
 
         return Optional.of(planBuilder.build());
     }

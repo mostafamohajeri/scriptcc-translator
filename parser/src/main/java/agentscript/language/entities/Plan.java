@@ -1,10 +1,9 @@
 package agentscript.language.entities;
 
 import agentscript.language.entities.expression.Expression;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
+
+import java.util.List;
 
 @Getter
 @Builder
@@ -12,10 +11,16 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(staticName = "empty")
 public class Plan {
 
+    @Singular
+    List<String> annotations;
     PlanTrigger trigger;
     Literal literal;
     Expression expression;
     PlanDefinition planDefinition;
+
+    public boolean getAtomic() {
+        return annotations.contains("@atomic");
+    }
 
     public String getHeadCheck() {
 
