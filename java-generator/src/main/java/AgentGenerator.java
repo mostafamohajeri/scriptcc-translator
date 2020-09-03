@@ -1,5 +1,5 @@
 import agentscript.language.entities.agent.IAgent;
-import agentscript.language.entities.goals.InitialGoal;
+import agentscript.language.entities.agent.InitialGoal;
 
 import java.util.List;
 

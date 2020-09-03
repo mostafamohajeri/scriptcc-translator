@@ -1,7 +1,7 @@
 package agentscript.language.entities.expression;
 
-import agentscript.language.entities.PrimitiveAction;
-import agentscript.language.entities.Term;
+import agentscript.language.entities.plan.PrimitiveAction;
+import agentscript.language.entities.terms.Term;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -13,24 +13,14 @@ public class TermExpression extends Expression implements IExpression{
     public final boolean is_term = true;
 
     @Override
-    public String getSt4() {
-        if(term instanceof PrimitiveAction)
-            return term.getRefName(true);
-        return term.getRefName(true);
+    public String getAsStructure() {
+        return term.getAsStructure();
     }
 
     @Override
-    public String getNative() {
-        if(term instanceof PrimitiveAction)
-            return ((PrimitiveAction) term).getCall();
-        return term.getValue();
+    public String getAsNative() {
+        return term.getAsValue();
     }
 
-    @Override
-    public String getScala() {
-        if(term instanceof PrimitiveAction)
-            return ((PrimitiveAction) term).getCall();
-        return term.getValue();
-    }
 
 }

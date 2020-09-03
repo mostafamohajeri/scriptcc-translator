@@ -73,14 +73,14 @@ object Agent extends IAgent {
 
         def initGoals()(implicit executionContext: ExecutionContext) = List[StructTerm](
           < initialGoals : { initialGoal |
-          StructTerm("<initialGoal.goal.writableName>",Seq[GenericTerm]( <initialGoal.goal.writableTerms : { expression | <expression.asNative> } ; separator=", "> ))
+          StructTerm("<initialGoal.goal.writableName>",Seq[GenericTerm]( <initialGoal.goal.writableTerms : { expression | <expression.native> } ; separator=", "> ))
 
             }; separator=",\n " >
         )
 
         def initBeliefs()(implicit executionContext: ExecutionContext) = List[StructTerm](
           < initialBeliefs : { ib |
-          <ib.literal.asStructure>
+          <ib.literal.refName>
           }; separator=",\n " >
         )
 
@@ -215,7 +215,7 @@ goal_plans(class_name,goalPlans) ::= <<
                 {
                 m<i0>.bindings foreach { case (k, v) => vars += (k -> v.asInstanceOf[GenericTerm]) \}
 
-                val r<i0> = executionContext.beliefBase.query(<plan.expression.asStructure>)
+                val r<i0> = executionContext.beliefBase.query(<plan.expression.st4>)
 
                 if (r<i0>.result) {
                     r<i0>.bindings foreach { case (k, v) => vars += (k -> v.asInstanceOf[GenericTerm]) \}
@@ -250,7 +250,7 @@ goal_plans(class_name,goalPlans) ::= <<
 code_block(steps) ::= <<
 <steps : { step |
                 <if(step.achieve)>
-                    <step.writableName>.execute(<step.writableName>.Parameters(List( <step.writableTerms : { expression | <expression.asNative> } ; separator=", "> )))
+                    <step.writableName>.execute(<step.writableName>.Parameters(List( <step.writableTerms : { expression | <expression.native> } ; separator=", "> )))
                 <elseif(step.primitive)>
                     PrimitiveAction.execute(PrimitiveAction.Parameters(() => <step.call>))
                 <elseif(step.for_loop)>
@@ -276,11 +276,11 @@ code_block(steps) ::= <<
                          \}
                      vars -= ("<step.varName>")
                 <elseif(step.if_else)>
-                    if((<step.ifBlock.expression.asNative>).holds) {
+                    if((<step.ifBlock.expression.native>).holds) {
                         <code_block(step.ifBlock.planDefinition.steps)>
                     \}
                     <step.elseIfBlocks : { elseBlock |
-                     else if((<elseBlock.expression.asNative>).holds) {
+                     else if((<elseBlock.expression.native>).holds) {
                            <code_block(elseBlock.planDefinition.steps)>
                      \}
                      }>

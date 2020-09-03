@@ -1,12 +1,9 @@
 package agentscript.language.entities.goals;
 
-import agentscript.language.entities.Atom;
-import agentscript.language.entities.Literal;
-import agentscript.language.entities.Term;
-import agentscript.language.entities.agent.Agent;
+import agentscript.language.entities.plan.IPlanStep;
+import agentscript.language.entities.terms.Atom;
 import agentscript.language.entities.expression.Expression;
 import lombok.*;
-import org.stringtemplate.v4.ST;
 
 import java.util.List;
 

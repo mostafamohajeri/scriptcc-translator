@@ -1,10 +1,10 @@
 package agentscript.language.visitor;
 
-import agentscript.language.entities.InitialBelief;
-import agentscript.language.entities.Plan;
+import agentscript.language.entities.agent.InitialBelief;
+import agentscript.language.entities.plan.Plan;
 import agentscript.language.entities.agent.Agent;
 import agentscript.language.entities.goals.GoalPlan;
-import agentscript.language.entities.goals.InitialGoal;
+import agentscript.language.entities.agent.InitialGoal;
 import lombok.Getter;
 
 import java.util.List;
@@ -39,10 +39,6 @@ public class AgentFactory {
                 agent.addGoalPlan(GoalPlan.from(p.getLiteral(), new CopyOnWriteArrayList<>(List.of(p))));
             }
         }
-
-//        for (InitialGoal g :agent.getInitialGoals()) {
-//            ((AchievementGoal) g.getGoal()).setGoalPlan(agent);
-//        }
 
     }
 

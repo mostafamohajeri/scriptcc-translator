@@ -1,6 +1,7 @@
 package agentscript.language.entities.goals;
 
-import agentscript.language.entities.*;
+import agentscript.language.entities.plan.Plan;
+import agentscript.language.entities.terms.Literal;
 import lombok.*;
 
 import java.util.List;

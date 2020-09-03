@@ -7,14 +7,12 @@ import lombok.Getter;
 @Getter
 public class NestedExpression extends Expression implements IExpression{
     Expression expression;
-    @Override public String getSt4() {
-        return String.format("StructTerm.of( %s , Seq() )",expression.getSt4());
-    }
-    public String getNative() {
-        return String.format("( %s )",expression.getNative());
+
+    @Override public String getAsStructure() {
+        return String.format("StructTerm.of( %s , Seq() )",expression.getAsStructure());
     }
 
-    public String getScala() {
-        return String.format("( %s )",expression.getNative());
+    @Override public String getAsNative() {
+        return String.format("( %s )",expression.getAsNative());
     }
 }

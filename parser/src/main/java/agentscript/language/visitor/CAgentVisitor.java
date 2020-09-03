@@ -1,11 +1,14 @@
 package agentscript.language.visitor;
 
-import agentscript.language.entities.*;
+import agentscript.language.entities.agent.InitialBelief;
+import agentscript.language.entities.agent.InitialGoal;
 import agentscript.language.entities.expression.BinaryExpression;
 import agentscript.language.entities.expression.Expression;
 import agentscript.language.entities.expression.NegationExpression;
 import agentscript.language.entities.expression.TermExpression;
 import agentscript.language.entities.goals.*;
+import agentscript.language.entities.plan.*;
+import agentscript.language.entities.terms.*;
 import grammar.AgentBaseVisitor;
 import grammar.AgentParser;
 import lombok.Getter;
