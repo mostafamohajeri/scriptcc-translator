@@ -12,6 +12,7 @@ import java.util.List;
 @NoArgsConstructor
 @Getter
 public class AchievementGoal extends Goal implements IPlanStep {
+    @NonNull boolean negated;
     @NonNull Atom atom;
     List<Expression> expressions;
 

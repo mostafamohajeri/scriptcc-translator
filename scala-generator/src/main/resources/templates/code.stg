@@ -5,7 +5,6 @@ import _root_.scala.collection.mutable.HashMap
 
 import _root_.akka.actor.typed.{ActorRef, Behavior, SupervisorStrategy}
 import _root_.akka.actor.typed.scaladsl.{ActorContext, Behaviors, Routers}
-import _root_.it.unibo.tuprolog.core.{Atom, Numeric, Struct, Term, Truth}
 
 import _root_.scala.util.Failure
 import _root_.scala.util.Success
@@ -21,8 +20,6 @@ import std.converters._
 import scala.util.Random
 import bb._
 import infrastructure._
-import infrastructure.termutils.ExTermFactoryKT._
-import infrastructure.termutils.ExTermVisitorKT._
 import bb.expstyla.exp._
 
 >>
@@ -40,7 +37,7 @@ object Intention {
         implicit val executionContext = p_executionContext.copy(intention = context,sender = Sender(message.c_sender_name,message.c_sender))
 
         message match {
-           case SubGoalMessage(_,_,_,r) =>
+           case SubGoalMessage(_,_,r) =>
               message.goal match {
 
         < goalPlans :  { goalPlan |
@@ -53,8 +50,7 @@ object Intention {
         }
           r ! IntentionDoneMessage(Option(executionContext.name),Option(executionContext.agent.self))
                         Behaviors.same
-        case InitEndMessage(s,r) =>
-            //r ! message
+        case InitEndMessage(r) =>
             Behaviors.stopped
       }
      }
@@ -84,12 +80,13 @@ object Agent extends IAgent {
           }; separator=",\n " >
         )
 
-        def create_goal_message(t: StructTerm,r:String,ref:ActorRef[IMessage]) : Option[SubGoalMessage] = {
+        def create_goal_message(t: StructTerm,ref:ActorRef[IMessage]) : Option[SubGoalMessage] = {
             < goalPlans :  { goalPlan | if(t.functor=="<goalPlan.goal.atom.name>" && t.terms.size == <goalPlan.arity> ) {
                                            val args : <goalPlan.goal.atom.name>.Parameters = if(t.terms.size == 0)  <goalPlan.goal.atom.name>.Parameters(List( )) else <goalPlan.goal.atom.name>.Parameters(t.terms.toList)
-                                            Option(SubGoalMessage(<goalPlan.goal.atom.name>, args,r,ref))
+                                            Option(SubGoalMessage(<goalPlan.goal.atom.name>, args,ref))
                                        \} else }> {
                                             println("no plan for this goal: " + t.toString)
+                                            ref ! IntentionErrorMessage(NoPlanMessage())
                                             Option.empty[SubGoalMessage]
                                             }
         }
@@ -115,12 +112,12 @@ object Agent extends IAgent {
                             implicit val scheduler = context.system.scheduler
 
 
-              //              initGoals.foreach( tuple => initiator ! SubGoalMessage(tuple._1,tuple._2,name,context.self))
+              //              initGoals.foreach( tuple => initiator ! SubGoalMessage(tuple._1,tuple._2,context.self))
                             initGoals.foreach(struct => {
 
 
                                  val result: Future[IMessage] =  initiator.ask[IMessage](ref => {
-                                   val subGoal = create_goal_message(struct,name,ref)
+                                   val subGoal = create_goal_message(struct,ref)
                                       if(subGoal.isDefined)
                                         subGoal.get
                                         else
@@ -131,23 +128,22 @@ object Agent extends IAgent {
 
                               result.onComplete {
                                    case Success(IntentionDoneMessage(n, r)) => IntentionDoneMessage(n,r)
-                                   case Failure(_) => IntentionFailedMessage()
+                                   case Failure(_) => IntentionErrorMessage()
                               }
 
                               Await.result(result,timeout.duration)
 
-              //                context.ask[ISubGoalMessage, IMessage](initiator, ref => SubGoalMessage(tuple._1, tuple._2, name, ref)) {
+              //                context.ask[ISubGoalMessage, IMessage](initiator, ref => SubGoalMessage(tuple._1, tuple._2,name, ref)) {
               //                  case Success(IntentionDoneMessage(_, _)) => IntentionDoneMessage()
               //                  case Failure(_) => IntentionErrorMessage()
               //                }
                             }
                             )
 
-              initiator ! InitEndMessage(name,context.self)
-              //context.log.debug(f"$name: I have started, switching behavior")
+              initiator ! InitEndMessage(context.self)
               normal_behavior()
 
-//            case InitEndMessage(_,_) =>
+//            case InitEndMessage(_) =>
 //              context.log.debug(f"$name: I have started, switching behavior")
 //              normal_behavior()
                   }
@@ -168,12 +164,12 @@ object Agent extends IAgent {
                   (context, message) => message match {
                     case IntentionDoneMessage(s,r) =>
                       //context.log.debug(f"${executionContext.name}: an intention was done by $s")
-                    case SubGoalMessage(_, _, _,_) =>
+                    case SubGoalMessage(_, _,_) =>
                       router ! message.asInstanceOf[SubGoalMessage]
-                    case GoalMessage(m,r,ref) =>
+                    case GoalMessage(m,ref) =>
                       m match {
                         case t: StructTerm =>
-                          val subGoal = create_goal_message(t,r,ref)
+                          val subGoal = create_goal_message(t,ref)
 
                           if(subGoal.isDefined)
                               context.self ! subGoal.get
@@ -229,6 +225,8 @@ goal_plans(class_name,goalPlans) ::= <<
                             <endif>
                  // plan <i0>
                  } >
+
+            executionContext.sender.ref() ! IntentionErrorMessage(NoApplicablePlanMessage())
 
        \}
 
@@ -292,7 +290,7 @@ code_block(steps) ::= <<
                 <elseif(step.assign)>
                      <step.call>
                 <elseif(step.belief_action)>
-                     BeliefUpdateAction.execute(BeliefUpdateAction.Parameters(<step.operator>, <step.literal.value>))
+                     BeliefUpdateAction.execute(BeliefUpdateAction.Parameters(<step.operator>, <step.literal.asValue>))
                 <endif>
                 } >
 >>

@@ -7,7 +7,7 @@
     <groupId>nl.uva.sne.cci</groupId>
     <artifactId>core</artifactId>
     <packaging>pom</packaging>
-    <version>0.2.6</version>
+    <version>0.2.11</version>
     <modules>
         <module>java-generator</module>
         <module>parser</module>

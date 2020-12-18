@@ -224,8 +224,11 @@ public class CAgentVisitor extends AgentBaseVisitor<Optional<Object>> {
 
     @Override
     public Optional<Object> visitAchievementgoal(AgentParser.AchievementgoalContext ctx) {
-        return Optional.of(AchievementGoal.from((Atom) Atom.from(ctx.ATOM().getText()),
-                Objects.nonNull(ctx.paramlist()) ? (List) this.visitParamlist(ctx.paramlist()).orElse(Collections.EMPTY_LIST) : null
+        return Optional.of(
+                AchievementGoal.from(
+                        Objects.nonNull(ctx.STRONGNEGATION()),
+                        (Atom) Atom.from(ctx.ATOM().getText()),
+                        Objects.nonNull(ctx.paramlist()) ? (List) this.visitParamlist(ctx.paramlist()).orElse(Collections.EMPTY_LIST) : null
                 )
                 );
     }

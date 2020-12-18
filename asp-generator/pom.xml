@@ -5,7 +5,7 @@
     <parent>
         <artifactId>core</artifactId>
         <groupId>nl.uva.sne.cci</groupId>
-        <version>0.2.6</version>
+        <version>0.2.11</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -15,7 +15,7 @@
     <dependency>
         <groupId>nl.uva.sne.cci</groupId>
         <artifactId>parser</artifactId>
-        <version>0.2.6</version>
+        <version>0.2.11</version>
         <scope>compile</scope>
     </dependency>
     <!-- https://mvnrepository.com/artifact/org.antlr/stringtemplate -->
@@ -25,6 +25,12 @@
         <artifactId>ST4</artifactId>
         <version>4.3</version>
     </dependency>
+        <dependency>
+            <groupId>nl.uva.sne.cci</groupId>
+            <artifactId>parser</artifactId>
+            <version>0.2.5</version>
+            <scope>compile</scope>
+        </dependency>
     </dependencies>
 
     <distributionManagement>

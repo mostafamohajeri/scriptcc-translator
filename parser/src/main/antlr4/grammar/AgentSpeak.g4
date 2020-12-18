@@ -247,6 +247,7 @@ testgoal :
  */
 achievementgoal :
     ( EXCLAMATIONMARK )
+    ( STRONGNEGATION )?
     ( ATOM paramlist? )
     ;
 
