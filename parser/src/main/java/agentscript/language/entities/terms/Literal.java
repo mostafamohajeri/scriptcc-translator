@@ -28,6 +28,8 @@ public class Literal extends Term {
                 .collect(Collectors.toList());
     }
 
+
+
     public static Literal empty() {
         return Literal.builder().build();
     }

@@ -20,6 +20,10 @@ public class AchievementGoal extends Goal implements IPlanStep {
         return atom.getName();
     }
 
+    public String getNameWithArity() {
+        int arity = (this.getExpressions()==null ? 0 : this.getExpressions().size());
+        return this.getAtom().getName() + "_" + arity ; }
+
     public List<Expression> getWritableTerms() {
         return expressions;
     }

@@ -5,7 +5,7 @@
     <parent>
         <artifactId>core</artifactId>
         <groupId>nl.uva.sne.cci</groupId>
-        <version>0.2.11</version>
+        <version>0.2.17.SNAP1</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -56,19 +56,13 @@
         <dependency>
             <groupId>nl.uva.sne.cci</groupId>
             <artifactId>parser</artifactId>
-            <version>0.2.11</version>
+            <version>0.2.17.SNAP1</version>
             <scope>compile</scope>
         </dependency>
 
     </dependencies>
 
-    <distributionManagement>
-        <repository>
-            <id>bintray-uva-cci-script-cc-grammars</id>
-            <name>uva-cci-script-cc-grammars</name>
-            <url>https://api.bintray.com/maven/uva-cci/script-cc-grammars/java-generator/;publish=1</url>
-        </repository>
-    </distributionManagement>
+
 
 
 </project>

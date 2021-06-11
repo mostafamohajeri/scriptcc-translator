@@ -7,7 +7,7 @@
     <groupId>nl.uva.sne.cci</groupId>
     <artifactId>core</artifactId>
     <packaging>pom</packaging>
-    <version>0.2.11</version>
+    <version>0.2.17.SNAP1</version>
     <modules>
         <module>java-generator</module>
         <module>parser</module>
@@ -67,13 +67,19 @@
 
     </dependencies>
 
+
     <distributionManagement>
-        <repository>
-            <id>bintray-uva-cci-script-cc-grammars</id>
-            <name>uva-cci-script-cc-grammars</name>
-            <url>https://api.bintray.com/maven/uva-cci/script-cc-grammars/core/;publish=1</url>
-        </repository>
-    </distributionManagement>
+    <repository>
+        <id>central</id>
+        <name>a0jvnacts8cjd-artifactory-primary-0-releases</name>
+        <url>https://uvacci.jfrog.io/artifactory/default-maven-local</url>
+    </repository>
+    <snapshotRepository>
+        <id>snapshots</id>
+        <name>a0jvnacts8cjd-artifactory-primary-0-snapshots</name>
+        <url>https://uvacci.jfrog.io/artifactory/default-maven-local</url>
+    </snapshotRepository>
+</distributionManagement>
 
 
 </project>

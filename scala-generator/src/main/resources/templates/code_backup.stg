@@ -5,7 +5,7 @@ import _root_.scala.collection.mutable.HashMap
 
 import _root_.akka.actor.typed.{ActorRef, Behavior, SupervisorStrategy}
 import _root_.akka.actor.typed.scaladsl.{ActorContext, Behaviors, Routers}
-import java.util.logging.Logger
+
 import _root_.scala.util.Failure
 import _root_.scala.util.Success
 import _root_.akka.util.Timeout
@@ -14,13 +14,13 @@ import _root_.akka.actor.typed.scaladsl.AskPattern._
 import _root_.scala.language.implicitConversions
 import _root_.scala.concurrent.{Await, Future}
 import _root_.scala.jdk.CollectionConverters._
+import std.coms._
 import std.converters._
 
 import scala.util.Random
 import bb._
 import infrastructure._
 import bb.expstyla.exp._
-import std.{AgentCommunicationLayer, DefaultCommunications}
 
 >>
 
@@ -40,8 +40,8 @@ object Intention {
               message.goal match {
 
         < goalPlans :  { goalPlan |
-          case <class_name>.this.<goalPlan.nameWithArity> =>
-            <class_name>.this.<goalPlan.nameWithArity>.execute(message.params.asInstanceOf[Parameters])
+          case <class_name>.<goalPlan.nameWithArity> =>
+            <class_name>.<goalPlan.nameWithArity>.execute(message.params.asInstanceOf[Parameters])
 
          } >
           case _ =>
@@ -66,7 +66,7 @@ object Intention {
 
 
 agent(class_name,initialGoals,initialBeliefs,goalPlans) ::= <<
-class Agent extends IAgent {
+object Agent extends IAgent {
 
         override def agent_type: String = "<class_name>"
 
@@ -96,12 +96,13 @@ class Agent extends IAgent {
             }
         }
 
-     def apply(name: String, yellowPages: IYellowPages, MAS: ActorRef[IMessage]): Behavior[IMessage] = {
-          Behaviors.setup { context =>
-            val yp: IYellowPages = yellowPages
-            val bb: IBeliefBase[GenericTerm] = beliefBaseFactory()
-            implicit val executionContext: ExecutionContext = ExecutionContext(name, agent_type, context, yp, bb, context.log)
-            bb.assert(initBeliefs)
+    def apply(name: String, yellowPages: YellowPages, MAS: ActorRef[IMessage]): Behavior[IMessage] = {
+      Behaviors.setup { context =>
+        val yp: YellowPages = yellowPages
+        val bb: BeliefBaseStyla = BeliefBaseFactory()
+        val logger = AgentLogger()
+        implicit val executionContext: ExecutionContext = ExecutionContext(name, agent_type, context, yp, bb, logger)
+        bb.assert(initBeliefs)
 
         val initiator = context.spawn(Intention(executionContext), "initiator")
 
@@ -110,7 +111,7 @@ class Agent extends IAgent {
           (context, message) =>
             message match {
               case StartMessage() =>
-
+                logger.start()
 
                 implicit val timeout: Timeout = 99999.seconds
                 implicit val ec = context.executionContext
@@ -317,15 +318,10 @@ footer() ::= <<
 
 agentdef(class_name,initialGoals,initialBeliefs,goalPlans) ::= <<
  <header()>
- class <class_name>  (coms: AgentCommunicationLayer = new  DefaultCommunications,
-                                     beliefBaseFactory: IBeliefBaseFactory = new StylaBeliefBaseFactory)
-                      extends IntentionalAgentFactory {
-
+ object <class_name> {
  <intention(goalPlans,class_name)>
- override def agentBuilder: Agent = new Agent()
  <agent(class_name,initialGoals,initialBeliefs,goalPlans)>
  <goal_plans(class_name,goalPlans)>
  <footer()>
-
  }
 >>

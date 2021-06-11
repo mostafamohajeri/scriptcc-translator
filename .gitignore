@@ -109,3 +109,13 @@ fabric.properties
 .idea/
 
 parser/gen
+
+.idea/
+.project/
+.project
+.jfrog/
+.vscode/
+.settings/
+*/.classpath
+*/.project
+*/.factorypath

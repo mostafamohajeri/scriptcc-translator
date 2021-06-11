@@ -12,6 +12,8 @@ import java.util.List;
 @NoArgsConstructor(staticName = "empty")
 public class GoalPlan {
 
+
+
     Literal goal;
     List<Plan> plans;
 
@@ -19,5 +21,7 @@ public class GoalPlan {
     public void addPlan(Plan p) {
         plans.add(p);
     }
+
+    public String getNameWithArity() { return this.goal.getAtom().getName() + "_" + this.goal.getExpressions().size(); }
 
 }
