@@ -81,20 +81,11 @@ class Agent extends IAgent {
 
         def initBeliefs()(implicit executionContext: ExecutionContext) = List[StructTerm](
           < initialBeliefs : { ib |
-          <ib.literal.asStructure>
+          <ib.term.asStructure>
           }; separator=",\n " >
         )
 
-        def create_goal_message(t: StructTerm, ref: IMessageSource) (implicit executionContext: ExecutionContext): Option[SubGoalMessage] = {
-          < goalPlans :  { goalPlan |
-          if(t.matchOnlyFunctorAndArity("<goalPlan.goal.atom.name>",<goalPlan.arity>)) {
-//          if(t.functor=="<goalPlan.goal.atom.name>" && t.terms.size == <goalPlan.arity> ) {
-            val args: Parameters = Parameters(t.terms.toList)
-            Option(SubGoalMessage(<goalPlan.nameWithArity>, args, ref))
-          \} else }> {
-            Option.empty[SubGoalMessage]
-            }
-        }
+
 
      def apply(name: String, yellowPages: IYellowPages, MAS: ActorRef[IMessage]): Behavior[IMessage] = {
           Behaviors.setup { context =>
@@ -122,7 +113,7 @@ class Agent extends IAgent {
 
 
                   val result: Future[IMessage] = initiator.ask[IMessage](ref => {
-                    val subGoal = create_goal_message(struct, AkkaMessageSource(ref))
+                    val subGoal = GoalParser.create_goal_message(struct, AkkaMessageSource(ref))
                     if (subGoal.isDefined)
                       subGoal.get
                     else
@@ -175,7 +166,7 @@ class Agent extends IAgent {
               case GoalMessage(m, ref) =>
                 m match {
                   case t: StructTerm =>
-                    val subGoal = create_goal_message(t, ref)
+                    val subGoal = GoalParser.create_goal_message(t, ref)
 
                     if (subGoal.isDefined)
                       context.self ! subGoal.get
@@ -184,12 +175,75 @@ class Agent extends IAgent {
 
 
                 }
+
+               case AskMessage(m, ref) =>
+                               m match {
+                                 case t: StructTerm =>
+                                   val subGoal = GoalParser.create_test_message(t, ref)
+
+                                   if (subGoal.isDefined)
+                                     context.self ! subGoal.get
+                                   else
+                                     ref.asInstanceOf[AkkaMessageSource].src ! IntentionErrorMessage(NoPlanMessage(),AkkaMessageSource(executionContext.agent.self))
+                               }
+            case BeliefMessage(m, ref) =>
+                 m match {
+                   case t: StructTerm =>
+                   if(executionContext.beliefBase.assertOne(t)) {
+                     val subGoal = GoalParser.create_belief_message(t, ref)
+
+                     if (subGoal.isDefined)
+                       context.self ! subGoal.get
+                   }
+                 }
             }
             Behaviors.same
         }
       }
     }
   }
+
+
+
+  object GoalParser extends IAgentGoalParser {
+       override def create_goal_message(t: StructTerm, ref: IMessageSource) (implicit executionContext: ExecutionContext): Option[SubGoalMessage] = {
+                 < goalPlans :  { goalPlan |
+                 <if(goalPlan.achievementGoalPlan)>
+                 if(t.matchOnlyFunctorAndArity("<goalPlan.goal.atom.name>",<goalPlan.arity>)) {
+                   val args: Parameters = Parameters(t.terms.toList)
+                   Option(SubGoalMessage(<goalPlan.nameWithArity>, args, ref))
+                 \} else <endif> }> {
+                   Option.empty[SubGoalMessage]
+                   }
+
+               }
+
+       override def create_belief_message(t: StructTerm, ref: IMessageSource) (implicit executionContext: ExecutionContext): Option[SubGoalMessage] = {
+                 < goalPlans :  { goalPlan |
+                 <if(goalPlan.addBeliefPlan)>
+                 if(t.matchOnlyFunctorAndArity("<goalPlan.goal.atom.name>",<goalPlan.arity>)) {
+                   val args: Parameters = Parameters(t.terms.toList)
+                   Option(SubGoalMessage(<goalPlan.nameWithArity>, args, ref))
+                 \} else <endif> }> {
+                   Option.empty[SubGoalMessage]
+                   }
+
+               }
+
+        override def create_test_message(t: StructTerm, ref: IMessageSource) (implicit executionContext: ExecutionContext): Option[SubGoalMessage] = {
+                         < goalPlans :  { goalPlan |
+                         <if(goalPlan.testGoalPlan)>
+                         if(t.matchOnlyFunctorAndArity("<goalPlan.goal.atom.name>",<goalPlan.arity>)) {
+                           val args: Parameters = Parameters(t.terms.toList)
+                           Option(SubGoalMessage(<goalPlan.nameWithArity>, args, ref))
+                         \} else <endif> }> {
+                           Option.empty[SubGoalMessage]
+                           }
+
+                       }
+
+       }
+
 >>
 
 goal_plans(class_name,goalPlans) ::= <<
@@ -304,7 +358,7 @@ code_block(steps) ::= <<
                 <elseif(step.assign)>
                      <step.call>
                 <elseif(step.belief_action)>
-                     BeliefUpdateAction.execute(BeliefUpdateAction.Parameters(<step.operator>, <step.literal.asValue>))
+                     BeliefUpdateAction.execute(BeliefUpdateAction.Parameters(<step.operator>, <step.literal.asValue>),GoalParser)
                 <endif>
                 } >
 >>

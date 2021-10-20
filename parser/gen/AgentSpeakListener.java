@@ -257,6 +257,16 @@ public interface AgentSpeakListener extends ParseTreeListener {
 	 */
 	void exitLiteral(AgentSpeakParser.LiteralContext ctx);
 	/**
+	 * Enter a parse tree produced by {@link AgentSpeakParser#inference}.
+	 * @param ctx the parse tree
+	 */
+	void enterInference(AgentSpeakParser.InferenceContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link AgentSpeakParser#inference}.
+	 * @param ctx the parse tree
+	 */
+	void exitInference(AgentSpeakParser.InferenceContext ctx);
+	/**
 	 * Enter a parse tree produced by {@link AgentSpeakParser#termlist}.
 	 * @param ctx the parse tree
 	 */

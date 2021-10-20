@@ -5,7 +5,7 @@
     <parent>
         <artifactId>core</artifactId>
         <groupId>nl.uva.sne.cci</groupId>
-        <version>0.2.17.SNAP1</version>
+        <version>2.23</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -14,7 +14,7 @@
         <dependency>
             <groupId>nl.uva.sne.cci</groupId>
             <artifactId>parser</artifactId>
-            <version>0.2.17.SNAP1</version>
+            <version>2.23</version>
             <scope>compile</scope>
         </dependency>
         <!-- https://mvnrepository.com/artifact/org.antlr/stringtemplate -->
@@ -27,17 +27,6 @@
 
 
     </dependencies>
-    <distributionManagement>
-    <repository>
-        <id>central</id>
-        <name>a0jvnacts8cjd-artifactory-primary-0-releases</name>
-        <url>https://uvacci.jfrog.io/artifactory/default-maven-local</url>
-    </repository>
-    <snapshotRepository>
-        <id>snapshots</id>
-        <name>a0jvnacts8cjd-artifactory-primary-0-snapshots</name>
-        <url>https://uvacci.jfrog.io/artifactory/default-maven-local</url>
-    </snapshotRepository>
-</distributionManagement>
+
 
 </project>

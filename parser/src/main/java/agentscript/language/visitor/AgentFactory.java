@@ -29,14 +29,19 @@ public class AgentFactory {
             boolean add = true;
 
             for (GoalPlan gp : agent.getGoalPlans()) {
-                if (gp.getGoal().getAtom().equals(p.getLiteral().getAtom()) && gp.getGoal().getExpressions().size() == p.getLiteral().getExpressions().size()) {
+                if (gp.getGoal().getAtom().equals(p.getLiteral().getAtom()) &&
+                        gp.getGoal().getExpressions().size() == p.getLiteral().getExpressions().size() &&
+                        gp.getTrigger().equals(p.getTrigger())
+                ) {
                     gp.addPlan(p);
                     add = false;
                     break;
                 }
             }
             if (add) {
-                agent.addGoalPlan(GoalPlan.from(p.getLiteral(), new CopyOnWriteArrayList<>(List.of(p))));
+                agent.addGoalPlan(
+                        GoalPlan.from(p.getLiteral(),
+                                new CopyOnWriteArrayList<>(List.of(p)) , p.getTrigger()));
             }
         }
 

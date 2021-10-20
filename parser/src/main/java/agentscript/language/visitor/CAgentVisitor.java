@@ -36,7 +36,7 @@ public class CAgentVisitor extends AgentBaseVisitor<Optional<Object>> {
     @Override
     public Optional<Object> visitInitialbeliefs(AgentParser.InitialbeliefsContext ctx) {
 
-        ctx.belief().stream().map(this::visitBelief).map(i -> (InitialBelief) i.orElse(Literal.empty())).forEach(factory::addInitialBelief);
+        ctx.belief().stream().map(this::visitBelief).map(i -> (InitialBelief) i.orElse(InitialBelief.from(Literal.empty()))).forEach(factory::addInitialBelief);
 
         return Optional.empty();
 
@@ -44,7 +44,12 @@ public class CAgentVisitor extends AgentBaseVisitor<Optional<Object>> {
 
     @Override
     public Optional<Object> visitBelief(AgentParser.BeliefContext ctx) {
-        return Optional.of(InitialBelief.from((Literal) visitLiteral(ctx.literal()).orElse(Literal.empty())));
+
+        if(Objects.nonNull(ctx.literal()))
+            return Optional.of(InitialBelief.from((Literal) visitLiteral(ctx.literal()).orElse(Literal.empty())));
+        else if (Objects.nonNull(ctx.inference()))
+            return Optional.of(InitialBelief.from((Rule) visitInference(ctx.inference()).orElse(Rule.empty())));
+        return Optional.empty();
     }
 
     @Override
@@ -263,6 +268,15 @@ public class CAgentVisitor extends AgentBaseVisitor<Optional<Object>> {
 
             return Optional.empty();
 
+    }
+
+    @Override
+    public Optional<Object> visitInference(AgentParser.InferenceContext ctx) {
+        return Optional.of(
+                Rule.builder()
+                        .LHS((Literal) this.visitLiteral(ctx.literal()).orElse(Literal.empty()))
+                .RHS((Expression) this.visitExpression(ctx.expression()).orElse(Expression.empty())).build()
+        );
     }
 
     @Override

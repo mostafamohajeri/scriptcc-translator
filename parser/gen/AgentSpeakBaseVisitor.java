@@ -191,6 +191,13 @@ public class AgentSpeakBaseVisitor<T> extends AbstractParseTreeVisitor<T> implem
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
+	@Override public T visitInference(AgentSpeakParser.InferenceContext ctx) { return visitChildren(ctx); }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation returns the result of calling
+	 * {@link #visitChildren} on {@code ctx}.</p>
+	 */
 	@Override public T visitTermlist(AgentSpeakParser.TermlistContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}

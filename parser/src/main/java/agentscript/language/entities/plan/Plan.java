@@ -19,6 +19,8 @@ public class Plan {
     Expression expression;
     PlanDefinition planDefinition;
 
+
+
     public boolean getAtomic() {
         return annotations.contains("@atomic");
     }

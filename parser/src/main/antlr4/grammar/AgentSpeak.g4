@@ -36,6 +36,8 @@ import Terminal;
  */
 belief :
     literal DOT
+    |
+    inference DOT
     ;
 
 initialgoal :
@@ -477,6 +479,12 @@ literal :
     STRONGNEGATION?
     ATOM
     paramlist?
+    ;
+
+inference :
+    literal
+    RULEOPERATOR
+    expression
     ;
 
 /**

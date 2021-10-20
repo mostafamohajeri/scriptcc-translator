@@ -315,6 +315,18 @@ public class AgentSpeakBaseListener implements AgentSpeakListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
+	@Override public void enterInference(AgentSpeakParser.InferenceContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitInference(AgentSpeakParser.InferenceContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
 	@Override public void enterTermlist(AgentSpeakParser.TermlistContext ctx) { }
 	/**
 	 * {@inheritDoc}

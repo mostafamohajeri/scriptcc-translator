@@ -259,8 +259,8 @@ SEMICOLON                  : ';';
 DOT                        : '.';
 UNDERSCORE                 : '_';
 //SLASH                      : '/';
-LEFTSHIFT                  : '<<';
-RIGHTSHIFT                 : '>>';
+//LEFTSHIFT                  : '<<';
+//RIGHTSHIFT                 : '>>';
 
 LEFTROUNDBRACKET           : '(';
 RIGHTROUNDBRACKET          : ')';

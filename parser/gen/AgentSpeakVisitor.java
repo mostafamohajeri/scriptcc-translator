@@ -160,6 +160,12 @@ public interface AgentSpeakVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitLiteral(AgentSpeakParser.LiteralContext ctx);
 	/**
+	 * Visit a parse tree produced by {@link AgentSpeakParser#inference}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitInference(AgentSpeakParser.InferenceContext ctx);
+	/**
 	 * Visit a parse tree produced by {@link AgentSpeakParser#termlist}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
