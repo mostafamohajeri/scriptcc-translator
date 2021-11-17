@@ -7,16 +7,21 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="java-generator" />
-        <module name="scala-generator" />
-        <module name="asp-generator" />
+        <module name="agentscript-parser" />
         <module name="javagenerator" />
-        <module name="parser" />
+        <module name="agentscript-asp-generator" />
         <module name="scalagenerator" />
+        <module name="agentscript-java-generator" />
+        <module name="agentscript-scala-generator" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
       <module name="antr4grammars" target="11" />
+      <module name="asp-generator" target="11" />
+      <module name="core" target="11" />
+      <module name="java-generator" target="11" />
+      <module name="parser" target="11" />
+      <module name="scala-generator" target="11" />
     </bytecodeTargetLevel>
   </component>
 </project>

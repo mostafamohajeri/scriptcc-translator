@@ -108,7 +108,7 @@ fabric.properties
 
 .idea/
 
-parser/gen
+agentscript-parser/gen
 
 .idea/
 .project/

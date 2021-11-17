@@ -122,12 +122,19 @@ class Agent extends IAgent {
                   )
 
 
-                  result.onComplete {
-                    case Success(IntentionDoneMessage(r)) => IntentionDoneMessage(r)
-                    case Failure(_) => IntentionErrorMessage(src = null)
-                  }
+                  //result.onComplete {
+                  //  case Success(IntentionDoneMessage(r)) => IntentionDoneMessage(r)
+                  //  case Failure(_) => IntentionErrorMessage(src = null)
+                  //}
 
-                  Await.result(result, timeout.duration)
+                  //Await.result(result, timeout.duration)
+
+                  val res = Await.result(result, timeout.duration)
+
+                  if(!res.isInstanceOf[IntentionDoneMessage]) {
+                    throw new RuntimeException(s"Issue with initial goal $struct")
+                    context.system.terminate()
+                  }
 
                   //                context.ask[ISubGoalMessage, IMessage](initiator, ref => SubGoalMessage(tuple._1, tuple._2,name, ref)) {
                   //                  case Success(IntentionDoneMessage(_, _)) => IntentionDoneMessage()
@@ -137,7 +144,7 @@ class Agent extends IAgent {
                 )
 
                 initiator ! InitEndMessage(context.self)
-                normal_behavior()
+                normal_behavior(MAS)
 
               //            case InitEndMessage(_) =>
               //              context.log.debug(f"$name: I have started, switching behavior")
@@ -148,19 +155,21 @@ class Agent extends IAgent {
       }
     }
 
-    def normal_behavior()(implicit executionContext: ExecutionContext): Behavior[IMessage] = {
+    def normal_behavior(MAS: ActorRef[IMessage])(implicit executionContext: ExecutionContext): Behavior[IMessage] = {
       Behaviors.setup { context =>
 
         val pool = Routers.pool(poolSize = 8)(
           Behaviors.supervise(Intention(executionContext)).onFailure[Exception](SupervisorStrategy.restart))
 
         val router = context.spawn(pool, "intention-pool")
-
+        //MAS ! ReadyMessage(context.self)
         Behaviors.receive {
           (context, message) =>
             message match {
-              case IntentionDoneMessage(r) =>
-              //context.log.debug(f"${executionContext.name}: an intention was done by $s")
+              case IntentionDoneMessage(s) =>
+                context.log.debug(f"${executionContext.name}: an intention was done by $s")
+              case IntentionErrorMessage(c,s) =>
+                context.log.debug(f"${executionContext.name}: an intention was done by $s: $c")
               case SubGoalMessage(_, _, _) =>
                 router ! message.asInstanceOf[SubGoalMessage]
               case GoalMessage(m, ref) =>
