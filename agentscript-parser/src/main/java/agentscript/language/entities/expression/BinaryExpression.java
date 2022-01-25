@@ -34,6 +34,7 @@ public class BinaryExpression extends Expression implements IExpression {
 
     public static String TUPOperator(String ASOperator) {
         switch (ASOperator) {
+            case ":-": return ":-";
             case "&&": return ",";
             case "||": return ";";
             case "=": return "=";
@@ -60,6 +61,7 @@ public class BinaryExpression extends Expression implements IExpression {
 
     public static String NativeOperator(String ASOperator) {
         switch (ASOperator) {
+            case ":-": return ":-";
             case "&&": return "&&";
             case "||": return "||";
             case "==": return "==";

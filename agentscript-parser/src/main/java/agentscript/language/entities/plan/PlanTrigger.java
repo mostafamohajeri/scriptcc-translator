@@ -10,6 +10,21 @@ public class PlanTrigger {
     @Getter
     PlanOperator planOperator;
 
+    public boolean getAchievementGoalPlan() {
+        return (this.getActionOperator().equals(ActionOperator.PLUS) &&
+                this.getPlanOperator().equals(PlanOperator.EXCLAMATION));
+    }
+
+    public boolean getAddBeliefPlan() {
+        return (this.getActionOperator().equals(ActionOperator.PLUS) &&
+                this.getPlanOperator().equals(PlanOperator.NONE));
+    }
+
+    public boolean getTestGoalPlan() {
+        return (this.getActionOperator().equals(ActionOperator.PLUS) &&
+                this.getPlanOperator().equals(PlanOperator.QUESTION));
+    }
+
     @Override
     public boolean equals(Object obj) {
         return this.actionOperator.equals(((PlanTrigger)obj).actionOperator) &&

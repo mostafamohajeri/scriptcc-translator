@@ -36,7 +36,7 @@ public class CAgentVisitor extends AgentBaseVisitor<Optional<Object>> {
     @Override
     public Optional<Object> visitInitialbeliefs(AgentParser.InitialbeliefsContext ctx) {
 
-        ctx.belief().stream().map(this::visitBelief).map(i -> (InitialBelief) i.orElse(InitialBelief.from(Literal.empty()))).forEach(factory::addInitialBelief);
+        ctx.belief().stream().map(this::visitBelief).map(i -> (InitialBelief) i.orElse(InitialBelief.from(Expression.empty()))).forEach(factory::addInitialBelief);
 
         return Optional.empty();
 
@@ -45,11 +45,15 @@ public class CAgentVisitor extends AgentBaseVisitor<Optional<Object>> {
     @Override
     public Optional<Object> visitBelief(AgentParser.BeliefContext ctx) {
 
-        if(Objects.nonNull(ctx.literal()))
-            return Optional.of(InitialBelief.from((Literal) visitLiteral(ctx.literal()).orElse(Literal.empty())));
-        else if (Objects.nonNull(ctx.inference()))
-            return Optional.of(InitialBelief.from((Rule) visitInference(ctx.inference()).orElse(Rule.empty())));
-        return Optional.empty();
+//        if(Objects.nonNull(ctx.literal()))
+//            return Optional.of(InitialBelief.from((Literal) visitLiteral(ctx.literal()).orElse(Literal.empty())));
+//        else if (Objects.nonNull(ctx.inference()))
+//            return Optional.of(InitialBelief.from((Rule) visitInference(ctx.inference()).orElse(Rule.empty())));
+//        return Optional.empty();
+
+//        Objects.requireNonNull(ctx.)
+        Objects.requireNonNull(ctx.expression(),"Expression is null");
+        return Optional.of(InitialBelief.from((Expression) visitExpression(ctx.expression()).orElse(Expression.empty())));
     }
 
     @Override
@@ -132,6 +136,8 @@ public class CAgentVisitor extends AgentBaseVisitor<Optional<Object>> {
 
         else if (Objects.nonNull(ctx.LEFTROUNDBRACKET()) && Objects.nonNull(ctx.RIGHTROUNDBRACKET()))
             return visitExpression(ctx.single);
+
+//        else if (Objects.nonNull(ctx))
 
         else if (Objects.nonNull(ctx.rhs) && Objects.nonNull(ctx.lhs))
             return Optional.of(BinaryExpression.from(
@@ -270,14 +276,14 @@ public class CAgentVisitor extends AgentBaseVisitor<Optional<Object>> {
 
     }
 
-    @Override
-    public Optional<Object> visitInference(AgentParser.InferenceContext ctx) {
-        return Optional.of(
-                Rule.builder()
-                        .LHS((Literal) this.visitLiteral(ctx.literal()).orElse(Literal.empty()))
-                .RHS((Expression) this.visitExpression(ctx.expression()).orElse(Expression.empty())).build()
-        );
-    }
+//    @Override
+//    public Optional<Object> visitInference(AgentParser.InferenceContext ctx) {
+//        return Optional.of(
+//                Rule.builder()
+//                        .LHS((Literal) this.visitLiteral(ctx.literal()).orElse(Literal.empty()))
+//                .RHS((Expression) this.visitExpression(ctx.expression()).orElse(Expression.empty())).build()
+//        );
+//    }
 
     @Override
     public Optional<Object> visitPrimitiveaction(AgentParser.PrimitiveactionContext ctx) {
@@ -329,9 +335,20 @@ public class CAgentVisitor extends AgentBaseVisitor<Optional<Object>> {
             return this.visitTermvalue(ctx.termvalue());
         else if (Objects.nonNull(ctx.primitiveaction()))
             return this.visitPrimitiveaction(ctx.primitiveaction());
+        else if(Objects.nonNull(ctx.planhead()))
+            return this.visitPlanhead(ctx.planhead());
         return Optional.empty();
     }
 
+    @Override
+    public Optional<Object> visitPlanhead(AgentParser.PlanheadContext ctx) {
+        return Optional.of(PlanHeadLiteral.builder()
+                .trigger((PlanTrigger) visitPlantrigger(ctx.plantrigger()).orElse(PlanTrigger.from(ActionOperator.NONE, PlanOperator.NONE)))
+                .atom(Atom.from(ctx.literal().ATOM().getText()))
+                .expressions(
+                        Objects.nonNull(ctx.literal().paramlist()) ? (List) this.visitParamlist(ctx.literal().paramlist()).orElse(Collections.EMPTY_LIST) : Collections.EMPTY_LIST
+                ).build());
+    }
 
     @Override
     public Optional<Object> visitVariable(AgentParser.VariableContext ctx) {

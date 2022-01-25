@@ -35,9 +35,7 @@ import Terminal;
  * belief rule
  */
 belief :
-    literal DOT
-    |
-    inference DOT
+    expression DOT
     ;
 
 initialgoal :
@@ -51,6 +49,10 @@ initialachievegoal :
 initialmaintenancegoal :
     (DOUBLEEXCLAMATIONMARK)  literal DOT
     ;
+
+planhead :
+    plantrigger
+        literal;
 
 plan :
     ANNOTATION*
@@ -171,6 +173,7 @@ expression :
     | lhs=expression binaryoperator=LOGICALOPERATOR1 rhs=expression
     | lhs=expression binaryoperator=LOGICALOPERATOR2 rhs=expression
     | lhs=expression binaryoperator=LOGICALOPERATOR3 rhs=expression
+    | lhs=expression binaryoperator=RULEOPERATOR rhs=expression
     | LEFTROUNDBRACKET single=expression RIGHTROUNDBRACKET
     | term
     ;
@@ -427,6 +430,7 @@ term :
     | termvalue
     | variable
     | literal
+    | planhead
     ;
 
 /**
@@ -481,11 +485,11 @@ literal :
     paramlist?
     ;
 
-inference :
-    literal
-    RULEOPERATOR
-    expression
-    ;
+//inference :
+//    literal
+//    RULEOPERATOR
+//    expression
+//    ;
 
 /**
  * generic list equal to collcations with empty clause

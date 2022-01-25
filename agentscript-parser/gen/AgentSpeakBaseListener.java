@@ -1,4 +1,4 @@
-// Generated from /home/msotafa/IdeaProjects/antr4grammars/parser/src/main/antlr4/grammar/AgentSpeak.g4 by ANTLR 4.8
+// Generated from /home/msotafa/IdeaProjects/antr4grammars/agentscript-parser/src/main/antlr4/grammar/AgentSpeak.g4 by ANTLR 4.8
 
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.tree.ErrorNode;
@@ -58,6 +58,18 @@ public class AgentSpeakBaseListener implements AgentSpeakListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitInitialmaintenancegoal(AgentSpeakParser.InitialmaintenancegoalContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterPlanhead(AgentSpeakParser.PlanheadContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitPlanhead(AgentSpeakParser.PlanheadContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
@@ -310,18 +322,6 @@ public class AgentSpeakBaseListener implements AgentSpeakListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitLiteral(AgentSpeakParser.LiteralContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void enterInference(AgentSpeakParser.InferenceContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitInference(AgentSpeakParser.InferenceContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *

@@ -1,4 +1,4 @@
-// Generated from /home/msotafa/IdeaProjects/antr4grammars/parser/src/main/antlr4/grammar/AgentSpeak.g4 by ANTLR 4.8
+// Generated from /home/msotafa/IdeaProjects/antr4grammars/agentscript-parser/src/main/antlr4/grammar/AgentSpeak.g4 by ANTLR 4.8
 import org.antlr.v4.runtime.tree.ParseTreeListener;
 
 /**
@@ -46,6 +46,16 @@ public interface AgentSpeakListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitInitialmaintenancegoal(AgentSpeakParser.InitialmaintenancegoalContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link AgentSpeakParser#planhead}.
+	 * @param ctx the parse tree
+	 */
+	void enterPlanhead(AgentSpeakParser.PlanheadContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link AgentSpeakParser#planhead}.
+	 * @param ctx the parse tree
+	 */
+	void exitPlanhead(AgentSpeakParser.PlanheadContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link AgentSpeakParser#plan}.
 	 * @param ctx the parse tree
@@ -256,16 +266,6 @@ public interface AgentSpeakListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitLiteral(AgentSpeakParser.LiteralContext ctx);
-	/**
-	 * Enter a parse tree produced by {@link AgentSpeakParser#inference}.
-	 * @param ctx the parse tree
-	 */
-	void enterInference(AgentSpeakParser.InferenceContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link AgentSpeakParser#inference}.
-	 * @param ctx the parse tree
-	 */
-	void exitInference(AgentSpeakParser.InferenceContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link AgentSpeakParser#termlist}.
 	 * @param ctx the parse tree

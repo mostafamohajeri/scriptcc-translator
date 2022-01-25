@@ -28,25 +28,24 @@ public class GoalPlan {
     }
 
     public boolean getAchievementGoalPlan() {
-        return (this.trigger.getActionOperator().equals(ActionOperator.PLUS) &&
-                this.getTrigger().getPlanOperator().equals(PlanOperator.EXCLAMATION));
+        return (this.trigger.getAchievementGoalPlan());
     }
 
     public boolean getAddBeliefPlan() {
-        return (this.trigger.getActionOperator().equals(ActionOperator.PLUS) &&
-                this.getTrigger().getPlanOperator().equals(PlanOperator.NONE));
+        return (this.trigger.getAddBeliefPlan());
     }
 
     public boolean getTestGoalPlan() {
-        return (this.trigger.getActionOperator().equals(ActionOperator.PLUS) &&
-                this.getTrigger().getPlanOperator().equals(PlanOperator.QUESTION));
+        return (this.trigger.getTestGoalPlan());
     }
 
     public String getNameWithArity() {
+        if(getAchievementGoalPlan())
+            return "adopt_achievement_"+createName();
         if (getAddBeliefPlan())
-            return "`+"+createName()+"`";
+            return "adopt_belief_"+createName();
         else if(getTestGoalPlan())
-            return "`+?"+createName()+"`";
+            return "adopt_test_"+createName();
         return createName();
     }
 

@@ -1,4 +1,4 @@
-// Generated from /home/msotafa/IdeaProjects/antr4grammars/parser/src/main/antlr4/grammar/AgentSpeak.g4 by ANTLR 4.8
+// Generated from /home/msotafa/IdeaProjects/antr4grammars/agentscript-parser/src/main/antlr4/grammar/AgentSpeak.g4 by ANTLR 4.8
 import org.antlr.v4.runtime.tree.ParseTreeVisitor;
 
 /**
@@ -33,6 +33,12 @@ public interface AgentSpeakVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitInitialmaintenancegoal(AgentSpeakParser.InitialmaintenancegoalContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link AgentSpeakParser#planhead}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitPlanhead(AgentSpeakParser.PlanheadContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link AgentSpeakParser#plan}.
 	 * @param ctx the parse tree
@@ -159,12 +165,6 @@ public interface AgentSpeakVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitLiteral(AgentSpeakParser.LiteralContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link AgentSpeakParser#inference}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitInference(AgentSpeakParser.InferenceContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link AgentSpeakParser#termlist}.
 	 * @param ctx the parse tree

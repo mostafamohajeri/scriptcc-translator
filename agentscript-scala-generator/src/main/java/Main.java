@@ -6,7 +6,7 @@ public class Main {
 
     public static void main(String[] args) {
         Translator t = new Translator();
-        t.translate_to_file("/home/msotafa/IdeaProjects/actor-playgrounds/src/test/asl/simple_bb_access.asl",
+        t.translate_to_file("/home/msotafa/IdeaProjects/actor-playgrounds/grounds/src/main/asl/agere2020/ring/test.asl",
                 "testagent" +
                         "" +
                         "","out");
