@@ -66,6 +66,7 @@ RELATIONALOPERATOR :
     | GREATER
     | GREATEREQUAL
     | IS
+    | PREFERRED
     ;
 
 ASSIGNOPERATOR :
@@ -156,6 +157,7 @@ ANNOTATION :
         | ANNOTATION_STRING
         | PARALLEL
         | ATOMIC
+        | PREFERENCES
     )
     ;
 
@@ -260,7 +262,7 @@ DOT                        : '.';
 UNDERSCORE                 : '_';
 //SLASH                      : '/';
 //LEFTSHIFT                  : '<<';
-//RIGHTSHIFT                 : '>>';
+PREFERRED                 : '>>';
 
 LEFTROUNDBRACKET           : '(';
 RIGHTROUNDBRACKET          : ')';
@@ -302,6 +304,7 @@ fragment ATOMIC            : 'atomic';
 fragment DESCRIPTION       : 'description';
 fragment TAG               : 'tag';
 fragment VARIABLE          : 'variable';
+fragment PREFERENCES       : 'preferences';
 
 
 DECONSTRUCT                : '=..';

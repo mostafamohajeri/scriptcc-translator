@@ -172,6 +172,7 @@ expression :
     | DEFAULTNEGATION single=expression
     | lhs=expression binaryoperator=LOGICALOPERATOR1 rhs=expression
     | lhs=expression binaryoperator=LOGICALOPERATOR2 rhs=expression
+    | lhs=expression binaryoperator=RIGHTARROW rhs=expression
     | lhs=expression binaryoperator=LOGICALOPERATOR3 rhs=expression
     | lhs=expression binaryoperator=RULEOPERATOR rhs=expression
     | LEFTROUNDBRACKET single=expression RIGHTROUNDBRACKET

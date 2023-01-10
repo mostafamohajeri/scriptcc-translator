@@ -43,6 +43,7 @@ public class BinaryExpression extends Expression implements IExpression {
             case ">": return ">";
             case ">=": return ">=";
             case "=<": return "=<";
+            case ">>": return "dominates";
             case "is": return "is";
             case "!==": return "\\\\==";
             case "!=": return "\\\\=";
@@ -55,6 +56,7 @@ public class BinaryExpression extends Expression implements IExpression {
             case "/": return "/";
             case "**": return "**";
             case "%": return "mod";
+            case "->": return "->";
         }
         return "UNIDENTIFIED_OPERATOR_" + ASOperator;
     }

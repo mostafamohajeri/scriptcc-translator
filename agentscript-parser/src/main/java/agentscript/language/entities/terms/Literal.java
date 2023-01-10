@@ -16,6 +16,7 @@ public class Literal extends Term {
 
     boolean negated;
 
+
     Atom atom;
 
     @Singular

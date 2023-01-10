@@ -20,6 +20,12 @@ public class PlanTrigger {
                 this.getPlanOperator().equals(PlanOperator.NONE));
     }
 
+
+    public boolean getAddUnBeliefPlan() {
+        return (this.getActionOperator().equals(ActionOperator.MINUS) &&
+                this.getPlanOperator().equals(PlanOperator.NONE));
+    }
+
     public boolean getTestGoalPlan() {
         return (this.getActionOperator().equals(ActionOperator.PLUS) &&
                 this.getPlanOperator().equals(PlanOperator.QUESTION));

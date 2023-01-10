@@ -83,16 +83,38 @@ class Agent extends IAgent {
           < initialBeliefs : { ib |
           <ib.term.asStructure>
           }; separator=",\n " >
+
         )
 
+        def planApplicabilities()(implicit executionContext: ExecutionContext) = List[StructTerm](
+
+                  <goalPlans : { goalPlan |
+                   <goalPlan.plans : { plan |
+                    <if(plan.preferenceCheck)>
+                         <plan.applicableRule>
+                         <endif>
+                             } >
+                   } >
+                )
 
 
-     def apply(name: String, yellowPages: IYellowPages, MAS: ActorRef[IMessage]): Behavior[IMessage] = {
+
+     def apply(name: String, yellowPages: IYellowPages, MAS: ActorRef[IMessage], parent: IMessageSource): Behavior[IMessage] = {
           Behaviors.setup { context =>
             val yp: IYellowPages = yellowPages
             val bb: IBeliefBase[GenericTerm] = beliefBaseFactory()
-            implicit val executionContext: ExecutionContext = ExecutionContext(name, agent_type, context, yp, bb, context.log)
+            implicit val executionContext: ExecutionContext = ExecutionContext(
+                           name = name,
+                           agentType = agent_type,
+                           agent = context,
+                           yellowPages = yp,
+                           beliefBase = bb,
+                           logger = context.log,
+                           goalParser = GoalParser,
+                           parent = parent
+                         )
             bb.assert(initBeliefs)
+            bb.assert(planApplicabilities)
 
         val initiator = context.spawn(Intention(executionContext), "initiator")
 
@@ -205,6 +227,17 @@ class Agent extends IAgent {
                        context.self ! subGoal.get
                    }
                  }
+
+             case UnBeliefMessage(m, ref) =>
+                  m match {
+                    case t: StructTerm =>
+                    if(executionContext.beliefBase.retractOne(t)) {
+                      val subGoal = GoalParser.create_unbelief_message(t, ref)
+
+                      if (subGoal.isDefined)
+                        context.self ! subGoal.get
+                    }
+                  }
             }
             Behaviors.same
         }
@@ -248,8 +281,19 @@ class Agent extends IAgent {
                          \} else <endif> }> {
                            Option.empty[SubGoalMessage]
                            }
-
                        }
+         override def create_unbelief_message(t: StructTerm, ref: IMessageSource) (implicit executionContext: ExecutionContext): Option[SubGoalMessage] = {
+                                  < goalPlans :  { goalPlan |
+                                  <if(goalPlan.addUnBeliefPlan)>
+                                  if(t.matchOnlyFunctorAndArity("<goalPlan.goal.atom.name>",<goalPlan.arity>)) {
+                                    val args: Parameters = Parameters(t.terms.toList)
+                                    Option(SubGoalMessage(<goalPlan.nameWithArity>, args, ref))
+                                  \} else <endif> }> {
+                                    Option.empty[SubGoalMessage]
+                                    }
+                                }
+
+
 
        }
 
@@ -263,7 +307,29 @@ goal_plans(class_name,goalPlans) ::= <<
        def execute(params: Parameters) (implicit executionContext: ExecutionContext) : Unit = {
         <goalPlan.goal.terms : { term | //var <term.name> = params.l_params(<i0>)  }; separator="\n">
         var vars = VarMap()
+
+        vars("Self").bind_to(StringTerm(executionContext.name))
+        vars("Source").bind_to(StringTerm(executionContext.src.name))
+        vars("Parent").bind_to(StringTerm(executionContext.parent.name))
+
+
+        <if(goalPlan.hasPreferences)>
+        <if(goalPlan.hasHeadCheck)>
+                        val prefs = executionContext.beliefBase.query(<goalPlan.headCheck>)
+
+                         if (prefs.result && prefs.answer.isDefined) {
+                                  params.l_params = prefs.answer.get match {
+                                  case StructTerm(_,parameters) => List.from(parameters.head.ref.asInstanceOf[StructTerm].terms)
+                            \}
+                            \}
+                        <endif>
+                        <endif>
+
+
         <goalPlan.plans : { plan |
+
+
+
 
         //plan <i0> start
 
@@ -271,6 +337,9 @@ goal_plans(class_name,goalPlans) ::= <<
            this.synchronized {
            <endif>
                 vars.clear()
+                vars("Self").bind_to(StringTerm(executionContext.name))
+                vars("Source").bind_to(StringTerm(executionContext.src.name))
+                vars("Parent").bind_to(StringTerm(executionContext.parent.name))
                 <if(plan.literal.expressions)>
                 <plan.literal.expressions : { term | vars +=( <if(term.term.is_var)>  "<term.term.name>" -> params.l_params(<i0>)<else>"<i0>" -> params.l_params(<i0>)<endif>)}; separator="\n ">
                <endif>
@@ -279,14 +348,21 @@ goal_plans(class_name,goalPlans) ::= <<
                 val m<i0> = executionContext.beliefBase.matchTerms(<plan.headCheck>);
                 if(m<i0>.result)
                 {
-                 m<i0>.bindings foreach { case (k, v) => vars += (k -> v.asInstanceOf[GenericTerm]) \}
+                 m<i0>.bindings foreach { case (k, v) =>
+                 //vars += (k -> v.asInstanceOf[GenericTerm])
+                 if(v.is_bound) vars(k).bind_to(v)
+                 else vars += ( k -> VarTerm(k) )
+                 \}
                <endif>
 
                  <if(plan.hasContextCheck)>
                 val r<i0> = executionContext.beliefBase.query(<plan.expression.asStructure>)
 
                 if (r<i0>.result) {
-                    r<i0>.bindings foreach { case (k, v) => vars += (k -> v.asInstanceOf[GenericTerm]) \}
+                    r<i0>.bindings foreach { case (k, v) =>
+                   // vars += (k -> v.asInstanceOf[GenericTerm])
+                             vars(k).bind_to(v)
+                    \}
                 <endif>
                     plan<i0>(vars)
                     return

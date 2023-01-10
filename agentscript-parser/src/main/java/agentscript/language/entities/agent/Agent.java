@@ -27,4 +27,5 @@ public class Agent implements IAgent {
         goalPlans.add(gp);
     }
 
+    public static class AgentBuilder {}
 }

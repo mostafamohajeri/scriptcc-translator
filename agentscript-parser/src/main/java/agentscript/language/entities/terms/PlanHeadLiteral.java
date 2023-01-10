@@ -77,6 +77,11 @@ public class PlanHeadLiteral extends Term {
     public boolean getAddBeliefPlan() {
         return (this.trigger.getAddBeliefPlan());
     }
+    public boolean getAddUnBeliefPlan() {
+        return (this.trigger.getAddUnBeliefPlan());
+    }
+
+
 
     public boolean getTestGoalPlan() {
         return (this.trigger.getTestGoalPlan());
@@ -85,8 +90,10 @@ public class PlanHeadLiteral extends Term {
     public String getNameWithTrigger() {
         if(getAchievementGoalPlan())
             return "adopt_achievement_"+createName();
-        if (getAddBeliefPlan())
+        else if (getAddBeliefPlan())
             return "adopt_belief_"+createName();
+        else if (getAddUnBeliefPlan())
+            return "adopt_unbelief_"+createName();
         else if(getTestGoalPlan())
             return "adopt_test_"+createName();
         return createName();
